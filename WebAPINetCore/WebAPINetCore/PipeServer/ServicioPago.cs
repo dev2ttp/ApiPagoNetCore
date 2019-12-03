@@ -29,6 +29,8 @@ namespace WebAPINetCore.PipeServer
 
         public enum Comandos
         {
+            DarVuelto = 303, // devuelve el billete o moneda  Para vuelto
+            EstadoVuelto = 306, // devuelve el billete o moneda  ingresado 
             CargaMoneda = 395,// comando usado para cargar monedas
             GetStatusUps = 127,// usado para obtener el estado de la corriente del totem
             estado_puerta = 326,// se usa para retirar gav billete

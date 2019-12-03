@@ -13,6 +13,8 @@ namespace WebAPINetCore.Services
         //Var para realizar llamados de servicio de mensajeria PIPE
         public static PipeClient Servicio1 = new PipeClient();
         public static PipeClient2 Servicio2 = new PipeClient2();
+        public static PipeClient2 Servicio2Pago = new PipeClient2();
+        public static PipeClient2 Servicio2Vuelto = new PipeClient2();
         public static ServicioPago servicio = new ServicioPago();
         public static List<string> data = new List<string>();
 

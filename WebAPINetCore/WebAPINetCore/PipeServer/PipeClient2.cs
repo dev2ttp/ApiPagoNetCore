@@ -29,7 +29,7 @@ namespace WebAPINetCore.PipeServer
             this.Timeout = 30 * 1000;
         }
 
-        public Task<bool> SendMessage(ServicioPago.Comandos command)
+        public bool SendMessage(ServicioPago.Comandos command)
         {
             if (MessageSentSuccessfully())
             {
@@ -45,7 +45,7 @@ namespace WebAPINetCore.PipeServer
                 if (Resultado.CodigoError != 0)
                 {
                     // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false); 
+                    return false; 
                 }
 
                 int respCmd = Convert.ToInt32(_Resp.Substring((int)ServicioPago.Posicion.CMD_POS, (int)ServicioPago.Posicion.CMD_LEN));
@@ -59,13 +59,13 @@ namespace WebAPINetCore.PipeServer
                 if (Resultado.CodigoError != 0)
                 {
                     // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false); 
+                    return false; 
                 }
                 if (!ServicioPago.IsChecksumValid(_Resp))
                 {
                     Resultado.CodigoError = (int)ServicioPago.ValidaMsg.MSGCKS;
                     // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false);
+                    return false;
                 }
 
                 string msg = _Resp.Substring((int)ServicioPago.Posicion.DAT_POS, len - (int)ServicioPago.Posicion.FIX_LEN);
@@ -76,7 +76,7 @@ namespace WebAPINetCore.PipeServer
                         Resultado.Data = new List<string> { msg.Substring(5, msg.Length - 5) };
                     //else
                         //   Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                        return Task.FromResult<bool>(false);
+                        return false;
                 }
 
                 Resultado.CodigoError = 0;
@@ -88,17 +88,15 @@ namespace WebAPINetCore.PipeServer
                     Resultado.Data[0]= Resultado.Data[0].Substring(7,Resultado.Data[0].Length-7);
                     //Global.EST = Resultado.EstadoSalud;
                 }
-                return Task.FromResult<bool>(true);
+                return true;
 
             }
             else
             {
                 Resultado.CodigoError = -1;
                 Resultado.Data = new List<string> { _Resp };
-                return Task.FromResult<bool>(false);
+                return false;
             }
-
-            return Task.FromResult<bool>(false);
         }
 
         private bool MessageSentSuccessfully()

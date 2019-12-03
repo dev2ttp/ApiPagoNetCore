@@ -1676,6 +1676,7 @@
       "path": "log4net/2.0.8",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net20-full/log4net.dll",
         "lib/net20-full/log4net.xml",
         "lib/net35-client/log4net.dll",
@@ -1992,8 +1993,6 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "Newtonsoft.Json.10.0.1.nupkg.sha512",
-        "Newtonsoft.Json.nuspec",
         "lib/net20/Newtonsoft.Json.dll",
         "lib/net20/Newtonsoft.Json.xml",
         "lib/net35/Newtonsoft.Json.dll",
@@ -2008,6 +2007,8 @@
         "lib/netstandard1.3/Newtonsoft.Json.xml",
         "lib/portable-net45+win8+wpa81+wp8/Newtonsoft.Json.dll",
         "lib/portable-net45+win8+wpa81+wp8/Newtonsoft.Json.xml",
+        "newtonsoft.json.10.0.1.nupkg.sha512",
+        "newtonsoft.json.nuspec",
         "tools/install.ps1"
       ]
     },
@@ -4095,6 +4096,7 @@
       "path": "system.reflection.emit.lightweight/4.3.0",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/MonoAndroid10/_._",
@@ -5994,23 +5996,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jose.paz\\.nuget\\packages\\": {},
+    "C:\\Users\\ttp\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jose.paz\\source\\repos\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+      "projectUniqueName": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
       "projectName": "WebAPINetCore",
-      "projectPath": "C:\\Users\\jose.paz\\source\\repos\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
-      "packagesPath": "C:\\Users\\jose.paz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jose.paz\\source\\repos\\WebAPINetCore\\WebAPINetCore\\obj\\",
+      "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+      "packagesPath": "C:\\Users\\ttp\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\jose.paz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ttp\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
