@@ -5,11 +5,17 @@ using System.Threading.Tasks;
 using WebAPINetCore.Models;
 using WebAPINetCore.Services;
 using WebAPINetCore.PipeServer;
+using System.Timers;
 
 namespace WebAPINetCore.Services
 {
     public class PagoService
     {
+        static object thisLock = new object();
+        System.Timers.Timer EsperarMonedas = new System.Timers.Timer() { AutoReset = false };
+        System.Timers.Timer EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
+        private EstadoPago montoapagar = new EstadoPago();
+        private EstadoVuelto montodeVuelto = new EstadoVuelto();
 
         public  bool InicioPago()
         {
@@ -62,115 +68,229 @@ namespace WebAPINetCore.Services
 
         public EstadoPagoResp EstadoDelPAgo(EstadoPago PagoInfo)
         {
-            EstadoPagoResp estadopago = new EstadoPagoResp();
-            Globals.data = new List<string>();
-            Globals.data.Add("");
-            Globals.Servicio2Pago = new PipeClient2();
-            Globals.Servicio2Pago.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Cons_dinero_ingre, Globals.data);
-            var vuelta =  Globals.Servicio2Pago.SendMessage(ServicioPago.Comandos.Cons_dinero_ingre);
-            if (vuelta)
+            lock (thisLock)
             {
-                try
+                EstadoPagoResp estadopago = new EstadoPagoResp();
+                Globals.data = new List<string>();
+                Globals.data.Add("");
+                Globals.Servicio2Pago = new PipeClient2();
+                Globals.Servicio2Pago.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Cons_dinero_ingre, Globals.data);
+                var vuelta = Globals.Servicio2Pago.SendMessage(ServicioPago.Comandos.Cons_dinero_ingre);
+                if (vuelta)
                 {
-                    var DineroIngresado = int.Parse(Globals.Servicio2Pago.Resultado.Data[0]);
-                    PagoInfo.DineroIngresado = DineroIngresado;
-                    PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - DineroIngresado;
-                    if (PagoInfo.DineroFaltante < 0)
+                    try
                     {
-                        Globals.data = new List<string>();
-                        var vueltoadar = PagoInfo.DineroFaltante * -1;
-                        Globals.data.Add(vueltoadar.ToString());
-                        Globals.Servicio2Vuelto = new PipeClient2();
-                        Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
-                        var DarVuelto =  Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
-                        if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("OK"))
+                        var DineroIngresado = int.Parse(Globals.Servicio2Pago.Resultado.Data[0]);
+                        PagoInfo.DineroIngresado = DineroIngresado;
+                        PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - DineroIngresado;
+                        if (PagoInfo.DineroFaltante < 0)
                         {
-                            estadopago.data = PagoInfo;
-                            estadopago.Status = true;
-                            return estadopago;
+                            Globals.data = new List<string>();
+                            var vueltoadar = PagoInfo.DineroFaltante * -1;
+                            montodeVuelto.VueltoTotal = vueltoadar;
+                            Globals.data.Add(vueltoadar.ToString());
+                            Globals.Servicio2Vuelto = new PipeClient2();
+                            Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
+                            var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
+                            if (DarVuelto)
+                            {
+                                if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("OK"))
+                                {
+                                    estadopago.data = PagoInfo;
+                                    estadopago.Status = true;
+                                    return estadopago;
+                                }
+                                else
+                                {
+                                    estadopago.data = PagoInfo;
+                                    estadopago.Status = false;
+                                    return estadopago;
+                                }
+                            }
+                            else {
+                                estadopago.data = PagoInfo;
+                                estadopago.Status = false;
+                                return estadopago;
+                            }
+                           
                         }
-                        else
+                        else if (PagoInfo.DineroFaltante == 0)
                         {
-                            estadopago.data = PagoInfo;
-                            estadopago.Status = false;
-                            return estadopago;
+                            var finalizar = FinalizarPago();
+                            if (finalizar == true)
+                            {
+                                EsperarMonedas = new System.Timers.Timer() { AutoReset = false };
+                                EsperarMonedas.Elapsed += new ElapsedEventHandler(Timer_EstadoVueltoMonedas);
+                                EsperarMonedas.AutoReset = false;
+                                EsperarMonedas.Interval = 1000;
+                                EsperarMonedas.Enabled = true;
+                                EsperarMonedas.Start();
+                                montoapagar = PagoInfo;
+                                estadopago.data = PagoInfo;
+                                estadopago.Status = true;
+                                return estadopago;
+                            }
+                            else
+                            {
+                                estadopago.data = PagoInfo;
+                                estadopago.Status = false;
+                                return estadopago;
+                            }
                         }
+                        estadopago.data = PagoInfo;
+                        estadopago.Status = true;
+                        return estadopago;
                     }
-                    else if (PagoInfo.DineroFaltante == 0)
+                    catch (Exception ex)
                     {
-                        var finalizar =  FinalizarPago();
-                        if (finalizar == true)
-                        {
-                            estadopago.data = PagoInfo;
-                            estadopago.Status = true;
-                            return estadopago;
-                        }
-                        else
-                        {
-                            estadopago.data = PagoInfo;
-                            estadopago.Status = false;
-                            return estadopago;
-                        }
+                        estadopago.Status = false;
+                        return estadopago;
                     }
-                    estadopago.data = PagoInfo;
-                    estadopago.Status = true;
-                    return estadopago;
                 }
-                catch (Exception ex )
+
+                else
                 {
                     estadopago.Status = false;
                     return estadopago;
                 }
             }
-
-            else
-            {
-                estadopago.Status = false;
-                return estadopago;
-            }
         }
 
 
-        public  EstadoVueltoResp EstadoDelVuelto(EstadoVuelto VueltoInfo)
+        public EstadoVueltoResp EstadoDelVuelto(EstadoVuelto VueltoInfo)
         {
-            EstadoVueltoResp estavuelto = new EstadoVueltoResp();
-            Globals.data = new List<string>();
-            Globals.data.Add("");
-            Globals.Servicio2Vuelto = new PipeClient2();
-            Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.EstadoVuelto, Globals.data);
-            var vuelta =  Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.EstadoVuelto);
-            if (vuelta)
+            lock (thisLock)
             {
-                try
+                EstadoVueltoResp estavuelto = new EstadoVueltoResp();
+                Globals.data = new List<string>();
+                Globals.data.Add("");
+                Globals.Servicio2Vuelto = new PipeClient2();
+                Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.EstadoVuelto, Globals.data);
+                var vuelta = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.EstadoVuelto);
+                if (vuelta)
                 {
-                    var VueltoEntregado = int.Parse(Globals.Servicio2Vuelto.Resultado.Data[0]);
-                    VueltoInfo.DineroRegresado = VueltoEntregado;
-                    VueltoInfo.DineroFaltante = VueltoInfo.VueltoTotal - VueltoEntregado;
-                    if (Globals.Servicio2Vuelto.Resultado.Data[1] == "OK")
+                    try
                     {
-                        VueltoInfo.VueltoFinalizado = true;
+                        
+                        var VueltoEntregado = int.Parse(Globals.Servicio2Vuelto.Resultado.Data[0]);
+                        VueltoInfo.DineroRegresado = VueltoEntregado;
+                        VueltoInfo.DineroFaltante = VueltoInfo.VueltoTotal - VueltoEntregado;
+                        if (Globals.Servicio2Vuelto.Resultado.Data[1] == "OK")
+                        {
+                            VueltoInfo.VueltoFinalizado = true;
+                            var finalizar = FinalizarPago();
+                            if (finalizar == true)
+                            {
+                                estavuelto.Status = true;
+                            }
+                            else
+                            {
+                                estavuelto.Status = false;
+                            }
+                        }
+                        else
+                        {
+                            VueltoInfo.VueltoFinalizado = false;
+                            estavuelto.Status = true;
+                        }
+                        estavuelto.data = VueltoInfo;
+                        return estavuelto;
                     }
-                    else
+                    catch (Exception)
                     {
-                        VueltoInfo.VueltoFinalizado = false;
+                        estavuelto.Status = false;
+                        return estavuelto;
                     }
-                    estavuelto.data = VueltoInfo;
-                    estavuelto.Status = true;
-                    return estavuelto;
                 }
-                catch (Exception)
+
+                else
                 {
                     estavuelto.Status = false;
                     return estavuelto;
                 }
             }
+        }
 
-            else
+        protected void Timer_EstadoVueltoMonedas(object sender, ElapsedEventArgs e)
+        {
+            EsperarMonedas.Enabled = false;
+            EsperarMonedas.Stop();
+
+            try
             {
-                estavuelto.Status = false;
-                return estavuelto;
+                
+                    EstadoPagoResp estadopago = new EstadoPagoResp();
+                    estadopago = EstadoDelPAgo(montoapagar);
+                    if (estadopago.data.DineroFaltante < 0 )
+                    {
+                    var IniciooPago = InicioPago();
+                    if (IniciooPago == true)
+                    {
+                        Globals.data = new List<string>();
+                        Globals.data.Add(montodeVuelto.VueltoTotal.ToString());
+                        Globals.Servicio2Vuelto = new PipeClient2();
+                        Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
+                        var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
+                        if (DarVuelto)
+                        {
+                            EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
+                            EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
+                            EsperarVueltoMonedas.AutoReset = false;
+                            EsperarVueltoMonedas.Interval = 2000;
+                            EsperarVueltoMonedas.Enabled = true;
+                            EsperarVueltoMonedas.Start();
+                        }
+                     }
+
+                    }
+                
+
+            }
+            catch (Exception ex)
+            {
+               //
             }
         }
 
-    }
+        protected void Timer_VueltoMonedas(object sender, ElapsedEventArgs e)
+        {
+            EsperarMonedas.Enabled = false;
+            EsperarMonedas.Stop();
+
+            try
+            {
+                EstadoVueltoResp estadovuelto = new EstadoVueltoResp();
+                estadovuelto = EstadoDelVuelto(montodeVuelto);
+                if (estadovuelto.data.VueltoFinalizado == false)
+                {
+                    EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
+                    EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
+                    EsperarVueltoMonedas.AutoReset = false;
+                    EsperarVueltoMonedas.Interval = 2000;
+                    EsperarVueltoMonedas.Enabled = true;
+                    EsperarVueltoMonedas.Start();
+                }
+                else {
+                    var finalizar = FinalizarPago();
+                    if (finalizar == true)
+                    {
+                        EsperarMonedas.Enabled = false;
+                        EsperarMonedas.Stop();
+                    }
+                    else
+                    {
+                        montodeVuelto = new EstadoVuelto();
+                        montoapagar = new EstadoPago();
+                        EsperarMonedas.Enabled = false;
+                        EsperarMonedas.Stop();
+                    }
+                }
+            }
+            catch (Exception ex )
+            {
+
+                //throw;
+            }
+        }
+     }
 }
