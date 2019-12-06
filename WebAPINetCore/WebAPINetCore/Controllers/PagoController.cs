@@ -62,6 +62,20 @@ namespace WebAPINetCore.Controllers
             return Ok(resultado);
         }
 
+        // GET api/Pago/FinalizarPago
+        [HttpGet("Cancelarpago")]
+        public ActionResult<IEnumerable<bool>> CancelarPago()
+        {
+            var resultado = pagoservice.CancelarPago();
+            return Ok(resultado);
+        }
+
+        [HttpGet("EstadoCancelacionPago")]
+        public ActionResult<IEnumerable<CancelarPago>> EstadoCancelacionPago()
+        {
+            var resultado = pagoservice.EstadoDeCancelacion();
+            return Ok(resultado);
+        }
 
 
     }
