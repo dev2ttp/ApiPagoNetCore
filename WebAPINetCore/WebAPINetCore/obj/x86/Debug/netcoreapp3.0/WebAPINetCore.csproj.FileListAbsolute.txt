@@ -1,0 +1,6 @@
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\WebAPINetCore.csprojAssemblyReference.cache
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.Manifest.cache
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.xml
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfoInputs.cache
+C:\Users\ttp\Desktop\QA\API\WebAPINetCore\WebAPINetCore\WebAPINetCore\obj\x86\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfo.cs

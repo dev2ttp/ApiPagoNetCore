@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using WebAPINetCore.Models;
 using WebAPINetCore.Services;
 using WebAPINetCore.PipeServer;
+
 namespace WebAPINetCore.Controllers
 {
     [Route("api/[controller]")]
@@ -20,15 +21,25 @@ namespace WebAPINetCore.Controllers
     {
 
         PagoService pagoservice = new PagoService();
-        public PagoController()
-        {
+        private readonly IConfiguration _configuration;
 
+        public PagoController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            Globals._config = _configuration;
+            //var algo = _configuration["Urls:Impresion"];
+            //var algo2 = _configuration["JWT:key"];
         }
 
         // GET api/Pago/IniciarPago
         [HttpGet("IniciarPago")]
         public  ActionResult<IEnumerable<bool>> IniciarPago()
         {
+            Globals.ComprobanteImpresoContador = 0;
+            Globals.ComprobanteImpreso = false;
+            Globals.ComprobanteImpresoVuelto = false;
+            Globals.Vuelto = new EstadoVuelto();
+            Globals.Pago = new EstadoPago();
             var resultado =  pagoservice.InicioPago();
             return Ok(resultado);
         }
@@ -42,6 +53,13 @@ namespace WebAPINetCore.Controllers
             EstadoPagoResp estado = new EstadoPagoResp();
             estado = resultado;
             return Ok(estado);
+        }
+
+        [HttpPost("Hacerimpresion")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> Hacerimpresion([FromBody] EstadoPago PagoInfo)
+        {
+            pagoservice.ArmarDocuemntoPagoCompeltoAsync(PagoInfo);
+            return Ok();
         }
 
         [HttpPost("VueltoRegresado")]
@@ -76,7 +94,5 @@ namespace WebAPINetCore.Controllers
             var resultado = pagoservice.EstadoDeCancelacion();
             return Ok(resultado);
         }
-
-
     }
 }

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,10 @@
 
   <ItemGroup>
     <Folder Include="PipeServer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TotalPack.Tesoreria.Printing\TotalPack.Tesoreria.Printing.csproj" />
   </ItemGroup>
 
 </Project>

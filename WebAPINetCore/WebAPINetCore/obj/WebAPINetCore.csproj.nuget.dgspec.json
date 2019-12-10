@@ -4,6 +4,17 @@
     "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
   },
   "projects": {
+    "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj",
+        "projectName": "TotalPack.Tesoreria.Printing",
+        "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj"
+      },
+      "frameworks": {
+        "net451": {}
+      }
+    },
     "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -29,7 +40,11 @@
         },
         "frameworks": {
           "netcoreapp3.0": {
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj": {
+                "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

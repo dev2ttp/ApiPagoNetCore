@@ -6,6 +6,12 @@ using WebAPINetCore.Models;
 using WebAPINetCore.Services;
 using WebAPINetCore.PipeServer;
 using System.Timers;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.IO;
+using System.Collections;
 
 namespace WebAPINetCore.Services
 {
@@ -16,8 +22,8 @@ namespace WebAPINetCore.Services
         System.Timers.Timer EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
         System.Timers.Timer TimerCancerlarPago = new System.Timers.Timer() { AutoReset = false };
         private EstadoPago montoapagar = new EstadoPago();
+        private static readonly HttpClient client = new HttpClient();
         private EstadoVuelto montodeVuelto = new EstadoVuelto();
-        
 
         public bool InicioPago()
         {
@@ -70,7 +76,6 @@ namespace WebAPINetCore.Services
             }
         }
 
-
         public bool CancelarPago()
         {
             lock (thisLock)
@@ -106,6 +111,89 @@ namespace WebAPINetCore.Services
             }
         }
 
+        public async Task<bool> ImprimirComprobanteAsync(String Documento)
+        {
+            var url = string.Format(Globals._config["Urls:Impresion"]);
+            var json = JsonConvert.SerializeObject(Documento);
+            var request = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var response = await client.PostAsync(url, request))
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                response.EnsureSuccessStatusCode();
+            }
+
+            return true;
+        }
+
+        public async void ArmarDocuemntoPagoCompeltoAsync(EstadoPago PagoInfo) {
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/Comprobante_Pago_completado.txt");
+                string sLine = "";
+                string comprobante = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                DateTime fechaHoy = DateTime.Now;
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("XXXAPAGAR", PagoInfo.MontoAPagar.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXPAGADO", PagoInfo.DineroIngresado.ToString() + " Pesos");
+
+                var respuesta = await ImprimirComprobanteAsync(comprobante);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async void ArmarDocuemntoPagoConVueltoAsync()
+        {
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/Comprobante_Pago_completado_vuelto.txt");
+                string sLine = "";
+                string comprobante = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                DateTime fechaHoy = DateTime.Now;
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("XXXAPAGAR", Globals.Pago.MontoAPagar.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXPAGADO", Globals.Pago.DineroIngresado.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXVAENTREGAR", Globals.Vuelto.DineroRegresado.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXVENTREGADO", Globals.Vuelto.VueltoTotal.ToString() + " Pesos");
+
+                var respuesta = await ImprimirComprobanteAsync(comprobante);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+
         public CancelarPago EstadoDeCancelacion()
         {
             var estado = Globals.EstadodeCancelacion;
@@ -118,6 +206,7 @@ namespace WebAPINetCore.Services
 
         public EstadoPagoResp EstadoDelPAgo(EstadoPago PagoInfo)
         {
+            Globals.ComprobanteImpresoContador++;
             lock (thisLock)
             {
                 EstadoPagoResp estadopago = new EstadoPagoResp();
@@ -133,6 +222,7 @@ namespace WebAPINetCore.Services
                         var DineroIngresado = int.Parse(Globals.Servicio2Pago.Resultado.Data[0]);
                         PagoInfo.DineroIngresado = DineroIngresado;
                         PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - DineroIngresado;
+                        Globals.Pago = PagoInfo;
                         if (PagoInfo.DineroFaltante < 0)
                         {
                             Globals.data = new List<string>();
@@ -148,12 +238,14 @@ namespace WebAPINetCore.Services
                                 {
                                     estadopago.data = PagoInfo;
                                     estadopago.Status = true;
+                                    estadopago.PagoStatus = false;
                                     return estadopago;
                                 }
                                 else
                                 {
                                     estadopago.data = PagoInfo;
                                     estadopago.Status = false;
+                                    estadopago.PagoStatus = false;
                                     return estadopago;
                                 }
                             }
@@ -161,6 +253,7 @@ namespace WebAPINetCore.Services
                             {
                                 estadopago.data = PagoInfo;
                                 estadopago.Status = false;
+                                estadopago.PagoStatus = false;
                                 return estadopago;
                             }
 
@@ -179,22 +272,32 @@ namespace WebAPINetCore.Services
                                 montoapagar = PagoInfo;
                                 estadopago.data = PagoInfo;
                                 estadopago.Status = true;
+                                if (Globals.ComprobanteImpreso == false && Globals.ComprobanteImpresoContador > 5)
+                                {
+                                    ArmarDocuemntoPagoCompeltoAsync(PagoInfo);
+                                    
+                                    Globals.ComprobanteImpreso = true;
+                                }
+                                estadopago.PagoStatus = true;
                                 return estadopago;
                             }
                             else
                             {
                                 estadopago.data = PagoInfo;
                                 estadopago.Status = false;
+                                estadopago.PagoStatus = false;
                                 return estadopago;
                             }
                         }
                         estadopago.data = PagoInfo;
                         estadopago.Status = true;
+                        estadopago.PagoStatus = false;
                         return estadopago;
                     }
                     catch (Exception ex)
                     {
                         estadopago.Status = false;
+                        estadopago.PagoStatus = false;
                         return estadopago;
                     }
                 }
@@ -202,11 +305,11 @@ namespace WebAPINetCore.Services
                 else
                 {
                     estadopago.Status = false;
+                    estadopago.PagoStatus = false;
                     return estadopago;
                 }
             }
         }
-
 
         public EstadoVueltoResp EstadoDelVuelto(EstadoVuelto VueltoInfo)
         {
@@ -229,28 +332,46 @@ namespace WebAPINetCore.Services
                         if (Globals.Servicio2Vuelto.Resultado.Data[1] == "OK")
                         {
                             VueltoInfo.VueltoFinalizado = true;
+                            Globals.Vuelto = VueltoInfo;
+                            if (Globals.EstadodeCancelacion.EntregandoVuelto )
+                            {
+                                Globals.Vuelto.VueltoTotal = VueltoInfo.DineroRegresado;
+                            }
                             var finalizar = FinalizarPago();
                             if (finalizar == true)
                             {
                                 estavuelto.Status = true;
+                                estavuelto.PagoStatus = true;
+                                if (Globals.ComprobanteImpresoVuelto == false)
+                                {
+                                    Globals.ComprobanteImpresoVuelto = true;
+                                    ArmarDocuemntoPagoConVueltoAsync();
+                                }
+                                
                                 Globals.EstadodeCancelacion = new CancelarPago();
                             }
                             else
                             {
+                                estavuelto.PagoStatus = false;
                                 estavuelto.Status = false;
                             }
                         }
                         else
                         {
                             VueltoInfo.VueltoFinalizado = false;
+                            Globals.Vuelto = VueltoInfo;
                             estavuelto.Status = true;
+                            estavuelto.PagoStatus = false;
                         }
                         estavuelto.data = VueltoInfo;
+                        Globals.Vuelto = VueltoInfo;
+                        estavuelto.PagoStatus = false;
                         return estavuelto;
                     }
                     catch (Exception)
                     {
                         estavuelto.Status = false;
+                        estavuelto.PagoStatus = false;
                         return estavuelto;
                     }
                 }
@@ -258,6 +379,7 @@ namespace WebAPINetCore.Services
                 else
                 {
                     estavuelto.Status = false;
+                    estavuelto.PagoStatus = false;
                     return estavuelto;
                 }
             }
@@ -312,9 +434,11 @@ namespace WebAPINetCore.Services
             try
             {
                 EstadoVueltoResp estadovuelto = new EstadoVueltoResp();
+                //var auxvuelto = Globals.Vuelto;
                 estadovuelto = EstadoDelVuelto(montodeVuelto);
                 if (estadovuelto.data.VueltoFinalizado == false)
                 {
+                    //Globals.Vuelto = auxvuelto;
                     Globals.EstadodeCancelacion.CancelacionCompleta = false;
                     Globals.EstadodeCancelacion.EntregandoVuelto = true;
                     EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
@@ -329,6 +453,7 @@ namespace WebAPINetCore.Services
                     var finalizar = FinalizarPago();
                     if (finalizar == true)
                     {
+                        //Globals.Vuelto = auxvuelto;
                         Globals.EstadodeCancelacion.CancelacionCompleta = true;
                         Globals.EstadodeCancelacion.EntregandoVuelto = false;
                         EsperarVueltoMonedas.Enabled = false;
@@ -354,7 +479,6 @@ namespace WebAPINetCore.Services
             }
         }
 
-
         protected void Timer_EstadoCancelarPago(object sender, ElapsedEventArgs e)
         {
             TimerCancerlarPago.Enabled = false;
@@ -365,12 +489,14 @@ namespace WebAPINetCore.Services
 
                 EstadoPagoResp estadopago = new EstadoPagoResp();
                 montoapagar.MontoAPagar = 999999;
+                var auxPago = Globals.Pago;
                 estadopago = EstadoDelPAgo(montoapagar);
                 if (estadopago.data.DineroIngresado > 0)
                 {
                     var IniciooPago = InicioPago();
                     if (IniciooPago == true)
                     {
+                        Globals.Pago = auxPago;
                         Globals.data = new List<string>();
                         Globals.data.Add(estadopago.data.DineroIngresado.ToString());
                         Globals.Servicio2Vuelto = new PipeClient2();
@@ -378,6 +504,8 @@ namespace WebAPINetCore.Services
                         var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
                         if (DarVuelto)
                         {
+                            Globals.Vuelto.VueltoTotal = estadopago.data.DineroIngresado;
+                            Globals.Vuelto.DineroRegresado = estadopago.data.DineroIngresado;
                             EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
                             EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
                             EsperarVueltoMonedas.AutoReset = false;

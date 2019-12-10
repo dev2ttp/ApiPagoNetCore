@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,6 +11,9 @@ namespace WebAPINetCore.Services
 {
     public static class Globals
     {
+
+        public static  IConfiguration _config;// configuraciones
+
 
         //Var para realizar llamados de servicio de mensajeria PIPE
         public static PipeClient Servicio1 = new PipeClient();
@@ -26,5 +30,14 @@ namespace WebAPINetCore.Services
 
         // VAriable para hacer Log de la API
         public static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        // variable impresa
+        public static bool ComprobanteImpreso;
+        public static int ComprobanteImpresoContador = 0;
+        public static bool ComprobanteImpresoVuelto;
+
+        // Variables de estado
+        public static EstadoVuelto Vuelto;
+        public static EstadoPago Pago;
     }
 }

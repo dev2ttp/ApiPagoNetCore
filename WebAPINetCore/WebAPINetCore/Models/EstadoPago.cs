@@ -20,5 +20,6 @@ namespace WebAPINetCore.Models
         }
         public EstadoPago data { get; set; }
         public bool Status { get; set; }
+        public bool PagoStatus { get; set; }
     }
 }

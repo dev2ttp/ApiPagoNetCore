@@ -1666,6 +1666,15 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
+      },
+      "TotalPack.Tesoreria.Printing/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/TotalPack.Tesoreria.Printing.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TotalPack.Tesoreria.Printing.dll": {}
+        }
       }
     }
   },
@@ -5986,12 +5995,18 @@
         "system.xml.xmldocument.4.3.0.nupkg.sha512",
         "system.xml.xmldocument.nuspec"
       ]
+    },
+    "TotalPack.Tesoreria.Printing/1.0.0": {
+      "type": "project",
+      "path": "../TotalPack.Tesoreria.Printing/TotalPack.Tesoreria.Printing.csproj",
+      "msbuildProject": "../TotalPack.Tesoreria.Printing/TotalPack.Tesoreria.Printing.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.0": [
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 3.0.0",
       "System.ServiceProcess.ServiceController >= 4.6.0",
+      "TotalPack.Tesoreria.Printing >= 1.0.0",
       "log4net >= 2.0.8"
     ]
   },
@@ -6024,7 +6039,11 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj": {
+              "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
