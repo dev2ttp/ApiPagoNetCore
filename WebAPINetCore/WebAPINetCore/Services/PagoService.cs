@@ -24,6 +24,7 @@ namespace WebAPINetCore.Services
         private EstadoPago montoapagar = new EstadoPago();
         private static readonly HttpClient client = new HttpClient();
         private EstadoVuelto montodeVuelto = new EstadoVuelto();
+        TransaccionService transaccion = new TransaccionService();
 
         public bool InicioPago()
         {
@@ -145,8 +146,9 @@ namespace WebAPINetCore.Services
 
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
-                comprobante = comprobante.Replace("XXXAPAGAR", PagoInfo.MontoAPagar.ToString() + " Pesos");
-                comprobante = comprobante.Replace("XXXPAGADO", PagoInfo.DineroIngresado.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.Pago.MontoAPagar.ToString());
+                comprobante = comprobante.Replace("XXXPAGADO", "$ " + Globals.Pago.DineroIngresado.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
 
                 var respuesta = await ImprimirComprobanteAsync(comprobante);
             }
@@ -179,10 +181,11 @@ namespace WebAPINetCore.Services
 
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
-                comprobante = comprobante.Replace("XXXAPAGAR", Globals.Pago.MontoAPagar.ToString() + " Pesos");
-                comprobante = comprobante.Replace("XXXPAGADO", Globals.Pago.DineroIngresado.ToString() + " Pesos");
-                comprobante = comprobante.Replace("XXXVAENTREGAR", Globals.Vuelto.DineroRegresado.ToString() + " Pesos");
-                comprobante = comprobante.Replace("XXXVENTREGADO", Globals.Vuelto.VueltoTotal.ToString() + " Pesos");
+                comprobante = comprobante.Replace("XXXAPAGAR","$ " +  Globals.Pago.MontoAPagar.ToString());
+                comprobante = comprobante.Replace("XXXPAGADO", "$ " + Globals.Pago.DineroIngresado.ToString());
+                comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.Vuelto.DineroRegresado.ToString());
+                comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.Vuelto.VueltoTotal.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
 
                 var respuesta = await ImprimirComprobanteAsync(comprobante);
             }
@@ -347,7 +350,7 @@ namespace WebAPINetCore.Services
                                     Globals.ComprobanteImpresoVuelto = true;
                                     ArmarDocuemntoPagoConVueltoAsync();
                                 }
-                                
+                                transaccion.FinTransaccion();
                                 Globals.EstadodeCancelacion = new CancelarPago();
                             }
                             else
@@ -417,6 +420,10 @@ namespace WebAPINetCore.Services
                     }
 
                 }
+                else {
+                    transaccion.FinTransaccion();
+                }
+
 
 
             }
@@ -430,6 +437,7 @@ namespace WebAPINetCore.Services
         {
             EsperarMonedas.Enabled = false;
             EsperarMonedas.Stop();
+            
 
             try
             {

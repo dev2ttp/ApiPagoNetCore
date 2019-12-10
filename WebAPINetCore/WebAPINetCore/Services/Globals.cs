@@ -39,5 +39,10 @@ namespace WebAPINetCore.Services
         // Variables de estado
         public static EstadoVuelto Vuelto;
         public static EstadoPago Pago;
+
+        // datos usuario 
+        public static string RutUser { get; set; }
+        public static string DVUser { get; set; }
+        public static string IDTransaccion { get; set; }
     }
 }

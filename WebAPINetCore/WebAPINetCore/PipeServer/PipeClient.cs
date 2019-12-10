@@ -28,7 +28,7 @@ namespace WebAPINetCore.PipeServer
             this.Timeout = 30 * 1000;
         }
 
-        public Task<bool> SendMessage(ServicioPago.Comandos command)
+        public bool SendMessage(ServicioPago.Comandos command)
         {
             if (MessageSentSuccessfully())
             {
@@ -44,7 +44,7 @@ namespace WebAPINetCore.PipeServer
                 if (Resultado.CodigoError != 0)
                 {
                     // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false);
+                    return false;
                 }
 
                 int respCmd = Convert.ToInt32(_Resp.Substring((int)ServicioPago.Posicion.CMD_POS, (int)ServicioPago.Posicion.CMD_LEN));
@@ -58,13 +58,13 @@ namespace WebAPINetCore.PipeServer
                 if (Resultado.CodigoError != 0)
                 {
                     // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false);
+                    return false;
                 }
                 if (!ServicioPago.IsChecksumValid(_Resp))
                 {
                     Resultado.CodigoError = (int)ServicioPago.ValidaMsg.MSGCKS;
                    // Resultado.Data = new List<string> { Estado.Servicio.GetError(Resultado.CodigoError) };
-                    return Task.FromResult<bool>(false);
+                    return false;
                 }
 
                 string msg = _Resp.Substring((int)ServicioPago.Posicion.DAT_POS, len - (int)ServicioPago.Posicion.FIX_LEN);
@@ -80,13 +80,13 @@ namespace WebAPINetCore.PipeServer
 
                 Resultado.CodigoError = 0;
                 Resultado.Data = msg.Split('|').ToList();
-                return Task.FromResult<bool>(true);
+                return true;
             }
             else
             {
                 Resultado.CodigoError = -1;
                 Resultado.Data = new List<string> { _Resp };
-                return Task.FromResult<bool>(false);
+                return false;
             }
         }
 

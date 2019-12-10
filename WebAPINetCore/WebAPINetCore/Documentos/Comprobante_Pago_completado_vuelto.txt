@@ -5,3 +5,4 @@
              Monto Pagado: XXXPAGADO
              Vuelto Total: XXXVAENTREGAR
              Vuelto Entregado: XXXVENTREGADO
+             ID de Transaccion: XXXIDTRANS   

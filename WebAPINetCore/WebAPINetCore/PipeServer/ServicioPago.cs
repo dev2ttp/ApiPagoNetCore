@@ -29,6 +29,8 @@ namespace WebAPINetCore.PipeServer
 
         public enum Comandos
         {
+            InicioTrans = 107, // devuelve Id de transaccion que se usara para la operacion
+            FinTrans = 108, // Finaliza una transaccion
             DarVuelto = 303, // devuelve el billete o moneda  Para vuelto
             EstadoVuelto = 306, // devuelve el billete o moneda  ingresado 
             CargaMoneda = 395,// comando usado para cargar monedas

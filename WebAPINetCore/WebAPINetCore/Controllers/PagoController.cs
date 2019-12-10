@@ -21,6 +21,7 @@ namespace WebAPINetCore.Controllers
     {
 
         PagoService pagoservice = new PagoService();
+        TransaccionService transaccion= new TransaccionService();
         private readonly IConfiguration _configuration;
 
         public PagoController(IConfiguration configuration)
@@ -35,6 +36,7 @@ namespace WebAPINetCore.Controllers
         [HttpGet("IniciarPago")]
         public  ActionResult<IEnumerable<bool>> IniciarPago()
         {
+            transaccion.InicioTransaccion();
             Globals.ComprobanteImpresoContador = 0;
             Globals.ComprobanteImpreso = false;
             Globals.ComprobanteImpresoVuelto = false;

@@ -1,34 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj": {
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj",
-        "projectName": "TotalPack.Tesoreria.Printing",
-        "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj"
-      },
-      "frameworks": {
-        "net451": {}
-      }
-    },
-    "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+        "projectUniqueName": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
         "projectName": "WebAPINetCore",
-        "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
-        "packagesPath": "C:\\Users\\ttp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
+        "projectPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+        "packagesPath": "C:\\Users\\jose.paz\\.nuget\\packages\\",
+        "outputPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\ttp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jose.paz\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,11 +29,7 @@
         },
         "frameworks": {
           "netcoreapp3.0": {
-            "projectReferences": {
-              "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj": {
-                "projectPath": "C:\\Users\\ttp\\Desktop\\QA\\API\\WebAPINetCore\\WebAPINetCore\\TotalPack.Tesoreria.Printing\\TotalPack.Tesoreria.Printing.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {
