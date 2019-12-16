@@ -12,6 +12,7 @@ namespace WebAPINetCore.Models
         public int MontoAPagar { get; set; }
         public int DineroIngresado { get; set; }
         public int DineroFaltante { get; set; }
+       // public bool EntregandoVuelto { get; set; }
     }
 
     public class EstadoPagoResp

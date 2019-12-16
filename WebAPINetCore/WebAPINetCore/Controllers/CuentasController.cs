@@ -28,7 +28,7 @@ namespace WebAPINetCore.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserToken>> Login([FromBody] UserInfo userInfo)
+        public ActionResult<UserToken> Login([FromBody] UserInfo userInfo)
         {
             var rut = userInfo.RuT.Split('-');
             Globals.data = new List<string>();
@@ -36,7 +36,7 @@ namespace WebAPINetCore.Controllers
             Globals.data.Add(rut[1]);
             Globals.data.Add(userInfo.Password);
             Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.logueo, Globals.data);
-            var vuelta = await Globals.Servicio1.SendMessage(ServicioPago.Comandos.logueo);
+            var vuelta =  Globals.Servicio1.SendMessage(ServicioPago.Comandos.logueo);
            
             if (vuelta)
             {

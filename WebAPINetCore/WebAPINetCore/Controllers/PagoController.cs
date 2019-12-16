@@ -42,6 +42,9 @@ namespace WebAPINetCore.Controllers
             Globals.ComprobanteImpresoVuelto = false;
             Globals.Vuelto = new EstadoVuelto();
             Globals.Pago = new EstadoPago();
+            Globals.TimersVueltoCancel = false;
+            Globals.VueltoUnaVEz = false;
+            Globals.DandoVuelto = false;
             var resultado =  pagoservice.InicioPago();
             return Ok(resultado);
         }
@@ -53,7 +56,7 @@ namespace WebAPINetCore.Controllers
         {
             var resultado =  pagoservice.EstadoDelPAgo(PagoInfo);
             EstadoPagoResp estado = new EstadoPagoResp();
-            estado = resultado;
+            estado = resultado; 
             return Ok(estado);
         }
 
