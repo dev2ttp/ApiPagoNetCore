@@ -50,5 +50,8 @@ namespace WebAPINetCore.Services
         public static bool TimersVueltoCancel;
         public static bool VueltoUnaVEz;
         public static bool DandoVuelto;
+
+        // estado de maquina y de servicio
+        public static bool MaquinasActivadas { get; set; }
     }
 }
