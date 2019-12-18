@@ -22,14 +22,13 @@ namespace WebAPINetCore.Controllers
 
         PagoService pagoservice = new PagoService();
         TransaccionService transaccion= new TransaccionService();
+        PermitirVueltoService vueltopuede = new PermitirVueltoService();
         private readonly IConfiguration _configuration;
 
         public PagoController(IConfiguration configuration)
         {
             _configuration = configuration;
             Globals._config = _configuration;
-            //var algo = _configuration["Urls:Impresion"];
-            //var algo2 = _configuration["JWT:key"];
         }
 
         // GET api/Pago/IniciarPago
@@ -45,6 +44,9 @@ namespace WebAPINetCore.Controllers
             Globals.TimersVueltoCancel = false;
             Globals.VueltoUnaVEz = false;
             Globals.DandoVuelto = false;
+            Globals.HayVuelto = true;
+            Globals.PagoCompleto = false;
+            Globals.VueltoPermitido = false;
             var resultado =  pagoservice.InicioPago();
             return Ok(resultado);
         }
@@ -54,6 +56,24 @@ namespace WebAPINetCore.Controllers
         [HttpPost("DineroIngresado")]
         public  ActionResult<IEnumerable<EstadoPagoResp>> EstadoDePago([FromBody] EstadoPago PagoInfo)
         {
+           
+            if (Globals.VueltoPermitido == false)
+            {
+                var VueltoPosible = vueltopuede.CalcularVueltoPosible(PagoInfo.MontoAPagar);
+
+
+                if (VueltoPosible == true)
+                {
+                    Globals.VueltoPermitido = true;
+                }
+                else
+                {
+                    EstadoPagoResp vueltonoposible = new EstadoPagoResp();
+                    vueltonoposible.PagoStatus = false;
+                    vueltonoposible.Status = false;
+                    return Ok(vueltonoposible);
+                }
+            }
             var resultado =  pagoservice.EstadoDelPAgo(PagoInfo);
             EstadoPagoResp estado = new EstadoPagoResp();
             estado = resultado; 

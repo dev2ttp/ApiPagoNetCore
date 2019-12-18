@@ -22,12 +22,28 @@ namespace WebAPINetCore
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(MyAllowSpecificOrigins,
+            //    builder =>
+            //    {
+            //        builder.WithOrigins("http://172.16.32.137:4200",
+            //                            "http://172.16.33.121:59579/api/");
+            //    });
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("PermitirApiRequest",
+                    builder => builder.WithOrigins("http://172.16.32.137:4200").WithMethods("GET", "POST").AllowAnyHeader());
+            });
+
             services.AddControllers();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -53,6 +69,8 @@ namespace WebAPINetCore
                 app.UseDeveloperExceptionPage();
             }
             app.UseAuthentication();
+            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(builder => builder.WithOrigins("http://172.16.32.137:4200", "http://172.16.32.155").WithMethods("GET", "POST").AllowAnyHeader());
             app.UseHttpsRedirection();
 
             app.UseRouting();

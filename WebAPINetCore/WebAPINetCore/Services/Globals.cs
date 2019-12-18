@@ -22,6 +22,8 @@ namespace WebAPINetCore.Services
         public static PipeClient2 Servicio2Pago = new PipeClient2();
         public static PipeClient2 Servicio2Vuelto = new PipeClient2();
         public static PipeClient2 Servicio2Cancelar = new PipeClient2();
+        public static PipeClient2 Servicio2ConsultarVuelto = new PipeClient2();
+        public static PipeClient2 Servicio2ConsultarDevolucionM = new PipeClient2();
         public static ServicioPago servicio = new ServicioPago();
         public static List<string> data = new List<string>();
 
@@ -53,5 +55,14 @@ namespace WebAPINetCore.Services
 
         // estado de maquina y de servicio
         public static bool MaquinasActivadas { get; set; }
+        public static bool HayVuelto { get; set; }
+        public static bool PagoCompleto { get; set; }
+        public static string dineroIngresado { get; set; }
+        public static List<int> billetes { get; set; }
+        public static List<int> monedas { get; set; }
+
+
+        //Consulta de vuelto
+        public static bool VueltoPermitido { get; set; }
     }
 }
