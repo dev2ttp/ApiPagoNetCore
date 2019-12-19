@@ -42,13 +42,25 @@ namespace WebAPINetCore.Controllers
             Globals.Vuelto = new EstadoVuelto();
             Globals.Pago = new EstadoPago();
             Globals.TimersVueltoCancel = false;
+            Globals.PagoFinalizado = false;
             Globals.VueltoUnaVEz = false;
             Globals.DandoVuelto = false;
             Globals.HayVuelto = true;
             Globals.PagoCompleto = false;
             Globals.VueltoPermitido = false;
             var resultado =  pagoservice.InicioPago();
-            return Ok(resultado);
+            var mensaje = pagoservice.ConfigurarStatus();
+            InicioOperacionService Status = new InicioOperacionService();
+            Status.MensajeAmostrar = mensaje;
+            if (Globals.EstadoDeSaludMaquina.Contains("00"))
+            {
+                Status.StatusMaquina = true;
+            }
+            else {
+                Status.StatusMaquina = false;
+            }
+            Status.Status = resultado;
+            return Ok(Status);
         }
 
 

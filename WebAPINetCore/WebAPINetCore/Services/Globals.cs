@@ -54,9 +54,11 @@ namespace WebAPINetCore.Services
         public static bool DandoVuelto;
 
         // estado de maquina y de servicio
+        public static string EstadoDeSaludMaquina { get; set; }
         public static bool MaquinasActivadas { get; set; }
         public static bool HayVuelto { get; set; }
         public static bool PagoCompleto { get; set; }
+        public static bool PagoFinalizado { get; set; }// Si el pago se ha completado se vuelve true para no enviar datos de mas  
         public static string dineroIngresado { get; set; }
         public static List<int> billetes { get; set; }
         public static List<int> monedas { get; set; }

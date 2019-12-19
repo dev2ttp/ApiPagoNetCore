@@ -6,6 +6,7 @@ using System.IO.Pipes;
 using System.IO;
 using Microsoft.VisualBasic;
 using System.Threading.Tasks;
+using WebAPINetCore.Services;
 
 namespace WebAPINetCore.PipeServer
 {
@@ -86,6 +87,7 @@ namespace WebAPINetCore.PipeServer
                     Resultado.EstadoSalud = Resultado.Data[0].Substring(0,7);
                     Resultado.EstadoSalud = Resultado.EstadoSalud.Substring(2,5);
                     Resultado.Data[0]= Resultado.Data[0].Substring(7,Resultado.Data[0].Length-7);
+                    Globals.EstadoDeSaludMaquina = Resultado.EstadoSalud;
                     //Global.EST = Resultado.EstadoSalud;
                 }
                 return true;

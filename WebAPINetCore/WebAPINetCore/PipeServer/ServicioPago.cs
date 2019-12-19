@@ -29,7 +29,7 @@ namespace WebAPINetCore.PipeServer
 
         public enum Comandos
         {
-            DineroEnMaquina = 325, // devuelve el dinero encontrado en la maquina
+            DineroEnMaquina = 990, // devuelve el dinero encontrado en la maquina
             InicioTrans = 107, // devuelve Id de transaccion que se usara para la operacion
             FinTrans = 108, // Finaliza una transaccion
             DarVuelto = 303, // devuelve el billete o moneda  Para vuelto

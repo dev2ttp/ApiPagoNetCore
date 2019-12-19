@@ -53,6 +53,16 @@ namespace WebAPINetCore.Services
             }
         }
 
+        public string ConfigurarStatus() {
+
+            if (Globals.EstadoDeSaludMaquina.Contains("04"))
+            {
+                string mensaje = "La Alcancia a supero su nivel Maximo";
+                return mensaje;
+            }
+            return "Todo Bien";
+        }
+
         public bool FinalizarPago()
         {
             Globals.log.Debug("Finalizar Pago");
@@ -217,8 +227,16 @@ namespace WebAPINetCore.Services
             Globals.ComprobanteImpresoContador++;// utilizado para que no se tomen datos del pago anterior
             lock (thisLock)
             {
+                
                 bool volveraUno = false;
                 EstadoPagoResp estadopago = new EstadoPagoResp();
+                if (Globals.PagoFinalizado == true)
+                {
+                    estadopago.data = PagoInfo;
+                    estadopago.PagoStatus = true;
+                    estadopago.Status = true;
+                    return estadopago;
+                }
                 Globals.data = new List<string>();
                 Globals.data.Add("");
                 Globals.Servicio2Pago = new PipeClient2();
@@ -318,7 +336,7 @@ namespace WebAPINetCore.Services
                                     Globals.ComprobanteImpreso = true;
                                 }
                                 estadopago.PagoStatus = true;
-
+                                Globals.PagoFinalizado = true;
                                 return estadopago;
                             }
                             else
@@ -451,14 +469,18 @@ namespace WebAPINetCore.Services
                 Globals.Servicio2ConsultarDevolucionM = new PipeClient2();
                 Globals.Servicio2ConsultarDevolucionM.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Cons_dinero_ingre, Globals.data);
                 var vuelta = Globals.Servicio2ConsultarDevolucionM.SendMessage(ServicioPago.Comandos.Cons_dinero_ingre);
-                estadopago.data.DineroFaltante = montoapagar.MontoAPagar - int.Parse(Globals.Servicio2ConsultarDevolucionM.Resultado.Data[0]);
-                if (estadopago.data.DineroFaltante < 0)// si despues de finalizar se ingreso dinero extra se llama el vuelto 
+                var retorno = Globals.Servicio2ConsultarDevolucionM.Resultado.Data[0];
+                
+                int dineroF = new int();
+                dineroF = montoapagar.MontoAPagar - int.Parse(retorno);
+                if (dineroF < 0)// si despues de finalizar se ingreso dinero extra se llama el vuelto 
                 {
                     var IniciooPago = InicioPago();
                     if (IniciooPago == true)
                     {
+                        dineroF = dineroF * -1;
                         Globals.data = new List<string>();
-                        Globals.data.Add(montodeVuelto.VueltoTotal.ToString());
+                        Globals.data.Add(dineroF.ToString());
                         Globals.Servicio2Vuelto = new PipeClient2();
                         Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
                         var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
