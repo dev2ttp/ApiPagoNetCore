@@ -58,6 +58,13 @@ namespace WebAPINetCore.Services
             if (Globals.EstadoDeSaludMaquina.Contains("04"))
             {
                 string mensaje = "La Alcancia a supero su nivel Maximo";
+                Globals.NivelBloqueo = true;
+                return mensaje;
+            }
+            if (Globals.EstadoDeSaludMaquina.Contains("08"))
+            {
+                Globals.NivelBloqueo = false;
+                string mensaje = "Advertencia la maquina de billetes esta llegando a su capacidad maxima";
                 return mensaje;
             }
             return "Todo Bien";

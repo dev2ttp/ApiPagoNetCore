@@ -57,8 +57,13 @@ namespace WebAPINetCore.Controllers
                 Status.StatusMaquina = true;
             }
             else {
+                if (Globals.NivelBloqueo)
+                {
+                    pagoservice.FinalizarPago();
+                }
                 Status.StatusMaquina = false;
             }
+            Status.NivelBloqueo = Globals.NivelBloqueo;
             Status.Status = resultado;
             return Ok(Status);
         }
