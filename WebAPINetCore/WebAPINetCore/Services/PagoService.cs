@@ -440,6 +440,20 @@ namespace WebAPINetCore.Services
                             Globals.Vuelto = VueltoInfo;
                             estavuelto.Status = true;
                             estavuelto.PagoStatus = false;
+                            if (VueltoInfo.DineroRegresado == 0)
+                            {
+
+                                if (Globals.VueltosSinIniciar >= 6) {
+                                    TimerDarVuelto = new System.Timers.Timer() { AutoReset = false };
+                                    TimerDarVuelto.Elapsed += new ElapsedEventHandler(Timer_DarVuelto);
+                                    TimerDarVuelto.AutoReset = false;
+                                    TimerDarVuelto.Interval = 3000;
+                                    TimerDarVuelto.Enabled = true;
+                                    TimerDarVuelto.Start();
+                                    Globals.VueltosSinIniciar = 0;
+                                }
+                                Globals.VueltosSinIniciar++;
+                            }
                         }
                         // si no se pudo comunicar correctamente io no hay vuelto
                         estavuelto.data = VueltoInfo;
@@ -526,8 +540,16 @@ namespace WebAPINetCore.Services
             {
 
                 EstadoPagoResp estadopago = new EstadoPagoResp();
-                Globals.RespaldoParaVuelto.DineroFaltante = 0;
-                Globals.RespaldoParaVuelto.DineroIngresado = 999999;// monto enviado para hacer saber  a la funcion que la llamada se realiza de este timer( esto por cuestiones de llamadas asyncronas)
+                if (Globals.DineroIngresadoSolicitado == false)
+                {
+                    Globals.RespaldoParaVuelto.DineroFaltante = 0;
+                    Globals.RespaldoParaVuelto.DineroIngresado = 999999;// monto enviado para hacer saber  a la funcion que la llamada se realiza de este timer( esto por cuestiones de llamadas asyncronas)
+                    Globals.DineroIngresadoSolicitado = true;
+                }
+                else {
+                    estadopago.data.DineroFaltante = Globals.RespaldoParaVuelto.MontoAPagar - int.Parse(Globals.dineroIngresado);
+                }
+                
                 estadopago = EstadoDelPAgo(Globals.RespaldoParaVuelto);// llamada para saber que monto actual de vuelto hay que realizar 
                 if (estadopago.data.DineroFaltante < 0)
                 {
@@ -552,8 +574,9 @@ namespace WebAPINetCore.Services
                             {
                                 Globals.DandoVuelto = false;
                                 Globals.HayVuelto = false;
-    }
+                            }
                             else {
+                                Globals.VueltosSinIniciar = 0; ;
                                 Globals.DandoVuelto = true;
                                 Globals.HayVuelto = true;
                             }
@@ -674,6 +697,8 @@ namespace WebAPINetCore.Services
                     estadopago = EstadoDelPAgo(montoapagar);
                     if (estadopago.data.DineroIngresado > 0)
                     {
+                        Globals.dineroIngresado = estadopago.data.DineroIngresado.ToString();
+                        Globals.DineroIngresadoSolicitado = true;
                         var IniciooPago = InicioPago();
                         if (IniciooPago == true)
                         {

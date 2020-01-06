@@ -67,5 +67,7 @@ namespace WebAPINetCore.Services
 
         //Consulta de vuelto
         public static bool VueltoPermitido { get; set; }
+        public static bool DineroIngresadoSolicitado { get; set; }// se utiliza para saber si ya se pidio el dinero final ingresado ( para hacerlo una sola vez)
+        public static int VueltosSinIniciar { get; set; }//utilizado para contar las veces que se envia un vuelto pero la maquina no da respuesta
     }
 }

@@ -84,9 +84,18 @@ namespace WebAPINetCore.PipeServer
                 Resultado.Data = msg.Split('|').ToList();
                 if (Resultado.Data[0].Contains("&&EST"))
                 {
-                    Resultado.EstadoSalud = Resultado.Data[0].Substring(0,7);
-                    Resultado.EstadoSalud = Resultado.EstadoSalud.Substring(2,5);
-                    Resultado.Data[0]= Resultado.Data[0].Substring(7,Resultado.Data[0].Length-7);
+                    var EstadoSaludBinario = Resultado.Data[0].Split("&&FINSALUD");
+                    Resultado.EstadoSalud = EstadoSaludBinario[0];
+                    Resultado.EstadoSalud = Resultado.EstadoSalud.Replace("&&EST",""); 
+                    //Resultado.EstadoSalud = Resultado.Data[0].Substring(0,7);
+                    //Resultado.EstadoSalud = Resultado.EstadoSalud.Substring(2,5);
+                    if (string.IsNullOrEmpty(EstadoSaludBinario[1]))
+                    {
+                        Resultado.Data[0] = "";
+                    }
+                    else {
+                        Resultado.Data[0] = EstadoSaludBinario[1];
+                    }
                     Globals.EstadoDeSaludMaquina = Resultado.EstadoSalud;
                     //Global.EST = Resultado.EstadoSalud;
                 }

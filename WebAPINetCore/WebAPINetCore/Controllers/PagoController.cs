@@ -21,7 +21,7 @@ namespace WebAPINetCore.Controllers
     {
 
         PagoService pagoservice = new PagoService();
-        TransaccionService transaccion= new TransaccionService();
+        TransaccionService transaccion = new TransaccionService();
         PermitirVueltoService vueltopuede = new PermitirVueltoService();
         private readonly IConfiguration _configuration;
 
@@ -33,7 +33,7 @@ namespace WebAPINetCore.Controllers
 
         // GET api/Pago/IniciarPago
         [HttpGet("IniciarPago")]
-        public  ActionResult<IEnumerable<bool>> IniciarPago()
+        public ActionResult<IEnumerable<bool>> IniciarPago()
         {
             transaccion.InicioTransaccion();
             Globals.ComprobanteImpresoContador = 0;
@@ -48,7 +48,8 @@ namespace WebAPINetCore.Controllers
             Globals.HayVuelto = true;
             Globals.PagoCompleto = false;
             Globals.VueltoPermitido = false;
-            var resultado =  pagoservice.InicioPago();
+            Globals.VueltosSinIniciar = 0;
+            var resultado = pagoservice.InicioPago();
             var mensaje = pagoservice.ConfigurarStatus();
             InicioOperacionService Status = new InicioOperacionService();
             Status.MensajeAmostrar = mensaje;
@@ -56,7 +57,8 @@ namespace WebAPINetCore.Controllers
             {
                 Status.StatusMaquina = true;
             }
-            else {
+            else
+            {
                 if (Globals.NivelBloqueo)
                 {
                     pagoservice.FinalizarPago();
@@ -71,9 +73,9 @@ namespace WebAPINetCore.Controllers
 
         // Post api/Pago/DineroIngresado
         [HttpPost("DineroIngresado")]
-        public  ActionResult<IEnumerable<EstadoPagoResp>> EstadoDePago([FromBody] EstadoPago PagoInfo)
+        public ActionResult<IEnumerable<EstadoPagoResp>> EstadoDePago([FromBody] EstadoPago PagoInfo)
         {
-           
+
             if (Globals.VueltoPermitido == false)
             {
                 var VueltoPosible = vueltopuede.CalcularVueltoPosible(PagoInfo.MontoAPagar);
@@ -91,9 +93,9 @@ namespace WebAPINetCore.Controllers
                     return Ok(vueltonoposible);
                 }
             }
-            var resultado =  pagoservice.EstadoDelPAgo(PagoInfo);
+            var resultado = pagoservice.EstadoDelPAgo(PagoInfo);
             EstadoPagoResp estado = new EstadoPagoResp();
-            estado = resultado; 
+            estado = resultado;
             return Ok(estado);
         }
 
@@ -107,7 +109,7 @@ namespace WebAPINetCore.Controllers
         [HttpPost("VueltoRegresado")]
         public ActionResult<IEnumerable<EstadoVueltoResp>> EstadoDeVuelto([FromBody] EstadoVuelto VueltoInfo)
         {
-            var resultado =  pagoservice.EstadoDelVuelto(VueltoInfo);
+            var resultado = pagoservice.EstadoDelVuelto(VueltoInfo);
             EstadoVueltoResp estado = new EstadoVueltoResp();
             estado = resultado;
             return Ok(estado);
@@ -116,9 +118,9 @@ namespace WebAPINetCore.Controllers
 
         // GET api/Pago/FinalizarPago
         [HttpGet("FinalizarPago")]
-        public  ActionResult<IEnumerable<string>> FinalizarPago()
+        public ActionResult<IEnumerable<string>> FinalizarPago()
         {
-            var resultado =  pagoservice.FinalizarPago();
+            var resultado = pagoservice.FinalizarPago();
             return Ok(resultado);
         }
 
