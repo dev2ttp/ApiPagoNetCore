@@ -136,5 +136,13 @@ namespace WebAPINetCore.Controllers
             var resultado = pagoservice.EstadoDeCancelacion();
             return Ok(resultado);
         }
+        //DM
+        // GET api/Pago/Float
+        [HttpGet("Float")]
+        public ActionResult<IEnumerable<string>> Float()
+        {
+            pagoservice.FloatByDenomination();
+            return Ok();
+        }
     }
 }

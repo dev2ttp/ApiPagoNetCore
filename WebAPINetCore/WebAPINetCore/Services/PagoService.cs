@@ -462,7 +462,16 @@ namespace WebAPINetCore.Services
                 }
             }
         }
-
+        //DM
+        public void FloatByDenomination()
+        {
+            Globals.log.Debug("Inicio de FloatByDenomination");
+            Globals.data = new List<string>();
+            Globals.data.Add("");
+            Globals.Servicio2Inicio = new PipeClient2();
+            Globals.Servicio2Inicio.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Float, Globals.data);
+            var vuelta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Float);
+        }
         protected void Timer_EstadoVueltoMonedas(object sender, ElapsedEventArgs e)// timer llamado cuando se finaliza una operacion completa o se cancela
         {
             EsperarMonedas.Enabled = false;
