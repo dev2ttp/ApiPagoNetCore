@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using WebAPINetCore.Models;
 using WebAPINetCore.PipeServer;
+
 
 namespace WebAPINetCore.Services
 {
@@ -24,6 +26,7 @@ namespace WebAPINetCore.Services
         public static PipeClient2 Servicio2Cancelar = new PipeClient2();
         public static PipeClient2 Servicio2ConsultarVuelto = new PipeClient2();
         public static PipeClient2 Servicio2ConsultarDevolucionM = new PipeClient2();
+        public static PipeClient2 EstadoSalud = new PipeClient2();
         public static ServicioPago servicio = new ServicioPago();
         public static List<string> data = new List<string>();
 
@@ -31,7 +34,8 @@ namespace WebAPINetCore.Services
 
 
         // VAriable para hacer Log de la API
-        public static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        //public static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public static readonly NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
 
         // variable impresa
         public static bool ComprobanteImpreso;
@@ -54,7 +58,7 @@ namespace WebAPINetCore.Services
         public static bool DandoVuelto;
 
         // estado de maquina y de servicio
-        public static string EstadoDeSaludMaquina { get; set; }
+        public static string EstadoDeSaludMaquina { get; set; }// status sin descifrar de la maquina
         public static bool MaquinasActivadas { get; set; }
         public static bool HayVuelto { get; set; }
         public static bool NivelBloqueo { get; set; }
@@ -63,6 +67,11 @@ namespace WebAPINetCore.Services
         public static string dineroIngresado { get; set; }
         public static List<int> billetes { get; set; }
         public static List<int> monedas { get; set; }
+
+        public static EstadosDeSalud SaludMaquina  { get; set; }//Status descifrados de salud de la maquina
+        public static bool BloqueoTransbank { get; set; }// status saber si se bloquea transbank
+        public static bool BloqueoEfectivo { get; set; }// status saber si se bloquea efectivo
+
 
 
         //Consulta de vuelto

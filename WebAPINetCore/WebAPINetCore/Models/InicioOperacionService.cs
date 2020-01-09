@@ -11,9 +11,8 @@ namespace WebAPINetCore.Models
         {
         }
         public bool Status { get; set; }
-        public bool StatusMaquina { get; set; }
-        public bool NivelBloqueo { get; set; }
-        public String MensajeAmostrar { get; set; }
-        // public bool EntregandoVuelto { get; set; }
+        public EstadosDeSalud StatusMaquina { get; set; }
+        public bool BloqueoTransbank { get; set; }
+        public bool BloqueoEfectivo { get; set; }
     }
 }

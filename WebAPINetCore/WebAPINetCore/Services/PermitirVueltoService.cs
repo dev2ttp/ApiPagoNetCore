@@ -51,35 +51,35 @@ namespace WebAPINetCore.Services
                     //}
                 }
 
-                //var Moneda = Globals.Servicio2ConsultarVuelto.Resultado.Data[1];
-                //var Monedas = Moneda.Split(';');
-                //foreach (var item in Monedas)
-                //{
-                //    if (item.Contains("0,10,"))
-                //    {
-                //        var moneda10 = item.Replace("0,10,", "10,");
-                //        var b10 = moneda10.Split(',')[1];
-                //        Globals.monedas.Add(int.Parse(b10)*10);
-                //    }
-                //    if (item.Contains("0,50,"))
-                //    {
-                //        var moneda50 = item.Replace("0,50,", "50,");
-                //        var b50 = moneda50.Split(',')[1];
-                //        Globals.monedas.Add(int.Parse(b50)*50);
-                //    }
-                //    if (item.Contains("1,00,"))
-                //    {
-                //        var moneda100 = item.Replace("1,00,", "100,");
-                //        var b100 = moneda100.Split(',')[1];
-                //        Globals.monedas.Add(int.Parse(b100)*100);
-                //    }
-                //    if (item.Contains("5,00,"))
-                //    {
-                //        var moneda500 = item.Replace("5,00,,", "500,");
-                //        var b500 = moneda500.Split(',')[1];
-                //        Globals.monedas.Add(int.Parse(b500)*500);
-                //    }
-                //}
+                var Moneda = Globals.Servicio2ConsultarVuelto.Resultado.Data[1];
+                var Monedas = Moneda.Split(';');
+                foreach (var item in Monedas)
+                {
+                    if (item.Contains("0,10,"))
+                    {
+                        var moneda10 = item.Replace("0,10,", "10,");
+                        var b10 = moneda10.Split(',')[1];
+                        Globals.monedas.Add(int.Parse(b10) * 10);
+                    }
+                    if (item.Contains("0,50,"))
+                    {
+                        var moneda50 = item.Replace("0,50,", "50,");
+                        var b50 = moneda50.Split(',')[1];
+                        Globals.monedas.Add(int.Parse(b50) * 50);
+                    }
+                    if (item.Contains("1,00,"))
+                    {
+                        var moneda100 = item.Replace("1,00,", "100,");
+                        var b100 = moneda100.Split(',')[1];
+                        Globals.monedas.Add(int.Parse(b100) * 100);
+                    }
+                    if (item.Contains("5,00,"))
+                    {
+                        var moneda500 = item.Replace("5,00,,", "500,");
+                        var b500 = moneda500.Split(',')[1];
+                        Globals.monedas.Add(int.Parse(b500) * 500);
+                    }
+                }
             }
             else
             {
@@ -99,10 +99,10 @@ namespace WebAPINetCore.Services
                 dineroTotal += item;
             }
 
-            //foreach (var item in Globals.monedas)
-            //{
-            //    dineroTotal += item;
-            //}
+            foreach (var item in Globals.monedas)
+            {
+                dineroTotal += item;
+            }
 
             if (MontoApagar > dineroTotal)
             {

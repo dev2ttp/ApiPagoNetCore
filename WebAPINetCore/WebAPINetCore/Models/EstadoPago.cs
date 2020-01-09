@@ -22,5 +22,8 @@ namespace WebAPINetCore.Models
         public EstadoPago data { get; set; }
         public bool Status { get; set; }
         public bool PagoStatus { get; set; }
+        public EstadosDeSalud StatusMaquina { get; set; }
+        public bool BloqueoTransbank { get; set; }
+        public bool BloqueoEfectivo { get; set; }
     }
 }

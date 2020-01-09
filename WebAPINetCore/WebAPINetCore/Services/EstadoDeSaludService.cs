@@ -33,83 +33,99 @@ namespace WebAPINetCore.Services
             ////4,0,0,0,0; 8,0,0,0,0; 10,0,0,0,0
             ///
             EstadosDeSalud SaludMaquina = new EstadosDeSalud();
+            Globals.BloqueoEfectivo = false;
+            Globals.BloqueoTransbank = false;
+            //Globals.EstadoDeSaludMaquina = "4,0,0,0,0";
             var Estados = Globals.EstadoDeSaludMaquina.Split(";");
             foreach (var item in Estados)
             {
                 var flags = item.Split(",");
-                if (item.Contains("1,"))// puerta abierta
+                if (flags[0] == "1")// puerta abierta
                 {
-                    if (flags[0] == "1")
+
+                    SaludMaquina.StadoPuerta.Activo = true;
+                    if (flags[1] == "1")
                     {
                         SaludMaquina.StadoPuerta.Mensaje = "No se puede continuar con las Operaciones La puerta se encuentra abierta. Por favor espere quw un ejecutivo se acerque para solucionar el problema";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true; 
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
+                    }
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoPuerta.BloqueoTotal = true;
                     }  
                 }
 
-                if (item.Contains("2,"))// corriente 
+                if (flags[0] == "2")// corriente 
                 {
-                    if (flags[0] == "1")
+                    SaludMaquina.StadoCorreinte.Activo = true;
+                    if (flags[1] == "1")
                     {
                         SaludMaquina.StadoCorreinte.Mensaje = "Se ha detectado un fallo en la corriente, Mientras el problema persista el sistema se Imhabilitaraa";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoCorreinte.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoCorreinte.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
+                    }
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoCorreinte.BloqueoTotal = true;
                     }
                 }
 
-                if (item.Contains("4,"))//Min billete
+                if (flags[0] == "4")//Min billete
                 {
-                    if (flags[0] == "1")
+                    SaludMaquina.StadoMinBillete.Activo = true;
+                    if (flags[1] == "1")
                     {
                         SaludMaquina.StadoMinBillete.Mensaje = "Los Billetes se encuentran en el minimo de billete, se recomienda cargar la maquina";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoMinBillete.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoMinBillete.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
+                    }
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoMinBillete.BloqueoTotal = true;
                     }
                 }
 
-                if (item.Contains("8,"))// max billete
+                if (flags[0] == "8")// max billete
                 {
+                    SaludMaquina.StadoMaxBillete.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoMaxBillete.Mensaje = "Los Billetes se encuentran en el maximo de billete, se recomienda descargar la maquina";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoMaxBillete.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoMaxBillete.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -117,19 +133,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("10,"))// min moneda
+                if (flags[0] == "10")// min moneda
                 {
+                    SaludMaquina.StadoMinMoneda.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoMinMoneda.Mensaje = "Las Monedas se encuentran en el minimo de monedas permitidas, se recomienda cargar la maquina";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoMinMoneda.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoMinMoneda.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -137,19 +156,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("20,"))// max monedas
+                if (flags[0] == "10")// max monedas
                 {
+                    SaludMaquina.StadoMaxMonedas.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoMaxMonedas.Mensaje = "Las Monedas se encuentran en el maximo de monedas permitido, se recomienda descargar la maquina";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoMaxMonedas.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoMaxMonedas.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -157,19 +179,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("40,"))//dispositive diferente
+                if (flags[0] == "40")//dispositive diferente
                 {
+                    SaludMaquina.StadoDispDiferente.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispDiferente.Mensaje = "Alguno de los Dispositivos Actuales no coinciden con los registrados, Por favor verifique, he intente nuevamente";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispDiferente.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispDiferente.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -177,19 +202,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("80,"))// atasco seguro 
+                if (flags[0] == "80")// atasco seguro 
                 {
+                    SaludMaquina.StadoDispAtascadoS.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispAtascadoS.Mensaje = "Un billete se ha atascado en el dispositivo";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispAtascadoS.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispAtascadoS.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -197,19 +225,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("100,"))// atasco inseguro
+                if (flags[0] == "100")// atasco inseguro
                 {
+                    SaludMaquina.StadoDispAtascadoInS.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispAtascadoInS.Mensaje = "Un billete se ha atascado bruscamente en el dispositivo";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispAtascadoInS.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispAtascadoInS.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -217,19 +248,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("200,"))// intento fraude de Billete
+                if (flags[0] == "200")// intento fraude de Billete
                 {
+                    SaludMaquina.StadoDispIntentoFraude.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispIntentoFraude.Mensaje = "se ha intentado cometer fraude con un billete  en el dispositivo";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispIntentoFraude.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispIntentoFraude.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -237,19 +271,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("400,"))// cCaja de billete full
+                if (flags[0] == "400")// cCaja de billete full
                 {
+                    SaludMaquina.StadoDispCajaFull.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispCajaFull.Mensaje = "se ha detectado que la caja de billete  en el dispositivo se encuentra full";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispCajaFull.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispCajaFull.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -257,19 +294,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("800,"))/// Unidad Atascada
+                if (flags[0] == "800")/// Unidad Atascada
                 {
+                    SaludMaquina.StadoDispUnidadAtascada.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispUnidadAtascada.Mensaje = "se ha detectado una unidad atascada  en el dispositivo";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispUnidadAtascada.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispUnidadAtascada.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -277,19 +317,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("1000,"))// Moneda atascada 
+                if (flags[0] == "1000")// Moneda atascada 
                 {
+                    SaludMaquina.StadoDispMonedaAtascada.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispMonedaAtascada.Mensaje = "se ha detectado una moneda atascada  en el dispositivo";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispMonedaAtascada.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispMonedaAtascada.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -297,19 +340,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("2000,"))// Busqueda de moneda fallida
+                if (flags[0] == "2000")// Busqueda de moneda fallida
                 {
+                    SaludMaquina.StadoDispBusquedaFallida.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispBusquedaFallida.Mensaje = "no se ha encontasdo la moneda solicitada ";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispBusquedaFallida.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispBusquedaFallida.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -317,19 +363,22 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (item.Contains("4000,"))// Intento Fraude Moneda
+                if (flags[0] == "4000")// Intento Fraude Moneda
                 {
+                    SaludMaquina.StadoDispIntetoFraudeMoneda.Activo = true;
                     if (flags[0] == "1")
                     {
                         SaludMaquina.StadoDispIntetoFraudeMoneda.Mensaje = "Se ha encontrado un intento de fraude en la moneda ";
                     }
-                    if (flags[1] == "1")
-                    {
-                        SaludMaquina.StadoDispIntetoFraudeMoneda.BloqueoEfectivo = true;
-                    }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoDispIntetoFraudeMoneda.BloqueoTransbank = true;
+                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        Globals.BloqueoEfectivo = true;
+                    }
+                    if (flags[3] == "1")
+                    {
+                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        Globals.BloqueoTransbank = true;
                     }
                     if (flags[3] == "1")
                     {
@@ -337,6 +386,8 @@ namespace WebAPINetCore.Services
                     }
                 }
             }
+
+            Globals.SaludMaquina = SaludMaquina;
         }
 
     }

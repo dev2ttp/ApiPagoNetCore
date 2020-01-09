@@ -45,6 +45,10 @@
               "target": "Package",
               "version": "[3.0.0, )"
             },
+            "NLog.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[4.9.0, )"
+            },
             "System.ServiceProcess.ServiceController": {
               "target": "Package",
               "version": "[4.6.0, )"

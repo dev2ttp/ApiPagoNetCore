@@ -49,24 +49,15 @@ namespace WebAPINetCore.Controllers
             Globals.PagoCompleto = false;
             Globals.VueltoPermitido = false;
             Globals.VueltosSinIniciar = 0;
-            var resultado = pagoservice.InicioPago();
-            var mensaje = pagoservice.ConfigurarStatus();
+            Globals.DineroIngresadoSolicitado = false;
+            Globals.dineroIngresado = "0";
+           var resultado = pagoservice.InicioPago();
+            pagoservice.ConfigurarStatus();
             InicioOperacionService Status = new InicioOperacionService();
-            Status.MensajeAmostrar = mensaje;
-            if (Globals.EstadoDeSaludMaquina.Contains("00"))
-            {
-                Status.StatusMaquina = true;
-            }
-            else
-            {
-                if (Globals.NivelBloqueo)
-                {
-                    pagoservice.FinalizarPago();
-                }
-                Status.StatusMaquina = false;
-            }
-            Status.NivelBloqueo = Globals.NivelBloqueo;
             Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(Status);
         }
 
@@ -96,6 +87,10 @@ namespace WebAPINetCore.Controllers
             var resultado = pagoservice.EstadoDelPAgo(PagoInfo);
             EstadoPagoResp estado = new EstadoPagoResp();
             estado = resultado;
+            pagoservice.ConfigurarStatus();
+            estado.StatusMaquina = Globals.SaludMaquina;
+            estado.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            estado.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(estado);
         }
 
@@ -112,6 +107,10 @@ namespace WebAPINetCore.Controllers
             var resultado = pagoservice.EstadoDelVuelto(VueltoInfo);
             EstadoVueltoResp estado = new EstadoVueltoResp();
             estado = resultado;
+            pagoservice.ConfigurarStatus();
+            estado.StatusMaquina = Globals.SaludMaquina;
+            estado.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            estado.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(estado);
         }
 
@@ -121,7 +120,13 @@ namespace WebAPINetCore.Controllers
         public ActionResult<IEnumerable<string>> FinalizarPago()
         {
             var resultado = pagoservice.FinalizarPago();
-            return Ok(resultado);
+            InicioOperacionService Status = new InicioOperacionService();
+            pagoservice.ConfigurarStatus();
+            Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            return Ok(Status);
         }
 
         // GET api/Pago/FinalizarPago
@@ -129,14 +134,68 @@ namespace WebAPINetCore.Controllers
         public ActionResult<IEnumerable<bool>> CancelarPago()
         {
             var resultado = pagoservice.CancelarPago();
-            return Ok(resultado);
+            InicioOperacionService Status = new InicioOperacionService();
+            pagoservice.ConfigurarStatus();
+            Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            return Ok(Status);
         }
 
         [HttpGet("EstadoCancelacionPago")]
         public ActionResult<IEnumerable<CancelarPago>> EstadoCancelacionPago()
         {
             var resultado = pagoservice.EstadoDeCancelacion();
+            pagoservice.ConfigurarStatus();
+            resultado.StatusMaquina = Globals.SaludMaquina;
+            resultado.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            resultado.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(resultado);
+        }
+        // GET api/Pago/EstadoSalud
+        [HttpGet("EstadoSalud")]
+        public ActionResult<IEnumerable<bool>> EstadoSalud()
+        {
+            var resultado = pagoservice.EstadoSalud();
+            InicioOperacionService Status = new InicioOperacionService();
+            Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            return Ok(Status);
+        }
+        // GET api/Pago/Detener vuelto
+        [HttpGet("DetenerVuelto")]
+        public ActionResult<IEnumerable<bool>> DetenerVuelto()
+        {
+            var resultado = pagoservice.DetenerVuelto();
+            InicioOperacionService Status = new InicioOperacionService();
+            Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            return Ok(Status);
+        }
+
+        // GET api/Pago/Float
+        [HttpGet("Float")]
+        public ActionResult<IEnumerable<string>> Float()
+        {
+           var resultado =  pagoservice.FloatByDenomination();
+            InicioOperacionService Status = new InicioOperacionService();
+            Status.Status = resultado;
+            Status.StatusMaquina = Globals.SaludMaquina;
+            Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
+            Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            return Ok(Status);
+        }
+
+        public void EstadoBloqueo() {
+            if (Globals.BloqueoEfectivo == true | Globals.BloqueoTransbank == true)
+            {
+                Globals.log.Info("Se ha producido una Alteracion en el estado de salud de la maquina: " + Globals.EstadoDeSaludMaquina);
+            }
         }
     }
 }

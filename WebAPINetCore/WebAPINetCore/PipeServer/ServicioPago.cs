@@ -29,6 +29,9 @@ namespace WebAPINetCore.PipeServer
 
         public enum Comandos
         {
+            Float = 991,//mandar a que la maquina trabaje con float
+            DetenerVuelto = 989, // devuelve el EstadoSalud de la maquina
+            EstadoSalud = 992, // devuelve el EstadoSalud de la maquina
             DineroEnMaquina = 990, // devuelve el dinero encontrado en la maquina
             InicioTrans = 107, // devuelve Id de transaccion que se usara para la operacion
             FinTrans = 108, // Finaliza una transaccion

@@ -31,6 +31,7 @@ namespace WebAPINetCore.Services
                 if (Globals.Servicio1.Resultado.Data[0].Length > 0)
                 {
                     Globals.IDTransaccion = Globals.Servicio1.Resultado.Data[0];
+                    Globals.log.Info("Se acaba de iniciar una transaccion nueva ID: "+ Globals.IDTransaccion);
                 }
                 
             }
@@ -51,6 +52,7 @@ namespace WebAPINetCore.Services
                     Globals.RutUser = "";
                     Globals.DVUser = "";
                 }
+                Globals.log.Info("Se acaba de Finalizar una transaccion de ID: " + Globals.IDTransaccion);
             }
         }
     }

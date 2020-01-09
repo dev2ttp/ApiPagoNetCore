@@ -89,9 +89,43 @@ D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.Manifest.cache
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.xml
-D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cache
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfoInputs.cache
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfo.cs
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.RazorTargetAssemblyInfo.cache
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csproj.CopyComplete
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csprojAssemblyReference.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\appsettings.Development.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\appsettings.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Properties\launchSettings.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.exe
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.deps.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.runtimeconfig.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.runtimeconfig.dev.json
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\WebAPINetCore.pdb
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\log4net.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Newtonsoft.Json.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\System.ServiceProcess.ServiceController.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csprojAssemblyReference.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.Manifest.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\staticwebassets\WebAPINetCore.StaticWebAssets.xml
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfoInputs.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfo.cs
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.RazorTargetAssemblyInfo.cache
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csproj.CopyComplete
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.dll
+C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.pdb
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cache
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\nlog.config
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.Extensions.Logging.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.Web.AspNetCore.dll

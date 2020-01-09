@@ -11,5 +11,8 @@ namespace WebAPINetCore.Models
 
         public bool CancelacionCompleta { get; set; }
         public bool EntregandoVuelto { get; set; }
+        public EstadosDeSalud StatusMaquina { get; set; }
+        public bool BloqueoTransbank { get; set; }
+        public bool BloqueoEfectivo { get; set; }
     }
 }

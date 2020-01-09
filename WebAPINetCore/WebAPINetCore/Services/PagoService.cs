@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebAPINetCore.Models;
-using WebAPINetCore.Services;
 using WebAPINetCore.PipeServer;
 using System.Timers;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.IO;
-using System.Collections;
+using Newtonsoft.Json;
 
 namespace WebAPINetCore.Services
 {
@@ -49,25 +45,69 @@ namespace WebAPINetCore.Services
             }
             else
             {
+                Globals.log.Error("Eror al activar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Inicio.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Inicio._Resp);
                 return false;
             }
         }
 
-        public string ConfigurarStatus() {
+        public bool FloatByDenomination()
+        {
+            Globals.log.Debug("Inicio de FloatByDenomination");
+            Globals.data = new List<string>();
+            Globals.data.Add("");
+            Globals.Servicio2Inicio = new PipeClient2();
+            Globals.Servicio2Inicio.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Float, Globals.data);
+            var vuelta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Float);
+            return vuelta;
+        }
 
-            if (Globals.EstadoDeSaludMaquina.Contains("04"))
+        public bool EstadoSalud()
+        {
+            Globals.data = new List<string>();
+            Globals.data.Add("");
+            Globals.EstadoSalud = new PipeClient2();
+            Globals.EstadoSalud.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.EstadoSalud, Globals.data);
+            var vuelta = Globals.EstadoSalud.SendMessage(ServicioPago.Comandos.EstadoSalud);
+            if (vuelta)
             {
-                string mensaje = "La Alcancia a supero su nivel Maximo";
-                Globals.NivelBloqueo = true;
-                return mensaje;
+                EstadoDeSaludService estadoSalud = new EstadoDeSaludService();
+                estadoSalud.DescifrarEstadoDeSalud();
+                return true;
             }
-            if (Globals.EstadoDeSaludMaquina.Contains("08"))
+            else
             {
-                Globals.NivelBloqueo = false;
-                string mensaje = "Advertencia la maquina de billetes esta llegando a su capacidad maxima";
-                return mensaje;
+                Globals.log.Error("Ha ocurrido un error al Obtener el estado de salud Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.EstadoSalud.Resultado.CodigoError + " Respuesta completa " + Globals.EstadoSalud._Resp);
             }
-            return "Todo Bien";
+            return false;
+        }
+
+        public bool DetenerVuelto()
+        {
+            Globals.log.Debug("Inicio detener pago");
+            Globals.data = new List<string>();
+            Globals.data.Add("");
+            Globals.EstadoSalud = new PipeClient2();
+            Globals.EstadoSalud.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DetenerVuelto, Globals.data);
+            var vuelta = Globals.EstadoSalud.SendMessage(ServicioPago.Comandos.DetenerVuelto);
+            if (vuelta)
+            {
+                EstadoDeSaludService estadoSalud = new EstadoDeSaludService();
+                estadoSalud.DescifrarEstadoDeSalud();
+                ArmarDocuemntoPagoConVueltoAsync();
+                return true;
+            }
+            else
+            {
+                Globals.log.Error("Ha ocurrido un error al Obtener el estado de salud Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.EstadoSalud.Resultado.CodigoError + " Respuesta completa " + Globals.EstadoSalud._Resp);
+            }
+            return false;
+        }
+
+        public void ConfigurarStatus()
+        {
+
+            EstadoDeSaludService estadoSalud = new EstadoDeSaludService();
+            estadoSalud.DescifrarEstadoDeSalud();
         }
 
         public bool FinalizarPago()
@@ -87,12 +127,14 @@ namespace WebAPINetCore.Services
                 }
                 else
                 {
+                    Globals.log.Error("Ha ocurrido un error al Finalizar el Pago o Apagar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2._Resp);
                     return false;
                 }
 
             }
             else
             {
+                Globals.log.Error("Ha ocurrido un error al Finalizar el Pago o Apagar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2._Resp);
                 return false;
             }
         }
@@ -122,12 +164,14 @@ namespace WebAPINetCore.Services
                     }
                     else
                     {
+                        Globals.log.Error("Ha ocurrido un error al Cancelar  el Pago Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Cancelar.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Cancelar._Resp);
                         return false;
                     }
 
                 }
                 else
                 {
+                    Globals.log.Error("Ha ocurrido un error al Cancelar  el Pago Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Cancelar.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Cancelar._Resp);
                     return false;
                 }
             }
@@ -176,8 +220,7 @@ namespace WebAPINetCore.Services
             }
             catch (Exception ex)
             {
-
-                throw;
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
             }
 
         }
@@ -204,7 +247,7 @@ namespace WebAPINetCore.Services
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.Pago.MontoAPagar.ToString());
-                comprobante = comprobante.Replace("XXXPAGADO", "$ " + Globals.Pago.DineroIngresado.ToString());
+                comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
                 comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.Vuelto.DineroRegresado.ToString());
                 comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.Vuelto.VueltoTotal.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
@@ -214,7 +257,7 @@ namespace WebAPINetCore.Services
             catch (Exception ex)
             {
 
-                throw;
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
             }
 
         }
@@ -234,7 +277,7 @@ namespace WebAPINetCore.Services
             Globals.ComprobanteImpresoContador++;// utilizado para que no se tomen datos del pago anterior
             lock (thisLock)
             {
-                
+
                 bool volveraUno = false;
                 EstadoPagoResp estadopago = new EstadoPagoResp();
                 if (Globals.PagoFinalizado == true)
@@ -260,10 +303,10 @@ namespace WebAPINetCore.Services
                             Globals.DandoVuelto = true;
                             volveraUno = true;
                             Globals.dineroIngresado = Globals.Servicio2Pago.Resultado.Data[0];
-                        }                  
+                        }
                         else
                         {// Actualizar el estado de pago
-                            Globals.Pago = PagoInfo;
+                                Globals.Pago = PagoInfo;
                         }
 
                         //Actualizar los datos de pago
@@ -298,7 +341,7 @@ namespace WebAPINetCore.Services
                                 TimerDarVuelto.Start();
                                 Globals.VueltoUnaVEz = true;
                             }
-                            
+
 
                             if (volveraUno == true)// se devuelven los flags de vuelto al estado original para  siguientes consultas 
                             {
@@ -311,7 +354,9 @@ namespace WebAPINetCore.Services
                             volveraUno = false;
                             if (Globals.HayVuelto == false)
                             {
+
                                 estadopago.Status = false;
+                                Globals.log.Error("No hay vuelto para entregar  Funcion estado de vuelto Transaccion: " + Globals.IDTransaccion);
                             }
                             return estadopago;
                         }
@@ -350,6 +395,7 @@ namespace WebAPINetCore.Services
                             {// si al enviar un estado de apagado de maquina esta no contesta correctamewnte
                                 estadopago.data = PagoInfo;
                                 estadopago.Status = false;
+                                Globals.log.Error("No se pudo completar la operacion de finalizar la maquina en  Funcion estado de vuelto Transaccion: " + Globals.IDTransaccion);
                                 estadopago.PagoStatus = false;
                                 return estadopago;
                             }
@@ -363,12 +409,14 @@ namespace WebAPINetCore.Services
                         }
                         if (Globals.HayVuelto == false)
                         {
+                            Globals.log.Error("No hay vuelto para entregar  Funcion estado de vuelto Transaccion: " + Globals.IDTransaccion);
                             estadopago.Status = false;
                         }
                         return estadopago;
                     }
                     catch (Exception ex)
                     {
+                        Globals.log.Error("Ha ocurrido un exepcion en el proceso Estado del pago Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
                         estadopago.Status = false;
                         estadopago.PagoStatus = false;
                         return estadopago;
@@ -377,6 +425,7 @@ namespace WebAPINetCore.Services
 
                 else // si no se enviaron los datos correctos dele stado de pago
                 {
+                    Globals.log.Error("Ha ocurrido un error al Consultar el estado del Pago Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Pago.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Pago._Resp);
                     estadopago.Status = false;
                     estadopago.PagoStatus = false;
                     return estadopago;
@@ -432,6 +481,7 @@ namespace WebAPINetCore.Services
                             {// si la maquina no finaliza correctamente
                                 estavuelto.PagoStatus = false;
                                 estavuelto.Status = false;
+                                Globals.log.Error("Ha ocurrido Error al finalizar las maquinas desde estado de vuelto  Transaccion: " + Globals.IDTransaccion);
                             }
                         }
                         else
@@ -443,7 +493,8 @@ namespace WebAPINetCore.Services
                             if (VueltoInfo.DineroRegresado == 0)
                             {
 
-                                if (Globals.VueltosSinIniciar >= 6) {
+                                if (Globals.VueltosSinIniciar >= 6)
+                                {
                                     TimerDarVuelto = new System.Timers.Timer() { AutoReset = false };
                                     TimerDarVuelto.Elapsed += new ElapsedEventHandler(Timer_DarVuelto);
                                     TimerDarVuelto.AutoReset = false;
@@ -461,8 +512,9 @@ namespace WebAPINetCore.Services
                         estavuelto.PagoStatus = false;
                         return estavuelto;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Globals.log.Error("Ha ocurrido un exepcion en el proceso Estado del vuelto Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
                         estavuelto.Status = false;
                         estavuelto.PagoStatus = false;
                         return estavuelto;
@@ -470,6 +522,7 @@ namespace WebAPINetCore.Services
                 }// si no se comunica correctamente con el servicio
                 else
                 {
+                    Globals.log.Error("Ha ocurrido un error al Consultar el estado del Vuelto Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Vuelto.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Vuelto._Resp);
                     estavuelto.Status = false;
                     estavuelto.PagoStatus = false;
                     return estavuelto;
@@ -491,7 +544,7 @@ namespace WebAPINetCore.Services
                 Globals.Servicio2ConsultarDevolucionM.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Cons_dinero_ingre, Globals.data);
                 var vuelta = Globals.Servicio2ConsultarDevolucionM.SendMessage(ServicioPago.Comandos.Cons_dinero_ingre);
                 var retorno = Globals.Servicio2ConsultarDevolucionM.Resultado.Data[0];
-                
+
                 int dineroF = new int();
                 dineroF = montoapagar.MontoAPagar - int.Parse(retorno);
                 if (dineroF < 0)// si despues de finalizar se ingreso dinero extra se llama el vuelto 
@@ -527,7 +580,7 @@ namespace WebAPINetCore.Services
             }
             catch (Exception ex)
             {
-                //
+                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_EstadoVueltoMonedas Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
             }
         }
 
@@ -546,10 +599,16 @@ namespace WebAPINetCore.Services
                     Globals.RespaldoParaVuelto.DineroIngresado = 999999;// monto enviado para hacer saber  a la funcion que la llamada se realiza de este timer( esto por cuestiones de llamadas asyncronas)
                     Globals.DineroIngresadoSolicitado = true;
                 }
-                else {
-                    estadopago.data.DineroFaltante = Globals.RespaldoParaVuelto.MontoAPagar - int.Parse(Globals.dineroIngresado);
+                else
+                {
+                    estadopago = new EstadoPagoResp();
+                    int varaux = 0;
+                    varaux = int.Parse(Globals.dineroIngresado);
+                    varaux =  Globals.RespaldoParaVuelto.MontoAPagar - varaux;
+                    estadopago.data.DineroFaltante = varaux;
+                    //estadopago.data.DineroFaltante = 3000;
                 }
-                
+
                 estadopago = EstadoDelPAgo(Globals.RespaldoParaVuelto);// llamada para saber que monto actual de vuelto hay que realizar 
                 if (estadopago.data.DineroFaltante < 0)
                 {
@@ -575,12 +634,13 @@ namespace WebAPINetCore.Services
                                 Globals.DandoVuelto = false;
                                 Globals.HayVuelto = false;
                             }
-                            else {
+                            else
+                            {
                                 Globals.VueltosSinIniciar = 0; ;
                                 Globals.DandoVuelto = true;
                                 Globals.HayVuelto = true;
                             }
-                            
+
                         }
                         else
                         {// para decir que la maquina no esta dando vuelto y que hay que volver a llamar a al timer
@@ -598,6 +658,7 @@ namespace WebAPINetCore.Services
             }
             catch (Exception ex)
             {
+                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_DarVuelto Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
                 Globals.HayVuelto = false;
                 //
             }
@@ -653,7 +714,7 @@ namespace WebAPINetCore.Services
             }
             catch (Exception ex)
             {
-
+                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_VueltoMonedas Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
                 //throw;
             }
         }
@@ -689,7 +750,8 @@ namespace WebAPINetCore.Services
                         }
                     }
                 }
-                else {
+                else
+                {
 
                     EstadoPagoResp estadopago = new EstadoPagoResp();
                     montoapagar.MontoAPagar = 9999999;
@@ -734,6 +796,7 @@ namespace WebAPINetCore.Services
             }
             catch (Exception ex)
             {
+                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_EstadoCancelarPago Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
                 //
             }
         }
