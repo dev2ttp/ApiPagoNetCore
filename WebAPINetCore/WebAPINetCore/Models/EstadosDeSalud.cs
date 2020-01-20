@@ -151,6 +151,7 @@ namespace WebAPINetCore.Models
         public EstadoDispMonedaAtascada StadoDispMonedaAtascada { get; set; }
         public EstadoDispBusquedaFallida StadoDispBusquedaFallida { get; set; }
         public EstadoDispIntentoFraudeMoneda StadoDispIntetoFraudeMoneda { get; set; }
+        public bool Floating { get; set; }
 
         public EstadosDeSalud() {
             StadoCorreinte = new EstadoCorriente();
@@ -168,6 +169,8 @@ namespace WebAPINetCore.Models
             StadoMinBillete = new EstadoMinimoBillete();
             StadoMinMoneda = new EstadoMinMonedas();
             StadoPuerta = new EstadoPuerta();
+            Floating = new bool();
+
         }
     }
 }

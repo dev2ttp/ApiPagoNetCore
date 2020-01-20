@@ -247,15 +247,7 @@ namespace WebAPINetCore.Services
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.Pago.MontoAPagar.ToString());
-                if (Globals.Cancelado == false)
-                {
-                    comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
-                }
-                if (Globals.Cancelado == true)
-                {
-                    comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Vuelto.VueltoTotal).ToString());
-                }
-
+                comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
                 comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.Vuelto.DineroRegresado.ToString());
                 comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.Vuelto.VueltoTotal.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
@@ -285,7 +277,6 @@ namespace WebAPINetCore.Services
             Globals.ComprobanteImpresoContador++;// utilizado para que no se tomen datos del pago anterior
             lock (thisLock)
             {
-
                 bool volveraUno = false;
                 EstadoPagoResp estadopago = new EstadoPagoResp();
                 if (Globals.PagoFinalizado == true)
@@ -362,7 +353,6 @@ namespace WebAPINetCore.Services
                             volveraUno = false;
                             if (Globals.HayVuelto == false)
                             {
-
                                 estadopago.Status = false;
                                 Globals.log.Error("No hay vuelto para entregar  Funcion estado de vuelto Transaccion: " + Globals.IDTransaccion);
                             }
