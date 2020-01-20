@@ -53,6 +53,7 @@ namespace WebAPINetCore.Services
         public static string IDTransaccion { get; set; }
 
         //cancelacion de timers
+        public static bool Cancelado { get; set; }
         public static bool TimersVueltoCancel;
         public static bool VueltoUnaVEz;
         public static bool DandoVuelto;

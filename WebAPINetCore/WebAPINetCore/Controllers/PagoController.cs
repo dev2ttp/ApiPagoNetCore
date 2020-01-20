@@ -51,6 +51,7 @@ namespace WebAPINetCore.Controllers
             Globals.VueltosSinIniciar = 0;
             Globals.DineroIngresadoSolicitado = false;
             Globals.dineroIngresado = "0";
+            Globals.Cancelado = false;
            var resultado = pagoservice.InicioPago();
             pagoservice.ConfigurarStatus();
             InicioOperacionService Status = new InicioOperacionService();
@@ -133,6 +134,7 @@ namespace WebAPINetCore.Controllers
         [HttpGet("Cancelarpago")]
         public ActionResult<IEnumerable<bool>> CancelarPago()
         {
+            Globals.Cancelado = true;
             var resultado = pagoservice.CancelarPago();
             InicioOperacionService Status = new InicioOperacionService();
             pagoservice.ConfigurarStatus();
@@ -146,6 +148,7 @@ namespace WebAPINetCore.Controllers
         [HttpGet("EstadoCancelacionPago")]
         public ActionResult<IEnumerable<CancelarPago>> EstadoCancelacionPago()
         {
+            Globals.Cancelado = true;
             var resultado = pagoservice.EstadoDeCancelacion();
             pagoservice.ConfigurarStatus();
             resultado.StatusMaquina = Globals.SaludMaquina;

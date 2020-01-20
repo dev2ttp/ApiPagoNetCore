@@ -247,7 +247,15 @@ namespace WebAPINetCore.Services
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.Pago.MontoAPagar.ToString());
-                comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
+                if (Globals.Cancelado == false)
+                {
+                    comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
+                }
+                if (Globals.Cancelado == true)
+                {
+                    comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Vuelto.VueltoTotal).ToString());
+                }
+
                 comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.Vuelto.DineroRegresado.ToString());
                 comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.Vuelto.VueltoTotal.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
