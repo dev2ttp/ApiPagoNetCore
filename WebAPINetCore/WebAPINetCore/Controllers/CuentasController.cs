@@ -30,10 +30,11 @@ namespace WebAPINetCore.Controllers
         [HttpPost("Login")]
         public ActionResult<UserToken> Login([FromBody] UserInfo userInfo)
         {
-            var rut = userInfo.RuT.Split('-');
+            var mantisa = userInfo.RuT.Substring(0, userInfo.RuT.Length-1);
+            var dv = userInfo.RuT.Substring(userInfo.RuT.Length - 1, 1);
             Globals.data = new List<string>();
-            Globals.data.Add(rut[0]);
-            Globals.data.Add(rut[1]);
+            Globals.data.Add(mantisa);
+            Globals.data.Add(dv);
             Globals.data.Add(userInfo.Password);
             Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.logueo, Globals.data);
             var vuelta =  Globals.Servicio1.SendMessage(ServicioPago.Comandos.logueo);
@@ -41,13 +42,18 @@ namespace WebAPINetCore.Controllers
             if (vuelta)
             {
                 var mensaje = Globals.Servicio1.Resultado.Data[0].Split('~');
-
-               UserToken Usuariorespuesta =  BuildTokenUserPass(userInfo);
-                Usuariorespuesta.Rut = userInfo.RuT;
-                Usuariorespuesta.IdUser = rut[0];
-                Usuariorespuesta.Nombre = mensaje[1] +" "+ mensaje[2];
-                Usuariorespuesta.TipoUser = mensaje[0];
-                Usuariorespuesta.IdSession = mensaje[4];
+                UserToken Usuariorespuesta = BuildTokenUserPass(userInfo);
+                if (mensaje.Length >2)
+                {
+                    
+                    Usuariorespuesta.Rut = mantisa + "-" + dv;
+                    Usuariorespuesta.IdUser = mantisa;
+                    Usuariorespuesta.Nombre = mensaje[1] + " " + mensaje[2];
+                    Usuariorespuesta.TipoUser = mensaje[0];
+                    Usuariorespuesta.IdSession = mensaje[4];
+                    return Usuariorespuesta;
+                }
+                Usuariorespuesta.Nombre = "Error";
                 return Usuariorespuesta;
             }
             else

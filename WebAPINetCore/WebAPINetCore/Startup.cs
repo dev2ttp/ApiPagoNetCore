@@ -70,7 +70,7 @@ namespace WebAPINetCore
             }
             app.UseAuthentication();
             //app.UseCors(MyAllowSpecificOrigins);
-            app.UseCors(builder => builder.WithOrigins("http://172.16.32.137:4200", "http://172.16.32.155").WithMethods("GET", "POST").AllowAnyHeader());
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://172.16.32.155").WithMethods("GET", "POST").AllowAnyHeader());
             app.UseHttpsRedirection();
 
             app.UseRouting();
