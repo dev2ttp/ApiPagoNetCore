@@ -78,5 +78,17 @@ namespace WebAPINetCore.Services
         public static bool VueltoPermitido { get; set; }
         public static bool DineroIngresadoSolicitado { get; set; }// se utiliza para saber si ya se pidio el dinero final ingresado ( para hacerlo una sola vez)
         public static int VueltosSinIniciar { get; set; }//utilizado para contar las veces que se envia un vuelto pero la maquina no da respuesta
+
+
+
+        // Tesoreria
+        //Saldos
+        public static SaldoGaveta Saldos { get; set; } // utilizado para llevar los saldos de toda la maquina
+
+        //Cieere Z
+        public static DatosCierreZ Cierrez = new DatosCierreZ(); // Datos Devueltos Al realizar un cierre Z
+
+        // IDs Fechas Reporte Cieere Z
+        public static IDReportesCierre fechasIDs = new IDReportesCierre();//IDs y fechas de los reportes de cierre Z
     }
 }
