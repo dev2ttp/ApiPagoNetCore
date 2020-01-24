@@ -90,5 +90,9 @@ namespace WebAPINetCore.Services
 
         // IDs Fechas Reporte Cieere Z
         public static IDReportesCierre fechasIDs = new IDReportesCierre();//IDs y fechas de los reportes de cierre Z
+
+        // Datos Cierre Cieere Z
+        public static ReportesCierre DatosCierre = new ReportesCierre();//IDs y fechas de los reportes de cierre Z
+
     }
 }

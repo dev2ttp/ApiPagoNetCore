@@ -37,4 +37,36 @@ namespace WebAPINetCore.Models
         }
     }
 
+    public class ReportesCierre
+    {
+        public string Fechas { get; set; }
+        public string Hora { get; set; }
+        public string ID { get; set; }
+        public string Cantidad { get; set; }
+        public string MontoTotal { get; set; }
+
+        public ReportesCierre()
+        {
+            Fechas = "";
+            ID = "";
+            Hora = "";
+            Cantidad = "";
+            MontoTotal = "";
+        }
+    }
+
+    public class GavsRetiro
+    {
+        public string Gavo { get; set; }
+        public string GavD { get; set; }
+
+
+        public GavsRetiro()
+        {
+            Gavo = "";
+            GavD = "";
+
+        }
+    }
+
 }

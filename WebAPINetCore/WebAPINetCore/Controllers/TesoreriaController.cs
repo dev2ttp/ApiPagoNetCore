@@ -53,5 +53,22 @@ namespace WebAPINetCore.Controllers
             return Ok(Globals.fechasIDs);
         }
 
+        [HttpPost("ObtenerReportebyID")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ObtenerReportebyID([FromBody] int idz)
+        {
+            Tesoservice.ObtenerReportebyID(idz.ToString());
+            return Ok(Globals.DatosCierre);
+        }
+
+        [HttpPost("VaciarGaveta")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> VaciarGaveta([FromBody] GavsRetiro gavs)
+        {
+            var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD);
+            return Ok(respuesta);
+        }
+
+        
+
+
     }
 }

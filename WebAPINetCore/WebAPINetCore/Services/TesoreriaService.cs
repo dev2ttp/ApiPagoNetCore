@@ -50,7 +50,8 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public void RealizarCierreZ(int mantisa) {
+        public void RealizarCierreZ(int mantisa)
+        {
 
             Globals.data = new List<string>();
             Globals.data.Add(mantisa.ToString());
@@ -82,10 +83,11 @@ namespace WebAPINetCore.Services
                     Globals.Cierrez.Cantidad = msg[3];
                     Globals.Cierrez.MontoTotal = msg[4];
                 }
-            }           
+            }
         }
 
-        public void ObtenerReporteCierreZ() {
+        public void ObtenerReporteCierreZ()
+        {
 
             Globals.data = new List<string>();
             Globals.Servicio1 = new PipeClient();
@@ -108,7 +110,7 @@ namespace WebAPINetCore.Services
                             Globals.fechasIDs.Fechas.Add(datosCierres[2]);
                             Globals.fechasIDs.ID.Add(datosCierres[1]);
                         }
-                        
+
                     }
                 }
                 else
@@ -116,8 +118,82 @@ namespace WebAPINetCore.Services
                     //Global.mensajeRorte = "No hay cierres Z para mostrar actualmente";
                 }
             }
-            else { 
-            
+            else
+            {
+
+            }
+
+        }
+
+        public void ObtenerReportebyID(string idz)
+        {
+            Globals.data = new List<string>();
+            Globals.Servicio1 = new PipeClient();
+            Globals.fechasIDs = new IDReportesCierre();
+            Globals.DatosCierre = new ReportesCierre();
+            Globals.data.Add("1"); //0
+            Globals.data.Add("Z");
+            Globals.data.Add(idz);
+            Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.ReporteCierreZ, Globals.data);
+            var respuesta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.ReporteCierreZ);
+            if (respuesta)
+            {
+                if (Globals.Servicio1.Resultado.Data.Count > 1)
+                {
+                    var datosCierres = Globals.Servicio1.Resultado.Data[0].Split("~");
+                    Globals.DatosCierre.Fechas = datosCierres[0];
+                    Globals.DatosCierre.Hora = datosCierres[1];
+                    Globals.DatosCierre.ID = datosCierres[2];
+
+                    datosCierres = Globals.Servicio1.Resultado.Data[2].Split("~");
+                    Globals.DatosCierre.Cantidad = datosCierres[datosCierres.Length-2];
+                    Globals.DatosCierre.MontoTotal = datosCierres[datosCierres.Length - 1];
+
+                    datosCierres = Globals.Servicio1.Resultado.Data[Globals.Servicio1.Resultado.Data.Count - 1].Split("~");
+                    if (datosCierres.Length >2)
+                    {
+                        Globals.DatosCierre.MontoTotal = datosCierres[3];
+                    }
+                    
+
+
+                }
+                else
+                {
+                    //Global.mensajeRorte = "No hay cierres Z para mostrar actualmente";
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        public string VaciarGaveta(string gvo, string gvd) {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(gvo);
+            data.Add(gvd);
+
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete, data);
+            var resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete);
+
+            if (resultado)
+            {
+                string msg = pipeClient._Resp;
+                if (msg.Contains("OK"))
+                {
+                    return "OK";
+                }
+                else {
+                    return "NOK";
+                }
+            }
+            else {
+                return "NOK";
             }
             
         }
