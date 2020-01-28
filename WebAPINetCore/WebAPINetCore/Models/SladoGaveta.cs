@@ -23,7 +23,7 @@ namespace WebAPINetCore.Models
 
     public class GavBA
     {
-
+        public string Idgav { get; set; }
         public string B1000 { get; set; }
         public string B2000 { get; set; }
         public string B5000 { get; set; }
@@ -34,7 +34,7 @@ namespace WebAPINetCore.Models
 
     public class GavBR
     {
-
+        public string Idgav { get; set; }
         public string B1000 { get; set; }
         public string B2000 { get; set; }
         public string B5000 { get; set; }
@@ -45,7 +45,7 @@ namespace WebAPINetCore.Models
 
     public class GavMB
     {
-
+        public string Idgav { get; set; }
         public string M10 { get; set; }
         public string M50 { get; set; }
         public string M100 { get; set; }
@@ -55,7 +55,7 @@ namespace WebAPINetCore.Models
 
     public class GavMR
     {
-
+        public string Idgav { get; set; }
         public string M10 { get; set; }
         public string M50 { get; set; }
         public string M100 { get; set; }

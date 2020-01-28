@@ -93,7 +93,6 @@ D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.AssemblyInfo.cs
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.RazorTargetAssemblyInfo.cache
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csproj.CopyComplete
-D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csprojAssemblyReference.cache
 C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\appsettings.Development.json
 C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\appsettings.json
 C:\Users\ttp\Desktop\Efectivo 1.1.0\ApiPago\WebAPINetCore\bin\Debug\netcoreapp3.0\Properties\launchSettings.json
@@ -129,3 +128,4 @@ D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.dll
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.Extensions.Logging.dll
 D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\NLog.Web.AspNetCore.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.csprojAssemblyReference.cache

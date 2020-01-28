@@ -67,7 +67,46 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
+        [HttpPost("Estadovaciado")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> Estadovaciado([FromBody] GavsRetiro gavs)
+        {
+            var respuesta = Tesoservice.Estadovaciado(gavs.Gavo);
+            return Ok(respuesta);
+        }
+
+        [HttpGet("Iniciocarga")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> Iniciocarga()
+        {
+            var resultado = Tesoservice.Iniciocarga();
+            return Ok(resultado);
+        }
+
+        [HttpGet("FinalizarCarga")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> FinalizarCarga()
+        {
+            var resultado = Tesoservice.FinalizarCarga();
+            return Ok(resultado);
+        }
+
+        [HttpGet("EstadoCarga")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> EstadoCarga()
+        {
+            var resultado = Tesoservice.EstadoCarga();
+            return Ok(resultado);
+        }
+
+
+        [HttpPost("CargarMoneda")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> CargarMoneda([FromBody] GavMR MonIngresadas)
+        {
+            var respuesta = Tesoservice.CargarMoneda(MonIngresadas);
+            return Ok(respuesta);
+        }
         
+
+
+            
+
 
 
     }
