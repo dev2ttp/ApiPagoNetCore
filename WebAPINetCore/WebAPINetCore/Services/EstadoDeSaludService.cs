@@ -10,7 +10,8 @@ namespace WebAPINetCore.Services
     {
 
 
-        public void DescifrarEstadoDeSalud() {
+        public void DescifrarEstadoDeSalud()
+        {
 
             //estadoSalud
             //public const int exc_puerta = 0x01;
@@ -61,7 +62,7 @@ namespace WebAPINetCore.Services
                     if (flags[4] == "1")
                     {
                         SaludMaquina.StadoPuerta.BloqueoTotal = true;
-                    }  
+                    }
                 }
 
                 if (flags[0] == "2")// corriente 
@@ -73,12 +74,12 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoCorreinte.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoCorreinte.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
                     if (flags[4] == "1")
@@ -96,12 +97,12 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoMinBillete.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoMinBillete.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
                     if (flags[4] == "1")
@@ -119,15 +120,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoMaxBillete.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoMaxBillete.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoMaxBillete.BloqueoTotal = true;
                     }
@@ -142,15 +143,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoMinMoneda.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoMinMoneda.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoMinMoneda.BloqueoTotal = true;
                     }
@@ -165,15 +166,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoMaxMonedas.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoMaxMonedas.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoMaxMonedas.BloqueoTotal = true;
                     }
@@ -188,15 +189,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispDiferente.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispDiferente.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispDiferente.BloqueoTotal = true;
                     }
@@ -211,15 +212,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispAtascadoS.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispAtascadoS.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispAtascadoS.BloqueoTotal = true;
                     }
@@ -234,15 +235,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispAtascadoInS.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispAtascadoInS.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispAtascadoInS.BloqueoTotal = true;
                     }
@@ -257,15 +258,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispIntentoFraude.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispIntentoFraude.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispIntentoFraude.BloqueoTotal = true;
                     }
@@ -280,15 +281,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispCajaFull.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispCajaFull.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispCajaFull.BloqueoTotal = true;
                     }
@@ -303,15 +304,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispUnidadAtascada.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispUnidadAtascada.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispUnidadAtascada.BloqueoTotal = true;
                     }
@@ -326,17 +327,17 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispMonedaAtascada.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispMonedaAtascada.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
-                        SaludMaquina.StadoDispUnidadAtascada.BloqueoTotal = true;
+                        SaludMaquina.StadoDispMonedaAtascada.BloqueoTotal = true;
                     }
                 }
 
@@ -349,15 +350,15 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispBusquedaFallida.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispBusquedaFallida.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispBusquedaFallida.BloqueoTotal = true;
                     }
@@ -372,22 +373,22 @@ namespace WebAPINetCore.Services
                     }
                     if (flags[2] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoEfectivo = true;
+                        SaludMaquina.StadoDispIntetoFraudeMoneda.BloqueoEfectivo = true;
                         Globals.BloqueoEfectivo = true;
                     }
                     if (flags[3] == "1")
                     {
-                        SaludMaquina.StadoPuerta.BloqueoTransbank = true;
+                        SaludMaquina.StadoDispIntetoFraudeMoneda.BloqueoTransbank = true;
                         Globals.BloqueoTransbank = true;
                     }
-                    if (flags[3] == "1")
+                    if (flags[4] == "1")
                     {
                         SaludMaquina.StadoDispIntetoFraudeMoneda.BloqueoTotal = true;
                     }
                 }
                 if (flags[0] == "8000")// Flotando
                 {
-                    SaludMaquina.Floating = true;                 
+                    SaludMaquina.Floating = true;
                 }
             }
 
