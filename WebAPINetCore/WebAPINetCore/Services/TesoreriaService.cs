@@ -320,7 +320,8 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public string CargarMoneda(GavMR MonIngresadas) {
+        public string CargarMoneda(GavMR MonIngresadas)
+        {
             try
             {
 
@@ -367,6 +368,208 @@ namespace WebAPINetCore.Services
                 return "NOK";
             }
         }
+
+        public string InsertarDisp(string tipodisp)
+        {
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(tipodisp);
+
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.agregdis, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.agregdis);
+            if (respuesta)
+            {
+                string msg = pipeClient._Resp;
+
+                if (msg.Contains("NOK"))
+                {
+                    return "NOK";
+                }
+                else
+                {
+                    //if (msg.Contains("OK"))
+
+                    var resultado = pipeClient.Resultado.Data[0].Split("~");
+                    string respuestaserv = resultado[resultado.Length - 1];
+                    if (respuestaserv.Contains("diferente"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else
+                    {
+                        return "OK";
+                    }
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+        }
+
+
+        public string RetirararDisp(string tipodisp)
+        {
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(tipodisp);
+
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.retirdisp, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.retirdisp);
+            if (respuesta == true)
+            {
+                string msg = pipeClient._Resp;
+
+                if (msg.Contains("NOK"))
+                {
+                    return "NOK";
+                }
+                else
+                {
+
+                    var resultado = pipeClient.Resultado.Data[0].Split("~");
+                    string respuestaserv = resultado[resultado.Length - 1];
+                    if (respuestaserv.Contains("no existe"))
+                    {
+                        return "no existe";
+                    }
+                    else
+                    {
+                        return "OK";
+                    }
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+
+        }
+
+        public string AgregarGav(GavReq gav)
+        {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+            data.Add(gav.Tipo);
+            data.Add(gav.Idgav);
+
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.agregav, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.agregav);
+            if (respuesta == true)
+            {
+                string msg = pipeClient._Resp;
+
+                if (msg.Contains("NOK"))
+                {
+                    return "NOK";
+                }
+                else
+                {
+                    //if (msg.Contains("OK"))
+
+                    var resultado = pipeClient.Resultado.Data[0].Split("~");
+                    string respuestaserv = resultado[resultado.Length - 1];
+                    if (respuestaserv.Contains("diferente"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else
+                    {
+                        return "OK";
+                    }
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+        }
+
+        public string RetirarGavB(string IDGAV)
+        {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(IDGAV);
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.retirargavBillete, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.retirargavBillete);
+            string msg = pipeClient._Resp;
+            if (respuesta == true)
+            {
+                if(msg.Contains("NOK"))
+                {
+                    return "NOK";
+                }
+                else
+                {
+                    //if (msg.Contains("OK"))
+
+                    var resultado = pipeClient.Resultado.Data[0].Split("~");
+                    string respuestaserv = resultado[resultado.Length - 1];
+                    if (respuestaserv.Contains("diferente"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else
+                    {
+                        return "OK";
+                    }
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+        }
+
+        public string RetirarGavM(string IDGAV)
+        {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(IDGAV);
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.retirargavMoneda, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.retirargavMoneda);
+            if (respuesta == true)
+            {
+                string msg = pipeClient._Resp;
+                if(msg.Contains("NOK"))
+                {
+                    return "NOK";
+                }
+                else
+                {
+                    //if (msg.Contains("OK"))
+
+                    var resultado = pipeClient.Resultado.Data[0].Split("~");
+                    string respuestaserv = resultado[resultado.Length - 1];
+                    if (respuestaserv.Contains("diferente"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else
+                    {
+                        return "OK";
+                    }
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+
+        }
+
 
         public void ObtenerBilletes(string saldo, string Tipo)
         {

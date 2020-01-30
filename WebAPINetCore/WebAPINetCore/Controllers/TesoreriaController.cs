@@ -102,10 +102,53 @@ namespace WebAPINetCore.Controllers
             var respuesta = Tesoservice.CargarMoneda(MonIngresadas);
             return Ok(respuesta);
         }
+
+        [HttpPost("InsertarDisp")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> InsertarDisp([FromBody] GavMR MonIngresadas)
+        {
+            var respuesta = Tesoservice.InsertarDisp(MonIngresadas.Idgav);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("RetirararDisp")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> RetirararDisp([FromBody] GavMR MonIngresadas)
+        {
+            var respuesta = Tesoservice.RetirararDisp(MonIngresadas.Idgav);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("AgregarGav")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> AgregarGav([FromBody] GavReq gav)
+        {
+            var respuesta = Tesoservice.AgregarGav(gav);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("RetirarGavB")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavB([FromBody] GavReq tipogav)
+        {
+            var respuesta = Tesoservice.RetirarGavB(tipogav.Tipo);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("RetirarGavM")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavM([FromBody] GavReq tipogav)
+        {
+            var respuesta = Tesoservice.RetirarGavM(tipogav.Tipo);
+            return Ok(respuesta);
+        }
+
         
 
+            
 
             
+
+
+
+
+
+
 
 
 
