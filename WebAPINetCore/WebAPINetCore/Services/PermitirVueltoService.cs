@@ -44,11 +44,11 @@ namespace WebAPINetCore.Services
                         var b10000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b10000)*10000);
                     }
-                    //if (item.Contains("20000,"))
-                    //{
-                    //    var b20000 = item.Split(',')[1];
-                    //    Globals.billetes.Add(int.Parse(b20000));
-                    //}
+                    if (item.Contains("20000,"))
+                    {
+                        var b20000 = item.Split(',')[1];
+                        Globals.billetes.Add(int.Parse(b20000));
+                    }
                 }
 
                 var Moneda = Globals.Servicio2ConsultarVuelto.Resultado.Data[1];
@@ -103,7 +103,11 @@ namespace WebAPINetCore.Services
             {
                 dineroTotal += item;
             }
-
+            //monedas
+            if (/*Globals.monedas[0] < 4 || Globals.monedas[1] < 4 || */Globals.monedas[2] < 400 /*|| Globals.monedas[3] < 2*/)
+            {
+                return false;
+            }
             if (MontoApagar > dineroTotal)
             {
                 return false;
