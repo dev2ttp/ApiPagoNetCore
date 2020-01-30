@@ -56,14 +56,12 @@ namespace WebAPINetCore.Controllers
             {
                 var VueltoPosible = vueltopuede.CalcularVueltoPosible(PagoInfo.MontoAPagar);
 
-
                 if (VueltoPosible == true)
                 {
                     Globals.VueltoPermitido = true;
                 }
                 else
                 {
-
                     Status = new InicioOperacionService();
                     Status.Status = false;
                     pagoservice.ConfigurarStatus();
