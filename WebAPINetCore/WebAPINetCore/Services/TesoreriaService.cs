@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using WebAPINetCore.Models;
 using WebAPINetCore.PipeServer;
@@ -9,6 +13,9 @@ namespace WebAPINetCore.Services
 {
     public class TesoreriaService
     {
+        private static readonly HttpClient client = new HttpClient();
+
+
         public void SaldoTransaccion()
         {
             Globals.data = new List<string>();
@@ -65,8 +72,8 @@ namespace WebAPINetCore.Services
             var respuesta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.CierreZ);
             if (respuesta)
             {
-                Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.CierreZ, Globals.data);
-                Globals.Servicio1.SendMessage(ServicioPago.Comandos.CierreZ);
+                //Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.CierreZ, Globals.data);
+                //Globals.Servicio1.SendMessage(ServicioPago.Comandos.CierreZ);
 
                 //<< 0,Fecha 1,Hora 2,IdZeta 3,Cantidad 4,Monto
                 string[] msg = Globals.Servicio1.Resultado.Data[0].Split('~');
@@ -173,7 +180,7 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public string VaciarGaveta(string gvo, string gvd)
+        public string VaciarGaveta(string gvo, string gvd, string tipo)
         {
 
             PipeClient2 pipeClient = new PipeClient2();
@@ -183,9 +190,18 @@ namespace WebAPINetCore.Services
             data.Add(gvo);
             data.Add(gvd);
 
-            return "OK";
-            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete, data);
-            var resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete);
+            //return "OK";
+            var resultado = false;
+            if (tipo == "B")
+            {
+                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete, data);
+                resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete);
+            }
+            else {
+                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_moneda, data);
+                resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_moneda);
+            }
+            
 
             if (resultado)
             {
@@ -206,7 +222,7 @@ namespace WebAPINetCore.Services
 
         }
 
-        public string Estadovaciado(string GavID)
+        public string Estadovaciado(string GavID, string tipo)
         {
 
             PipeClient2 pipeClient = new PipeClient2();
@@ -214,12 +230,20 @@ namespace WebAPINetCore.Services
             List<string> data = new List<string>();
             data.Add(GavID);
             //data.Add(Global.ba.nserialgv);
-            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete_compr, data);
-            var resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete_compr);
-
+            var resultado = false;
+            if (tipo == "B")
+            {
+                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete_compr, data);
+                resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete_compr);
+            }
+            else
+            {
+                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_moneda_compr, data);
+                resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_moneda_compr);
+            }
             if (resultado)
             {
-                return "OK";
+                //return "OK";
                 string msg = pipeClient._Resp;
 
 
@@ -229,7 +253,7 @@ namespace WebAPINetCore.Services
                 }
                 else
                 {
-                    return "OK";
+                        return "OK";
                 }
             }
             else
@@ -332,19 +356,19 @@ namespace WebAPINetCore.Services
                 data.Add(MonIngresadas.Idgav); // numero serie de gaveta
                 if (int.Parse(MonIngresadas.M10) > 0)
                 {
-                    data.Add(MonIngresadas.M10);
+                    data.Add("10," + MonIngresadas.M10);
                 }
                 if (int.Parse(MonIngresadas.M50) > 0)
                 {
-                    data.Add(MonIngresadas.M50);
+                    data.Add("50," + MonIngresadas.M50);
                 }
                 if (int.Parse(MonIngresadas.M100) > 0)
                 {
-                    data.Add(MonIngresadas.M100);
+                    data.Add("100," + MonIngresadas.M100);
                 }
                 if (int.Parse(MonIngresadas.M500) > 0)
                 {
-                    data.Add(MonIngresadas.M500);
+                    data.Add("500," + MonIngresadas.M500);
                 }
                 pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.Agregar_diner, data);
                 pipeClient.SendMessage(ServicioPago.Comandos.Agregar_diner);
@@ -570,6 +594,40 @@ namespace WebAPINetCore.Services
 
         }
 
+        public async Task ImprecionCierreZAsync(DatosCierreZ Cierre) {
+
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/cierreZ.txt");
+                string sLine = "";
+                string comprobante = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
+                comprobante = comprobante.Replace("DD-MM-AAAA", Cierre.Fecha);
+                comprobante = comprobante.Replace("HH:MM:SS", Cierre.Hora);
+                comprobante = comprobante.Replace("XXID", Cierre.IDZCierre);
+                comprobante = comprobante.Replace("CNT", Cierre.Cantidad);
+                comprobante = comprobante.Replace("MTD", Cierre.MontoTotal);
+
+                var respuesta = await ImprimirComprobanteAsync(comprobante);
+            }
+            catch (Exception ex)
+            {
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+        }
+
 
         public void ObtenerBilletes(string saldo, string Tipo)
         {
@@ -699,5 +757,19 @@ namespace WebAPINetCore.Services
             }
         }
 
+
+        public async Task<bool> ImprimirComprobanteAsync(String Documento)
+        {
+            var url = string.Format(Globals._config["Urls:Impresion"]);
+            var json = JsonConvert.SerializeObject(Documento);
+            var request = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var response = await client.PostAsync(url, request))
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                response.EnsureSuccessStatusCode();
+            }
+
+            return true;
+        }
     }
 }

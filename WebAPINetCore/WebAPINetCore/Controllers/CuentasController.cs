@@ -51,6 +51,7 @@ namespace WebAPINetCore.Controllers
                     Usuariorespuesta.Nombre = mensaje[1] + " " + mensaje[2];
                     Usuariorespuesta.TipoUser = mensaje[0];
                     Usuariorespuesta.IdSession = mensaje[4];
+                    Globals.IDTransaccion = mensaje[4];
                     return Usuariorespuesta;
                 }
                 Usuariorespuesta.Nombre = "Error";

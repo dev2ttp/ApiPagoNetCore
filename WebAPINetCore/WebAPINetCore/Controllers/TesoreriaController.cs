@@ -63,14 +63,14 @@ namespace WebAPINetCore.Controllers
         [HttpPost("VaciarGaveta")]
         public ActionResult<IEnumerable<EstadoPagoResp>> VaciarGaveta([FromBody] GavsRetiro gavs)
         {
-            var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD);
+            var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD,gavs.Tipo);
             return Ok(respuesta);
         }
 
         [HttpPost("Estadovaciado")]
         public ActionResult<IEnumerable<EstadoPagoResp>> Estadovaciado([FromBody] GavsRetiro gavs)
         {
-            var respuesta = Tesoservice.Estadovaciado(gavs.Gavo);
+            var respuesta = Tesoservice.Estadovaciado(gavs.Gavo,gavs.Tipo);
             return Ok(respuesta);
         }
 
@@ -138,11 +138,18 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
-        
+        [HttpPost("ImprimirCierreZ")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCierreZ([FromBody] DatosCierreZ Cierre)
+        {
+            var respuesta = Tesoservice.ImprecionCierreZAsync(Cierre);
+            return Ok(respuesta);
+        }
 
-            
 
-            
+
+
+
+
 
 
 

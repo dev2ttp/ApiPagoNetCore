@@ -59,6 +59,8 @@ namespace WebAPINetCore.Models
     {
         public string Gavo { get; set; }
         public string GavD { get; set; }
+        public string Tipo { get; set; }
+
 
 
         public GavsRetiro()
