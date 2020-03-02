@@ -1,0 +1,10 @@
+\02Totalpack
+Confirmacion de Cierre Z
+ID Transaccion: XXXIDTRANS
+\29
+Fecha:DD-MM-AAAA
+Hora:HH:MM:SS
+ID Cierre Zeta:XXID
+Cantidad:CNT
+Monto Total $:MTD
+\29

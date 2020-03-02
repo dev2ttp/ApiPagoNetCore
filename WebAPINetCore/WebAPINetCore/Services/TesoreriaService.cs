@@ -15,6 +15,16 @@ namespace WebAPINetCore.Services
     {
         private static readonly HttpClient client = new HttpClient();
 
+        public bool abrirpuerta() {
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            var resultado = false;
+                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.AbrirPuerta, data);
+                resultado = pipeClient.SendMessage(ServicioPago.Comandos.AbrirPuerta);
+                return resultado;
+        }
 
         public void SaldoTransaccion()
         {
@@ -24,9 +34,10 @@ namespace WebAPINetCore.Services
             var respuesta = Globals.Servicio2.SendMessage(ServicioPago.Comandos.estadosaldo);
             if (respuesta)
             {
+                Globals.Saldos = new SaldoGaveta();
                 if (Globals.Servicio2.Resultado.Data.Count > 1)
                 {
-                    Globals.Saldos = new SaldoGaveta();
+                    
                     foreach (var item in Globals.Servicio2.Resultado.Data)
                     {
                         var saldo = item.Split("~");
@@ -59,6 +70,14 @@ namespace WebAPINetCore.Services
                 }
 
             }
+        }
+
+        public void SaldoMaquinaTrans() {
+            Globals.billetes = new List<int>();
+            Globals.monedas = new List<int>();
+            PermitirVueltoService llenarSaldo = new PermitirVueltoService();
+            Globals.SaldosMaquina = new SaldoGaveta();
+            llenarSaldo.ObteneDineroMaquina();
         }
 
         public void RealizarCierreZ(int mantisa)
@@ -97,13 +116,13 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public void ObtenerReporteCierreZ()
+        public void ObtenerReporteCierreZ(int mantisa)
         {
 
             Globals.data = new List<string>();
             Globals.Servicio1 = new PipeClient();
             Globals.fechasIDs = new IDReportesCierre();
-            Globals.data.Add("1"); //0
+            Globals.data.Add(mantisa.ToString()); //0
             Globals.data.Add("L");
             Globals.data.Add("0");
             Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.ReporteCierreZ, Globals.data);
@@ -136,19 +155,20 @@ namespace WebAPINetCore.Services
 
         }
 
-        public void ObtenerReportebyID(string idz)
+        public void ObtenerReportebyID (UserToken user)
         {
             Globals.data = new List<string>();
             Globals.Servicio1 = new PipeClient();
             Globals.fechasIDs = new IDReportesCierre();
             Globals.DatosCierre = new ReportesCierre();
-            Globals.data.Add("1"); //0
+            Globals.data.Add(user.IdUser); //0
             Globals.data.Add("Z");
-            Globals.data.Add(idz);
+            Globals.data.Add(user.TipoUser);
             Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.ReporteCierreZ, Globals.data);
             var respuesta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.ReporteCierreZ);
             if (respuesta)
             {
+                var msg = Globals.Servicio1.Resultado.Data;
                 if (Globals.Servicio1.Resultado.Data.Count > 1)
                 {
                     var datosCierres = Globals.Servicio1.Resultado.Data[0].Split("~");
@@ -165,6 +185,142 @@ namespace WebAPINetCore.Services
                     {
                         Globals.DatosCierre.MontoTotal = datosCierres[3];
                     }
+
+                    Globals.RParticularZMontos = Globals.RParticularZGavetas = Globals.RParticularZDiscrepancias = "";
+                    Globals.RParticularZmain = new string[7];
+                    var main = msg[0].Split('~');
+                    Globals.RParticularZmain[0] = main[0];
+                    Globals.RParticularZmain[1] = main[1];
+                    Globals.RParticularZmain[2] = main[2];
+                    Globals.RParticularZmain[3] = main[3];
+                    Globals.RParticularZmain[4] = main[4];
+                    Globals.RParticularZmain[5] = main[5];
+                    Globals.RParticularZmain[6] = main[6];
+
+                    int indice = 0;
+                    Globals.RParticularZMontos = "";
+                    for (int i = 1; i < msg.Count; i++)
+                    {
+                        var Montos = msg[i].Split('~');
+                        if (Montos[1].Contains("Total"))
+                        {
+                            indice = i;
+                            i = msg.Count;
+                            Globals.RParticularZMontos += "Total ";
+                            Globals.RParticularZMontos += Montos[4] + " ";
+                            Globals.RParticularZMontos += Montos[5] + " \n";
+
+                            //Globals.RParticularZMontos += "    Total      ";
+                            //Globals.RParticularZMontos += formatear_bouche(2, "  ", Globals.RParticularZMontos.Length) + " ";
+                            //Globals.RParticularZMontos += formatear_bouche(3, Montos[4], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZMontos += formatear_bouche(4, Montos[5], Globals.RParticularZMontos.Length) + " \n            ";
+                        }
+                        else
+                        {
+                            Globals.RParticularZMontos += Montos[1] + " ";
+                            Globals.RParticularZMontos += Montos[2] + " ";
+                            Globals.RParticularZMontos += Montos[4] + " ";
+                            Globals.RParticularZMontos += Montos[5] + " \n";
+                            //Globals.RParticularZMontos += formatear_bouche(1, Montos[1], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZMontos += formatear_bouche(2, Montos[2], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZMontos += formatear_bouche(3, Montos[4], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZMontos += formatear_bouche(4, Montos[5], Globals.RParticularZMontos.Length) + " \n             ";
+
+                        }
+
+                    }
+                    Globals.RParticularZGavetas = "";
+                    for (int i = indice + 1; i < msg.Count; i++)
+                    {
+                        var Gavetas = msg[i].Split('~');
+                        if (Gavetas[1].Contains("Total"))
+                        {
+                            indice = i;
+                            i = msg.Count;
+                            Globals.RParticularZGavetas += "Total ";
+                            Globals.RParticularZGavetas += Gavetas[4] + " ";
+
+
+                            //Globals.RParticularZGavetas += "    Total      ";
+                            //Globals.RParticularZGavetas += formatear_bouche(2, "  ", Globals.RParticularZMontos.Length) + " ";
+                            //Globals.RParticularZGavetas += formatear_bouche(3, Gavetas[4], Globals.RParticularZMontos.Length) + "  ";
+                            if (Gavetas.Length > 5)
+                            {
+                                Globals.RParticularZGavetas += Gavetas[5] + " \n";
+                                // Globals.RParticularZGavetas += formatear_bouche(4, Gavetas[5], Globals.RParticularZMontos.Length) + " \n            ";
+                            }
+                            else
+                            {
+                                Globals.RParticularZGavetas += " \n             ";
+                            }
+                        }
+                        else
+                        {
+                            Globals.RParticularZGavetas += Gavetas[1] + " ";
+                            Globals.RParticularZGavetas += Gavetas[2] + " ";
+                            Globals.RParticularZGavetas += Gavetas[4] + " ";
+                            Globals.RParticularZGavetas += Gavetas[5] + " \n";
+
+                            //Globals.RParticularZGavetas += formatear_bouche(1, Gavetas[1], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZGavetas += formatear_bouche(2, Gavetas[2], Globals.RParticularZMontos.Length) + "  ";
+                            //Globals.RParticularZGavetas += formatear_bouche(3, Gavetas[4], Globals.RParticularZMontos.Length) + "  ";
+                            if (Gavetas.Length > 5)
+                            {
+                                Globals.RParticularZGavetas += Gavetas[5] + " \n";
+                                //Globals.RParticularZGavetas += formatear_bouche(4, Gavetas[5], Globals.RParticularZMontos.Length) + " \n             ";
+                            }
+                            else
+                            {
+                                Globals.RParticularZGavetas += " \n             ";
+                            }
+
+                        }
+
+                    }
+
+                    Globals.RParticularZDiscrepancias = "";
+                    for (int i = indice + 1; i < msg.Count; i++)
+                    {
+                        var Discrepancia = msg[i].Split('~');
+                        if (Discrepancia[1].Contains("Total"))
+                        {
+                            indice = i;
+                            i = msg.Count;
+                            Globals.RParticularZDiscrepancias += "Total       ";
+                            Globals.RParticularZDiscrepancias += Discrepancia[3] + "  ";
+                            if (Discrepancia.Length > 5)
+                            {
+                                Globals.RParticularZDiscrepancias += Discrepancia[5] + " \n";
+                            }
+                            else
+                            {
+                                Globals.RParticularZDiscrepancias += " \n";
+                            }
+
+
+                        }
+                        else
+                        {
+                            Globals.RParticularZDiscrepancias += Discrepancia[0] + "  ";
+                            Globals.RParticularZDiscrepancias += Discrepancia[1] + "  ";
+                            Globals.RParticularZDiscrepancias += Discrepancia[2] + "  ";
+                            Globals.RParticularZDiscrepancias += Discrepancia[3] + "  ";
+                            Globals.RParticularZDiscrepancias += Discrepancia[4] + "  ";
+                            if (Discrepancia.Length > 5)
+                            {
+                                Globals.RParticularZDiscrepancias += Discrepancia[5] + "  ";
+                                Globals.RParticularZDiscrepancias += Discrepancia[6] + "  ";
+                                Globals.RParticularZDiscrepancias += Discrepancia[7] + "  ";
+                                Globals.RParticularZDiscrepancias += Discrepancia[8] + " \n";
+                            }
+                            else
+                            {
+                                Globals.RParticularZDiscrepancias += " \n";
+                            }
+
+                        }
+                    }
+
 
 
 
@@ -197,11 +353,12 @@ namespace WebAPINetCore.Services
                 pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_billete, data);
                 resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_billete);
             }
-            else {
+            else
+            {
                 pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.vacio_moneda, data);
                 resultado = pipeClient.SendMessage(ServicioPago.Comandos.vacio_moneda);
             }
-            
+
 
             if (resultado)
             {
@@ -253,7 +410,7 @@ namespace WebAPINetCore.Services
                 }
                 else
                 {
-                        return "OK";
+                    return "OK";
                 }
             }
             else
@@ -433,7 +590,6 @@ namespace WebAPINetCore.Services
             }
         }
 
-
         public string RetirararDisp(string tipodisp)
         {
             PipeClient2 pipeClient = new PipeClient2();
@@ -503,6 +659,26 @@ namespace WebAPINetCore.Services
                     {
                         return "Dispositivo Diferente";
                     }
+                    else if (respuestaserv.Contains("no existe"))
+                    {
+                        return "no existe";
+                    }
+                    else if (respuestaserv.Contains("no habilitada"))
+                    {
+                        return "no habilitada";
+                    }
+                    else if (respuestaserv.Contains("no cargado"))
+                    {
+                        return "no cargado";
+                    }
+                    else if (respuestaserv.Contains("previamente retirado"))
+                    {
+                        return "previamente retirado";
+                    }
+                    else if (respuestaserv.Contains("ya estaba inserta"))
+                    {
+                        return "ya estaba inserta";
+                    }
                     else
                     {
                         return "OK";
@@ -528,7 +704,7 @@ namespace WebAPINetCore.Services
             string msg = pipeClient._Resp;
             if (respuesta == true)
             {
-                if(msg.Contains("NOK"))
+                if (msg.Contains("NOK"))
                 {
                     return "NOK";
                 }
@@ -541,6 +717,14 @@ namespace WebAPINetCore.Services
                     if (respuestaserv.Contains("diferente"))
                     {
                         return "Dispositivo Diferente";
+                    }
+                    else if (respuestaserv.Contains("no existe"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else if (respuestaserv.Contains("previamente retirada"))
+                    {
+                        return "previamente retirada";
                     }
                     else
                     {
@@ -567,7 +751,7 @@ namespace WebAPINetCore.Services
             if (respuesta == true)
             {
                 string msg = pipeClient._Resp;
-                if(msg.Contains("NOK"))
+                if (msg.Contains("NOK"))
                 {
                     return "NOK";
                 }
@@ -580,6 +764,14 @@ namespace WebAPINetCore.Services
                     if (respuestaserv.Contains("diferente"))
                     {
                         return "Dispositivo Diferente";
+                    }
+                    else if (respuestaserv.Contains("no existe"))
+                    {
+                        return "Dispositivo Diferente";
+                    }
+                    else if (respuestaserv.Contains("previamente retirada"))
+                    {
+                        return "previamente retirada";
                     }
                     else
                     {
@@ -594,13 +786,16 @@ namespace WebAPINetCore.Services
 
         }
 
-        public async Task ImprecionCierreZAsync(DatosCierreZ Cierre) {
+        public async Task ImprecionCierreZAsync(DatosCierreZ Cierre)
+        {
 
             try
             {
                 StreamReader objReader = new StreamReader("./Documentos/cierreZ.txt");
                 string sLine = "";
                 string comprobante = "";
+                Impresion comprobanteE = new Impresion();
+                comprobanteE.document = "";
 
                 while (sLine != null)
                 {
@@ -619,8 +814,8 @@ namespace WebAPINetCore.Services
                 comprobante = comprobante.Replace("XXID", Cierre.IDZCierre);
                 comprobante = comprobante.Replace("CNT", Cierre.Cantidad);
                 comprobante = comprobante.Replace("MTD", Cierre.MontoTotal);
-
-                var respuesta = await ImprimirComprobanteAsync(comprobante);
+                comprobanteE.document = comprobante;
+                var respuesta = await ImprimirComprobanteAsync(comprobanteE);
             }
             catch (Exception ex)
             {
@@ -628,6 +823,180 @@ namespace WebAPINetCore.Services
             }
         }
 
+        public async Task ImpresionReporteCierrez(UserToken user)
+        {
+
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/Impresion_reporteCierreZ.txt");
+                string sLine = "";
+                string comprobante = "";
+                Impresion comprobanteE = new Impresion();
+                comprobanteE.document = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                 comprobante = comprobante.Replace("XXXIDU", user.IdUser.ToString());
+                 comprobante = comprobante.Replace("XXXUSR", user.Nombre);
+                 comprobante = comprobante.Replace("XXXFECHA", Globals.RParticularZmain[0]);
+                 comprobante = comprobante.Replace("XXXHORA", Globals.RParticularZmain[1]);
+                 comprobante = comprobante.Replace("XXXIDZETA", Globals.RParticularZmain[2]);
+                 comprobante = comprobante.Replace("XXXREP", Globals.RParticularZMontos + " ");
+                 comprobante = comprobante.Replace("XXXGAV", Globals.RParticularZGavetas + " ");
+                 comprobante = comprobante.Replace("XXXTOT", Globals.RParticularZDiscrepancias);
+                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
+
+                comprobanteE.document = comprobante;
+                var respuesta = await ImprimirComprobanteAsync(comprobanteE);
+            }
+            catch (Exception ex)
+            {
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+        }
+
+        public async Task ImprecionComprobantePagoAsync(CargaDinero Carga)
+        {
+
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/comprobante_Ingre_Dinero.txt");
+                string sLine = "";
+                string comprobante = "";
+                Impresion comprobanteE = new Impresion();
+                comprobanteE.document = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
+                comprobante = comprobante.Replace("M1XX", Carga.M10);
+                comprobante = comprobante.Replace("M50X", Carga.M50);
+                comprobante = comprobante.Replace("M10X", Carga.M100);
+                comprobante = comprobante.Replace("M500", Carga.M500);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1000);
+                comprobante = comprobante.Replace("B2XXX", Carga.B2000);
+                comprobante = comprobante.Replace("B5000", Carga.B5000);
+                comprobante = comprobante.Replace("B100XX", Carga.B10000);
+                comprobante = comprobante.Replace("B20XXX", Carga.B20000);
+
+                comprobanteE.document = comprobante;
+                var respuesta = await ImprimirComprobanteAsync(comprobanteE);
+            }
+            catch (Exception ex)
+            {
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+        }
+
+        public async Task ImprimirGavAntesAhora(CargaDinero Carga, string Nombre)
+        {
+            SaldoMaquinaTrans();
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/comprobante_AntesAhora.txt");
+                string sLine = "";
+                string comprobante = "";
+                Impresion comprobanteE = new Impresion();
+                comprobanteE.document = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                comprobante = comprobante.Replace("XXXTitulo", Nombre);
+                comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
+                comprobante = comprobante.Replace("M1XX", Carga.M10 + "|" + Globals.SaldosMaquina.MR.M10);
+                comprobante = comprobante.Replace("M50X", Carga.M50 + "|" + Globals.SaldosMaquina.MR.M50);
+                comprobante = comprobante.Replace("M10X", Carga.M100 + "|" + Globals.SaldosMaquina.MR.M100);
+                comprobante = comprobante.Replace("M500", Carga.M500 + "|" + Globals.SaldosMaquina.MR.M500);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1000 + "|" + Globals.SaldosMaquina.BA.B1000);
+                comprobante = comprobante.Replace("B2XXX", Carga.B2000 + "|" + Globals.SaldosMaquina.BA.B2000);
+                comprobante = comprobante.Replace("B5000", Carga.B5000 + "|" + Globals.SaldosMaquina.BA.B5000);
+                comprobante = comprobante.Replace("B100XX", Carga.B10000 + "|" + Globals.SaldosMaquina.BA.B10000);
+                comprobante = comprobante.Replace("B20XXX", Carga.B20000 + "|" + Globals.SaldosMaquina.BA.B20000);
+
+                comprobanteE.document = comprobante;
+                var respuesta = await ImprimirComprobanteAsync(comprobanteE);
+            }
+            catch (Exception ex)
+            {
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+        }
+
+        public async Task ImprecionComprobantePagoAsyncR(CargaDinero Carga, string Nombre)
+        {
+            SaldoTransaccion();
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/comprobante_AntesAhora.txt");
+                string sLine = "";
+                string comprobante = "";
+                Impresion comprobanteE = new Impresion();
+                comprobanteE.document = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                comprobante = comprobante.Replace("XXXTitulo", Nombre);
+                comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
+                comprobante = comprobante.Replace("M1XX", Carga.M10 + "|" + Globals.Saldos.MB.M10);
+                comprobante = comprobante.Replace("M50X", Carga.M50 + "|" + Globals.Saldos.MB.M50);
+                comprobante = comprobante.Replace("M10X", Carga.M100 + "|" + Globals.Saldos.MB.M100);
+                comprobante = comprobante.Replace("M500", Carga.M500 + "|" + Globals.Saldos.MB.M500);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1000 + "|" + Globals.Saldos.BR.B1000);
+                comprobante = comprobante.Replace("B2XXX", Carga.B2000 + "|" + Globals.Saldos.BR.B2000);
+                comprobante = comprobante.Replace("B5000", Carga.B5000 + "|" + Globals.Saldos.BR.B5000);
+                comprobante = comprobante.Replace("B100XX", Carga.B10000 + "|" + Globals.Saldos.BR.B10000);
+                comprobante = comprobante.Replace("B20XXX", Carga.B20000 + "|" + Globals.Saldos.BR.B20000);
+
+                comprobanteE.document = comprobante;
+                var respuesta = await ImprimirComprobanteAsync(comprobanteE);
+            }
+            catch (Exception ex)
+            {
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+        }
 
         public void ObtenerBilletes(string saldo, string Tipo)
         {
@@ -757,8 +1126,7 @@ namespace WebAPINetCore.Services
             }
         }
 
-
-        public async Task<bool> ImprimirComprobanteAsync(String Documento)
+        public async Task<bool> ImprimirComprobanteAsync(Impresion Documento)
         {
             var url = string.Format(Globals._config["Urls:Impresion"]);
             var json = JsonConvert.SerializeObject(Documento);
@@ -766,10 +1134,12 @@ namespace WebAPINetCore.Services
             using (var response = await client.PostAsync(url, request))
             {
                 var content = await response.Content.ReadAsStringAsync();
+
                 response.EnsureSuccessStatusCode();
+                return true;
             }
 
-            return true;
+           
         }
     }
 }

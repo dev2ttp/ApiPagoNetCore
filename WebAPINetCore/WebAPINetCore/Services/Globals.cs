@@ -84,6 +84,7 @@ namespace WebAPINetCore.Services
         // Tesoreria
         //Saldos
         public static SaldoGaveta Saldos { get; set; } // utilizado para llevar los saldos de toda la maquina
+        public static SaldoGaveta SaldosMaquina { get; set; } // utilizado para llevar los saldos de toda la maquina
 
         //Cieere Z
         public static DatosCierreZ Cierrez = new DatosCierreZ(); // Datos Devueltos Al realizar un cierre Z
@@ -93,6 +94,14 @@ namespace WebAPINetCore.Services
 
         // Datos Cierre Cieere Z
         public static ReportesCierre DatosCierre = new ReportesCierre();//IDs y fechas de los reportes de cierre Z
+
+        // variables reporte cierre Z
+        public static string RParticularZMontos { get; set; }
+        public static string RParticularZGavetas { get; set; }
+        public static string RParticularZDiscrepancias { get; set; }
+        public static string[] RParticularZmain { get; set; }
+        
+
 
     }
 }

@@ -64,6 +64,26 @@ namespace WebAPINetCore.Controllers
             }
         }
 
+        [HttpPost("LogOut")]
+        public ActionResult<UserToken> LogOut([FromBody] UserInfo userInfo)
+        {
+            Globals.data = new List<string>();
+            Globals.data.Add(userInfo.RuT);
+            Globals.Servicio1.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.logoff, Globals.data);
+            var vuelta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.logoff);
+
+            if (vuelta)
+            {
+                Globals.IDTransaccion = "";
+                return Ok("Deslogueo Correcto");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return BadRequest(ModelState);
+            }
+        }
+
 
         private UserToken BuildTokenUserPass(UserInfo userInfo)
         {

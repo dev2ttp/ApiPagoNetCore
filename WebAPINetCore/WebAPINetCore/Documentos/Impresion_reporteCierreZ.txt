@@ -1,0 +1,21 @@
+\02=====================
+CIERRE ZETA
+=====================
+         
+ID Usuario : XXXIDU
+Nombre     : XXXUSR
+Fecha      : XXXFECHA
+Hora       : XXXHORA
+ID Zeta    : XXXIDZETA
+ID Transaccion: XXXIDTRANS
+
+            
+Medio Tipo Operacion Monto $
+----- ---- --------- -------
+XXXREP
+----------------------------
+Medio Tipo Cantidad  Monto $
+----- ---- --------  -------
+XXXGAV
+----------------------------
+XXXTOT

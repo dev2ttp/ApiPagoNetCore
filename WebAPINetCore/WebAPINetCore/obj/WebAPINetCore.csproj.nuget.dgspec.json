@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
+    "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {}
   },
   "projects": {
-    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
+    "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+        "projectUniqueName": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
         "projectName": "WebAPINetCore",
-        "projectPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
-        "packagesPath": "C:\\Users\\jose.paz\\.nuget\\packages\\",
-        "outputPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
+        "projectPath": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
+        "packagesPath": "C:\\Users\\ttp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\jose.paz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ttp\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

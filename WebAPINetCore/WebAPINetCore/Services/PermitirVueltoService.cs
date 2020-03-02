@@ -28,26 +28,31 @@ namespace WebAPINetCore.Services
                     {
                         var b1000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b1000)*1000);
+                        Globals.SaldosMaquina.BA.B1000 = b1000;
                     }
                     if (item.Contains("2000,"))
                     {
                         var b2000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b2000)*2000);
+                        Globals.SaldosMaquina.BA.B2000 = b2000;
                     }
                     if (item.Contains("5000,"))
                     {
                         var b5000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b5000)*5000);
+                        Globals.SaldosMaquina.BA.B5000 = b5000;
                     }
                     if (item.Contains("10000,"))
                     {
                         var b10000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b10000)*10000);
+                        Globals.SaldosMaquina.BA.B10000 = b10000;
                     }
                     if (item.Contains("20000,"))
                     {
                         var b20000 = item.Split(',')[1];
                         Globals.billetes.Add(int.Parse(b20000));
+                        Globals.SaldosMaquina.BA.B20000 = b20000;
                     }
                 }
 
@@ -60,24 +65,28 @@ namespace WebAPINetCore.Services
                         var moneda10 = item.Replace("0,10,", "10,");
                         var b10 = moneda10.Split(',')[1];
                         Globals.monedas.Add(int.Parse(b10) * 10);
+                        Globals.SaldosMaquina.MR.M10 = b10;
                     }
                     if (item.Contains("0,50,"))
                     {
                         var moneda50 = item.Replace("0,50,", "50,");
                         var b50 = moneda50.Split(',')[1];
                         Globals.monedas.Add(int.Parse(b50) * 50);
+                        Globals.SaldosMaquina.MR.M50 = b50;
                     }
                     if (item.Contains("1,00,"))
                     {
                         var moneda100 = item.Replace("1,00,", "100,");
                         var b100 = moneda100.Split(',')[1];
                         Globals.monedas.Add(int.Parse(b100) * 100);
+                        Globals.SaldosMaquina.MR.M100 = b100;
                     }
                     if (item.Contains("5,00,"))
                     {
                         var moneda500 = item.Replace("5,00,,", "500,");
                         var b500 = moneda500.Split(',')[1];
                         Globals.monedas.Add(int.Parse(b500) * 500);
+                        Globals.SaldosMaquina.MR.M500 = b500;
                     }
                 }
             }

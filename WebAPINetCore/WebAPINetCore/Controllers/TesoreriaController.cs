@@ -30,7 +30,39 @@ namespace WebAPINetCore.Controllers
             Globals._config = _configuration;
         }
 
-        // GET api/Pago/FinalizarPago
+        // Administrar maquina Abrir apagar reiniciar
+
+        [HttpGet("AbrirPuerta")]
+        public ActionResult<IEnumerable<string>> AbrirPuerta()
+        {
+           var respuesta = Tesoservice.abrirpuerta();
+            return Ok(true);
+        }
+
+        [HttpGet("ApagarPC")]
+        public ActionResult<IEnumerable<string>> ApagarPC()
+        {
+            apagarPC apagar = new apagarPC("/s", DateTime.Now);
+            var respuesta = apagar.Shut_Down();
+            return Ok(respuesta);
+        }
+
+        [HttpGet("ReiniciarPC")]
+        public ActionResult<IEnumerable<string>> ReiniciarPC()
+        {
+            apagarPC apagar = new apagarPC("/r", DateTime.Now);
+            var respuesta = apagar.Shut_Down();
+            return Ok(respuesta);
+        }
+
+         //Saldo  de maquina y base de datos
+        [HttpGet("ObtenerSaldosMaquina")]
+        public ActionResult<IEnumerable<string>> ObtenerSaldosMaquina()
+        {
+            Tesoservice.SaldoMaquinaTrans();
+            return Ok(Globals.SaldosMaquina);
+        }
+
         [HttpGet("ObtenerSaldos")]
         public ActionResult<IEnumerable<string>> ObtenerSaldos()
         {
@@ -38,7 +70,7 @@ namespace WebAPINetCore.Controllers
             return Ok(Globals.Saldos);
         }
 
-        // Post api/Tesoreria/DineroIngresado
+        // Realizar cierre Z y consulta
         [HttpPost("RealizarCierreZ")]
         public ActionResult<IEnumerable<EstadoPagoResp>> RealizarCierreZ([FromBody] int mantisa)
         {
@@ -46,20 +78,22 @@ namespace WebAPINetCore.Controllers
             return Ok(Globals.Cierrez);
         }
 
-        [HttpGet("ObtenerReporteCierreZ")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ObtenerReporteCierreZ()
+        [HttpPost("ObtenerReporteCierreZ")]
+        public ActionResult<IEnumerable<IDReportesCierre>> ObtenerReporteCierreZ([FromBody] int mantisa)
         {
-            Tesoservice.ObtenerReporteCierreZ();
+            Tesoservice.ObtenerReporteCierreZ(mantisa);
             return Ok(Globals.fechasIDs);
         }
 
         [HttpPost("ObtenerReportebyID")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ObtenerReportebyID([FromBody] int idz)
+        public ActionResult<IEnumerable<EstadoPagoResp>> ObtenerReportebyID([FromBody] UserToken user)
         {
-            Tesoservice.ObtenerReportebyID(idz.ToString());
+            Tesoservice.ObtenerReportebyID(user);
             return Ok(Globals.DatosCierre);
         }
 
+
+        // Vaciado de Gavetas
         [HttpPost("VaciarGaveta")]
         public ActionResult<IEnumerable<EstadoPagoResp>> VaciarGaveta([FromBody] GavsRetiro gavs)
         {
@@ -74,6 +108,7 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
+        // Cargar de dinero Dinero 
         [HttpGet("Iniciocarga")]
         public ActionResult<IEnumerable<EstadoPagoResp>> Iniciocarga()
         {
@@ -103,6 +138,7 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
+        // adm Dispositivos
         [HttpPost("InsertarDisp")]
         public ActionResult<IEnumerable<EstadoPagoResp>> InsertarDisp([FromBody] GavMR MonIngresadas)
         {
@@ -116,7 +152,7 @@ namespace WebAPINetCore.Controllers
             var respuesta = Tesoservice.RetirararDisp(MonIngresadas.Idgav);
             return Ok(respuesta);
         }
-
+        // Retirar gavetas
         [HttpPost("AgregarGav")]
         public ActionResult<IEnumerable<EstadoPagoResp>> AgregarGav([FromBody] GavReq gav)
         {
@@ -127,17 +163,18 @@ namespace WebAPINetCore.Controllers
         [HttpPost("RetirarGavB")]
         public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavB([FromBody] GavReq tipogav)
         {
-            var respuesta = Tesoservice.RetirarGavB(tipogav.Tipo);
+            var respuesta = Tesoservice.RetirarGavB(tipogav.Idgav);
             return Ok(respuesta);
         }
 
         [HttpPost("RetirarGavM")]
         public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavM([FromBody] GavReq tipogav)
         {
-            var respuesta = Tesoservice.RetirarGavM(tipogav.Tipo);
+            var respuesta = Tesoservice.RetirarGavM(tipogav.Idgav);
             return Ok(respuesta);
         }
 
+        // Impresiones de Ticketcs 
         [HttpPost("ImprimirCierreZ")]
         public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCierreZ([FromBody] DatosCierreZ Cierre)
         {
@@ -145,6 +182,48 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
+        [HttpPost("ImprimirCargaDinero")] 
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCargaDinero([FromBody] CargaDinero Carga)
+        {
+            var respuesta = Tesoservice.ImprecionComprobantePagoAsync(Carga);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("ImpresionReporteCierrez")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImpresionReporteCierrez([FromBody] UserToken user)
+        {
+            var respuesta = Tesoservice.ImpresionReporteCierrez(user);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("ImprimirGavAntesAhora")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirGavAntesAhora([FromBody] CargaDinero Carga)
+        {
+            var respuesta = Tesoservice.ImprimirGavAntesAhora(Carga, "Vaciado Gaveta de Vueltos");
+            return Ok(respuesta);
+        }
+
+        [HttpPost("ImprimirGavAntesAhoraR")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirGavAntesAhoraR([FromBody] CargaDinero Carga)
+        {
+            var respuesta = Tesoservice.ImprecionComprobantePagoAsyncR(Carga, "Vaciado Alcancias");
+            return Ok(respuesta);
+        }
+
+        [HttpPost("ImpGavAntesAhoraD")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImpGavAntesAhoraD([FromBody] CargaDinero Carga)
+        {
+            var respuesta = Tesoservice.ImprimirGavAntesAhora(Carga, "Retiro Disp Vueltos");
+            return Ok(true);
+        }
+
+
+        [HttpPost("ImpGavAntesAhoraDReciclaje")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> ImpGavAntesAhoraDReciclaje([FromBody] CargaDinero Carga)
+        {
+            var respuesta = Tesoservice.ImprecionComprobantePagoAsyncR(Carga, "Retiro Disp Alcancia");
+            return Ok(true);
+        }
 
 
 
@@ -159,5 +238,6 @@ namespace WebAPINetCore.Controllers
 
 
 
+
+        }
     }
-}
