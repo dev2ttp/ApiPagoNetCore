@@ -180,7 +180,9 @@ namespace WebAPINetCore.Services
         public async Task<bool> ImprimirComprobanteAsync(String Documento)
         {
             var url = string.Format(Globals._config["Urls:Impresion"]);
-            var json = JsonConvert.SerializeObject(Documento);
+            Impresion documento = new Impresion();
+            documento.document = Documento;
+            var json = JsonConvert.SerializeObject(documento);
             var request = new StringContent(json, Encoding.UTF8, "application/json");
             using (var response = await client.PostAsync(url, request))
             {
@@ -247,7 +249,7 @@ namespace WebAPINetCore.Services
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.Pago.MontoAPagar.ToString());
-                comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
+               // comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.Pago.MontoAPagar + Globals.Vuelto.VueltoTotal).ToString());
                 comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.Vuelto.DineroRegresado.ToString());
                 comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.Vuelto.VueltoTotal.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);

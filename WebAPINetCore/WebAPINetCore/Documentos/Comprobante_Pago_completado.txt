@@ -1,6 +1,6 @@
-                     Totalpack              
-           Comprobante de Pago Completado
-             dd/mm/aaaa hh:mm:ss PM     
-             Monto a Pagar: XXXAPAGAR
-             Monto Pagado: XXXPAGADO   
-			 ID de Transaccion: XXXIDTRANS   
+Totalpack              
+Comprobante de Pago Completado
+dd/mm/aaaa hh:mm:ss PM     
+Monto a Pagar: XXXAPAGAR
+Monto Pagado: XXXPAGADO   
+ID de Transaccion: XXXIDTRANS   

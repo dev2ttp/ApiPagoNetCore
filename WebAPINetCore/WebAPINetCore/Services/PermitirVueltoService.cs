@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPINetCore.PipeServer;
+using WebAPINetCore.Models;
 
 namespace WebAPINetCore.Services
 {
@@ -20,6 +21,7 @@ namespace WebAPINetCore.Services
             var vuelta = Globals.Servicio2ConsultarVuelto.SendMessage(ServicioPago.Comandos.DineroEnMaquina);
             if (vuelta)
             {
+                Globals.SaldosMaquina = new SaldoGaveta();
                 var billete = Globals.Servicio2ConsultarVuelto.Resultado.Data[0];
                 var billetes = billete.Split(';');
                 foreach (var item in billetes)
@@ -113,7 +115,11 @@ namespace WebAPINetCore.Services
                 dineroTotal += item;
             }
             //monedas
-            if (/*Globals.monedas[0] < 4 || Globals.monedas[1] < 4 || */Globals.monedas[2] < 400 /*|| Globals.monedas[3] < 2*/)
+            //if (/*Globals.monedas[0] < 4 || Globals.monedas[1] < 4 || */Globals.monedas[2] < 400 /*|| Globals.monedas[3] < 2*/)
+            //{
+            //    return false;
+            //}
+            if (Globals.monedas[2] < 400 )
             {
                 return false;
             }
