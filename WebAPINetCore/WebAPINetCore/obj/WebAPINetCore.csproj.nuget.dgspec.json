@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {}
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
+        "projectUniqueName": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
         "projectName": "WebAPINetCore",
-        "projectPath": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
-        "packagesPath": "C:\\Users\\ttp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ttp\\Desktop\\ServicioPago2_Version_1.1.0\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\obj\\",
+        "projectPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+        "packagesPath": "C:\\Users\\jose.paz\\.nuget\\packages\\",
+        "outputPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\ttp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jose.paz\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -48,6 +48,10 @@
             "NLog.Web.AspNetCore": {
               "target": "Package",
               "version": "[4.9.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
             },
             "System.ServiceProcess.ServiceController": {
               "target": "Package",
