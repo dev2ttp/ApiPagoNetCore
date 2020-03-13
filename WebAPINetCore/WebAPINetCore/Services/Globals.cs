@@ -41,6 +41,10 @@ namespace WebAPINetCore.Services
         public static bool ComprobanteImpreso;
         public static int ComprobanteImpresoContador = 0;
         public static bool ComprobanteImpresoVuelto;
+        public static int ImpresoraMontoPagar = 0;
+        public static int ImpresoraMontoIngresado = 0;
+        public static int ImpresoraMontoVueltoEntregar = 0;
+        public static int ImpresoraMontoEntregado = 0;
 
         // Variables de estado
         public static EstadoVuelto Vuelto;

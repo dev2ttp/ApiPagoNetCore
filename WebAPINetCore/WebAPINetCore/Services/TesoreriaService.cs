@@ -15,15 +15,16 @@ namespace WebAPINetCore.Services
     {
         private static readonly HttpClient client = new HttpClient();
 
-        public bool abrirpuerta() {
+        public bool abrirpuerta()
+        {
             PipeClient2 pipeClient = new PipeClient2();
             ServicioPago servicio = new ServicioPago();
             List<string> data = new List<string>();
 
             var resultado = false;
-                pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.AbrirPuerta, data);
-                resultado = pipeClient.SendMessage(ServicioPago.Comandos.AbrirPuerta);
-                return resultado;
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.AbrirPuerta, data);
+            resultado = pipeClient.SendMessage(ServicioPago.Comandos.AbrirPuerta);
+            return resultado;
         }
 
         public void SaldoTransaccion()
@@ -37,7 +38,7 @@ namespace WebAPINetCore.Services
                 Globals.Saldos = new SaldoGaveta();
                 if (Globals.Servicio2.Resultado.Data.Count > 1)
                 {
-                    
+
                     foreach (var item in Globals.Servicio2.Resultado.Data)
                     {
                         var saldo = item.Split("~");
@@ -72,7 +73,8 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public void SaldoMaquinaTrans() {
+        public void SaldoMaquinaTrans()
+        {
             Globals.billetes = new List<int>();
             Globals.monedas = new List<int>();
             PermitirVueltoService llenarSaldo = new PermitirVueltoService();
@@ -155,7 +157,7 @@ namespace WebAPINetCore.Services
 
         }
 
-        public void ObtenerReportebyID (UserToken user)
+        public void ObtenerReportebyID(UserToken user)
         {
             Globals.data = new List<string>();
             Globals.Servicio1 = new PipeClient();
@@ -786,6 +788,63 @@ namespace WebAPINetCore.Services
 
         }
 
+        public string DiscrepanciaB(Discrepancia Gavs)
+        {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(Gavs.GavOrigen);
+            data.Add(Gavs.GavDestino);
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.AutoDiscrepanciaB, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.AutoDiscrepanciaB);
+            if (respuesta == true)
+            {
+                string msg = pipeClient._Resp;
+                if (msg.Contains("OK"))
+                {
+                    return "OK";
+                }
+                else
+                {
+                    return "NOK";
+                }
+            }
+            else {
+                return "NOK";
+            }
+        }
+
+        public string DiscrepanciaM(Discrepancia Gavs)
+        {
+
+            PipeClient2 pipeClient = new PipeClient2();
+            ServicioPago servicio = new ServicioPago();
+            List<string> data = new List<string>();
+
+            data.Add(Gavs.GavOrigen);
+            data.Add(Gavs.GavDestino);
+            pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.AutoDiscrepanciaM, data);
+            var respuesta = pipeClient.SendMessage(ServicioPago.Comandos.AutoDiscrepanciaM);
+            if (respuesta == true)
+            {
+                string msg = pipeClient._Resp;
+                if (msg.Contains("OK"))
+                {
+                    return "OK";
+                }
+                else
+                {
+                    return "NOK";
+                }
+            }
+            else
+            {
+                return "NOK";
+            }
+        }
+
         public async Task ImprecionCierreZAsync(DatosCierreZ Cierre)
         {
 
@@ -845,15 +904,15 @@ namespace WebAPINetCore.Services
                 }
                 objReader.Close();
 
-                 comprobante = comprobante.Replace("XXXIDU", user.IdUser.ToString());
-                 comprobante = comprobante.Replace("XXXUSR", user.Nombre);
-                 comprobante = comprobante.Replace("XXXFECHA", Globals.RParticularZmain[0]);
-                 comprobante = comprobante.Replace("XXXHORA", Globals.RParticularZmain[1]);
-                 comprobante = comprobante.Replace("XXXIDZETA", Globals.RParticularZmain[2]);
-                 comprobante = comprobante.Replace("XXXREP", Globals.RParticularZMontos + " ");
-                 comprobante = comprobante.Replace("XXXGAV", Globals.RParticularZGavetas + " ");
-                 comprobante = comprobante.Replace("XXXTOT", Globals.RParticularZDiscrepancias);
-                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
+                comprobante = comprobante.Replace("XXXIDU", user.IdUser.ToString());
+                comprobante = comprobante.Replace("XXXUSR", user.Nombre);
+                comprobante = comprobante.Replace("XXXFECHA", Globals.RParticularZmain[0]);
+                comprobante = comprobante.Replace("XXXHORA", Globals.RParticularZmain[1]);
+                comprobante = comprobante.Replace("XXXIDZETA", Globals.RParticularZmain[2]);
+                comprobante = comprobante.Replace("XXXREP", Globals.RParticularZMontos + " ");
+                comprobante = comprobante.Replace("XXXGAV", Globals.RParticularZGavetas + " ");
+                comprobante = comprobante.Replace("XXXTOT", Globals.RParticularZDiscrepancias);
+                comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
 
                 comprobanteE.document = comprobante;
                 var respuesta = await ImprimirComprobanteAsync(comprobanteE);
@@ -1139,7 +1198,7 @@ namespace WebAPINetCore.Services
                 return true;
             }
 
-           
+
         }
     }
 }

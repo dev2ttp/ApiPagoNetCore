@@ -1,7 +1,7 @@
-Totalpack              
+Totalpack
 Comprobante de Pago Completado
-dd/mm/aaaa hh:mm:ss PM     
+dd/mm/aaaa hh:mm:ss PM
 Monto a Pagar: XXXAPAGAR
 Vuelto Total: XXXVAENTREGAR
 Vuelto Entregado: XXXVENTREGADO
-ID de Transaccion: XXXIDTRANS   
+ID de Transaccion: XXXIDTRANS

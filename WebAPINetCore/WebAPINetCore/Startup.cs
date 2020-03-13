@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace WebAPINetCore
 {
@@ -22,45 +23,29 @@ namespace WebAPINetCore
         {
             Configuration = configuration;
         }
+        readonly string AllowSpecificOrigins = "AllowOrigins";
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(MyAllowSpecificOrigins,
-            //    builder =>
-            //    {
-            //        builder.WithOrigins("http://172.16.32.137:4200",
-            //                            "http://172.16.33.121:59579/api/");
-            //    });
-            //});
-
+            services.AddControllers();
             services.AddCors(options =>
             {
-                options.AddPolicy("PermitirApiRequest",
-                    builder => builder.WithOrigins("http://172.16.32.137:4200").WithMethods("GET", "POST").AllowAnyHeader());
+                options.AddPolicy(AllowSpecificOrigins,
+                    builder => builder.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://localhost:80/", "http://localhost:443")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin());
             });
-
-            services.AddControllers();
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuer = false,
-                     ValidateAudience = false,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
-                     ClockSkew = TimeSpan.Zero
-                 });
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Impresión PDF", Version = "v1" });
+            });
+            services.ConfigureSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(x => x.FullName);
+            });
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -68,18 +53,19 @@ namespace WebAPINetCore
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseAuthentication();
-            //app.UseCors(MyAllowSpecificOrigins);
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200", "http://172.16.32.155").WithMethods("GET", "POST").AllowAnyHeader());
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "API Impresión PDF");
+            });
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseCors(AllowSpecificOrigins); //Between routing and endpoints
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers().RequireCors(AllowSpecificOrigins);
             });
         }
     }

@@ -28,6 +28,9 @@ namespace WebAPINetCore.Services
             var respuesta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.InicioTrans);
             if (respuesta)
             {
+                Globals.IDTransaccion = "";
+                Globals.RutUser = "";
+                Globals.DVUser = "";
                 if (Globals.Servicio1.Resultado.Data[0].Length > 0)
                 {
                     Globals.IDTransaccion = Globals.Servicio1.Resultado.Data[0];
@@ -48,9 +51,9 @@ namespace WebAPINetCore.Services
             {
                 if (Globals.Servicio1.Resultado.Data[0].Length > 0)
                 {
-                    Globals.IDTransaccion = "";
-                    Globals.RutUser = "";
-                    Globals.DVUser = "";
+                    //Globals.IDTransaccion = "";
+                    //Globals.RutUser = "";
+                    //Globals.DVUser = "";
                 }
                 Globals.log.Info("Se acaba de Finalizar una transaccion de ID: " + Globals.IDTransaccion);
             }

@@ -14,11 +14,16 @@ namespace WebAPINetCore.Services
 
         public void ObteneDineroMaquina()
         {
-            Globals.data = new List<string>();
-            Globals.data.Add("");
-            Globals.Servicio2ConsultarVuelto = new PipeClient2();
-            Globals.Servicio2ConsultarVuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DineroEnMaquina, Globals.data);
-            var vuelta = Globals.Servicio2ConsultarVuelto.SendMessage(ServicioPago.Comandos.DineroEnMaquina);
+            var vuelta = false ;
+            do
+            {
+                Globals.data = new List<string>();
+                Globals.data.Add("");
+                Globals.Servicio2ConsultarVuelto = new PipeClient2();
+                Globals.Servicio2ConsultarVuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DineroEnMaquina, Globals.data);
+                vuelta = Globals.Servicio2ConsultarVuelto.SendMessage(ServicioPago.Comandos.DineroEnMaquina);
+            } while (Globals.Servicio2ConsultarVuelto.Resultado.Data[0].Contains("NOK"));
+           
             if (vuelta)
             {
                 Globals.SaldosMaquina = new SaldoGaveta();
@@ -85,7 +90,7 @@ namespace WebAPINetCore.Services
                     }
                     if (item.Contains("5,00,"))
                     {
-                        var moneda500 = item.Replace("5,00,,", "500,");
+                        var moneda500 = item.Replace("5,00,", "500,");
                         var b500 = moneda500.Split(',')[1];
                         Globals.monedas.Add(int.Parse(b500) * 500);
                         Globals.SaldosMaquina.MR.M500 = b500;

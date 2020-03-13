@@ -35,7 +35,7 @@ namespace WebAPINetCore.Controllers
         [HttpGet("AbrirPuerta")]
         public ActionResult<IEnumerable<string>> AbrirPuerta()
         {
-           var respuesta = Tesoservice.abrirpuerta();
+            var respuesta = Tesoservice.abrirpuerta();
             return Ok(true);
         }
 
@@ -55,7 +55,7 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
-         //Saldo  de maquina y base de datos
+        //Saldo  de maquina y base de datos
         [HttpGet("ObtenerSaldosMaquina")]
         public ActionResult<IEnumerable<string>> ObtenerSaldosMaquina()
         {
@@ -97,14 +97,14 @@ namespace WebAPINetCore.Controllers
         [HttpPost("VaciarGaveta")]
         public ActionResult<IEnumerable<EstadoPagoResp>> VaciarGaveta([FromBody] GavsRetiro gavs)
         {
-            var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD,gavs.Tipo);
+            var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD, gavs.Tipo);
             return Ok(respuesta);
         }
 
         [HttpPost("Estadovaciado")]
         public ActionResult<IEnumerable<EstadoPagoResp>> Estadovaciado([FromBody] GavsRetiro gavs)
         {
-            var respuesta = Tesoservice.Estadovaciado(gavs.Gavo,gavs.Tipo);
+            var respuesta = Tesoservice.Estadovaciado(gavs.Gavo, gavs.Tipo);
             return Ok(respuesta);
         }
 
@@ -174,6 +174,20 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
+        [HttpPost("DiscrepanciaBillete")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> DiscrepanciaBillete([FromBody] Discrepancia Gavs)
+        {
+            var respuesta = Tesoservice.DiscrepanciaB(Gavs);
+            return Ok(respuesta);
+        }
+
+        [HttpPost("DiscrepanciaMoneda")]
+        public ActionResult<IEnumerable<EstadoPagoResp>> DiscrepanciaMoneda([FromBody] Discrepancia Gavs)
+        {
+            var respuesta = Tesoservice.DiscrepanciaM(Gavs);
+            return Ok(respuesta);
+        }
+
         // Impresiones de Ticketcs 
         [HttpPost("ImprimirCierreZ")]
         public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCierreZ([FromBody] DatosCierreZ Cierre)
@@ -182,7 +196,7 @@ namespace WebAPINetCore.Controllers
             return Ok(respuesta);
         }
 
-        [HttpPost("ImprimirCargaDinero")] 
+        [HttpPost("ImprimirCargaDinero")]
         public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCargaDinero([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprecionComprobantePagoAsync(Carga);
@@ -225,19 +239,5 @@ namespace WebAPINetCore.Controllers
             return Ok(true);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
     }
+}

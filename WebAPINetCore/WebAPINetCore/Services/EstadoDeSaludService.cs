@@ -47,7 +47,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoPuerta.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoPuerta.Mensaje = "No se puede continuar con las Operaciones La puerta se encuentra abierta. Por favor espere quw un ejecutivo se acerque para solucionar el problema";
+                        SaludMaquina.StadoPuerta.Mensaje = "No se puede continuar con las Operaciones La puerta se encuentra abierta. Por favor espere que un ejecutivo se acerque para solucionar el problema";
                     }
                     if (flags[2] == "1")
                     {

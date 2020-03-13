@@ -35,6 +35,12 @@ namespace WebAPINetCore.Controllers
         [HttpPost("IniciarPago")]
         public ActionResult<IEnumerable<InicioOperacionService>> IniciarPago([FromBody] EstadoPago PagoInfo)
         {
+            Globals.ImpresoraMontoEntregado = 0;
+            Globals.ImpresoraMontoIngresado = 0;
+            Globals.ImpresoraMontoPagar = 0;
+            Globals.ImpresoraMontoVueltoEntregar = 0;
+            Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
+
             transaccion.InicioTransaccion();
             Globals.ComprobanteImpresoContador = 0;
             Globals.ComprobanteImpreso = false;
@@ -195,6 +201,9 @@ namespace WebAPINetCore.Controllers
             return Ok(Status);
         }
 
+
+        // GET api/Pago/Float
+        [HttpGet("estadoBloqueo")]
         public void EstadoBloqueo() {
             if (Globals.BloqueoEfectivo == true | Globals.BloqueoTransbank == true)
             {
