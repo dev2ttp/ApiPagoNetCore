@@ -40,8 +40,7 @@ namespace WebAPINetCore.Controllers
             Globals.ImpresoraMontoPagar = 0;
             Globals.ImpresoraMontoVueltoEntregar = 0;
             Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
-
-            transaccion.InicioTransaccion();
+            //transaccion.InicioTransaccion();
             Globals.ComprobanteImpresoContador = 0;
             Globals.ComprobanteImpreso = false;
             Globals.ComprobanteImpresoVuelto = false;
@@ -200,9 +199,7 @@ namespace WebAPINetCore.Controllers
             Status.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(Status);
         }
-
-
-        // GET api/Pago/Float
+        // GET api/Pago/estadoBloqueo
         [HttpGet("estadoBloqueo")]
         public void EstadoBloqueo() {
             if (Globals.BloqueoEfectivo == true | Globals.BloqueoTransbank == true)

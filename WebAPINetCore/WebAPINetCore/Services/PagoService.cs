@@ -22,6 +22,7 @@ namespace WebAPINetCore.Services
         private static readonly HttpClient client = new HttpClient();
         private EstadoVuelto montodeVuelto = new EstadoVuelto();
         TransaccionService transaccion = new TransaccionService();
+        ControladorPerisfericos controPeri = new ControladorPerisfericos();
 
         public bool InicioPago()
         {
@@ -31,7 +32,9 @@ namespace WebAPINetCore.Services
             Globals.Servicio2Inicio = new PipeClient2();
             Globals.Servicio2Inicio.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Ini_Agregar_dinero, Globals.data);
             var vuelta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
-            if (vuelta)
+            var resPayout = controPeri.InicioPayout();
+            var resHooper = controPeri.InicioHopper();
+            if (vuelta && resPayout && resHooper)
             {
                 if (Globals.Servicio2Inicio.Resultado.Data[0].Contains("OK"))
                 {
@@ -118,7 +121,8 @@ namespace WebAPINetCore.Services
             Globals.Servicio2 = new PipeClient2();
             Globals.Servicio2.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, Globals.data);
             var vuelta = Globals.Servicio2.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
-            if (vuelta)
+            var resPayout = controPeri.FinPayout();
+            if (vuelta && resPayout)
             {
                 if (Globals.Servicio2.Resultado.Data[0].Contains("OK"))
                 {
@@ -139,10 +143,26 @@ namespace WebAPINetCore.Services
             }
         }
 
+        public bool FinalizarOperacion()
+        {
+            Globals.log.Debug("Finalizar hopper");
+            var resPayout = controPeri.FinPayout();
+            if (resPayout)
+            {
+                    Globals.MaquinasActivadas = false;
+                    return true;
+            }
+            else
+            {
+                Globals.log.Error("Ha ocurrido un error al Finalizar Hopper  Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2._Resp);
+                return false;
+            }
+        }
         public bool CancelarPago()
         {
             lock (thisLock)
             {
+
                 Globals.log.Debug("Cancerlar de Pago");
                 Globals.data = new List<string>();
                 Globals.data.Add("");
@@ -213,7 +233,7 @@ namespace WebAPINetCore.Services
                 objReader.Close();
 
                 DateTime fechaHoy = DateTime.Now;
-                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString()); 
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.ImpresoraMontoPagar.ToString());
                 comprobante = comprobante.Replace("XXXPAGADO", "$ " + Globals.ImpresoraMontoIngresado.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
@@ -314,11 +334,11 @@ namespace WebAPINetCore.Services
                         var DineroIngresado = int.Parse(Globals.Servicio2Pago.Resultado.Data[0]);
                         PagoInfo.DineroIngresado = DineroIngresado;
                         PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - DineroIngresado;
+
                         if (DineroIngresado > Globals.ImpresoraMontoIngresado)
                         {
                             Globals.ImpresoraMontoIngresado = DineroIngresado;
                         }
-
                         if (PagoInfo.DineroFaltante < 0)
                         {// si hay que dar vuelto
                             FinalizarPago();
@@ -464,7 +484,6 @@ namespace WebAPINetCore.Services
                         {
                             Globals.ImpresoraMontoEntregado = VueltoEntregado;
                         }
-                        
                         VueltoInfo.DineroRegresado = VueltoEntregado;
                         VueltoInfo.DineroFaltante = VueltoInfo.VueltoTotal - VueltoEntregado;
                         // actualizar los datos del vuelto 
@@ -611,7 +630,7 @@ namespace WebAPINetCore.Services
                     var IniciooPago = InicioPago();
                     if (IniciooPago == true)
                     {
-                        Globals.ImpresoraMontoVueltoEntregar = int.Parse(Globals.dineroIngresado);
+
                         Globals.data = new List<string>();
                         Globals.data.Add(Globals.dineroIngresado);
                         Globals.Servicio2Vuelto = new PipeClient2();
@@ -619,6 +638,7 @@ namespace WebAPINetCore.Services
                         var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
                         if (DarVuelto)
                         {
+                            Globals.ImpresoraMontoVueltoEntregar = int.Parse(Globals.dineroIngresado);
                             Globals.Vuelto.VueltoTotal = int.Parse(Globals.dineroIngresado);
                             Globals.Vuelto.DineroRegresado = int.Parse(Globals.dineroIngresado);
                             EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
@@ -709,7 +729,6 @@ namespace WebAPINetCore.Services
                         var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
                         if (DarVuelto)// si se empieza  a dar vuelto  se llama a un timer de consulta para que luego apague la maquina
                         {
-                            Globals.ImpresoraMontoVueltoEntregar = dineroF;
                             return dineroF;
                         }
                         else
@@ -764,7 +783,7 @@ namespace WebAPINetCore.Services
                         var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
                         if (DarVuelto)// si la maquina devuelve que esta dando vueltos
                         {
-                            if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("No hay dinero para dar vuelto"))
+                            if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("False"))
                             {
                                 Globals.DandoVuelto = false;
                                 Globals.HayVuelto = false;
@@ -814,7 +833,7 @@ namespace WebAPINetCore.Services
                 var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
                 if (DarVuelto)// si la maquina devuelve que esta dando vueltos
                 {
-                    if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("No hay dinero para dar vuelto"))
+                    if (Globals.Servicio2Vuelto.Resultado.Data[0].Contains("False"))
                     {
                         Globals.DandoVuelto = false;
                         Globals.HayVuelto = false;

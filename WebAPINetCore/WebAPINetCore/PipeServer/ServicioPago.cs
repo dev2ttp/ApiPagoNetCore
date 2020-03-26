@@ -78,7 +78,14 @@ namespace WebAPINetCore.PipeServer
             PagoFallido = 201,      // 0,IdUsr 1,SrvTipo 2,BolNum 3,Monto 4,Financiador 5,RutM 6,DV 7,MedioPago 8,MedioTipo 9,Error
             PagoUpdate = 202,       // 0,IdUsr 1,IdPago  2,NumDoc 3,$Total 4,$Bonif [5,$Medio 6,MedioPago 7,MedioTipo 8,Tarjeta 9,CodAut]
             LogOpe = 204,           // 0,IdUsr 1,acc 2,idToUpd 3,FHini 4,FHfin 5,tipo 6,detalle 7,monto 8,fCierre 9,subTipo 10,rutCli 11,codAseg 12,codLugar 13,rutConv 14,rutMedico 15,codEsp 16,FHagenda 17,rutCaj 18,tipoPago 19,idCita 20,codPres 21,nomAseg
-            PagoOk2 = 205           // 0,IdUsr 1,SrvTipo 2,NumDoc 3,$Total 4,Financiador 5,RutM 6,DV 7,$Bonif 8,DatOpe(0,$Medio 1,MedioPago 2,MedioTipo 3,MedioSubTipo 4,CodAut)
+            PagoOk2 = 205,           // 0,IdUsr 1,SrvTipo 2,NumDoc 3,$Total 4,Financiador 5,RutM 6,DV 7,$Bonif 8,DatOpe(0,$Medio 1,MedioPago 2,MedioTipo 3,MedioSubTipo 4,CodAut)
+
+            InicioPayout = 600,
+            InicioHopper = 601,
+            FinPayout = 602,
+            FinHopper = 603,
+            GetAllLevelsNota = 604,
+            GetAllLevelsCoin = 605,
         }
 
         public enum Posicion

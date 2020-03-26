@@ -14,6 +14,7 @@ namespace WebAPINetCore.Services
     public class TesoreriaService
     {
         private static readonly HttpClient client = new HttpClient();
+        ControladorPerisfericos controPeri = new ControladorPerisfericos();
 
         public bool abrirpuerta()
         {
@@ -429,8 +430,10 @@ namespace WebAPINetCore.Services
             Globals.data.Add("");
             Globals.Servicio2Inicio = new PipeClient2();
             Globals.Servicio2Inicio.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Ini_Agregar_dinero, Globals.data);
-            var respuesta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
-            if (respuesta)
+            var vuelta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
+            var resPayout = controPeri.InicioPayout();
+            var resHooper = controPeri.InicioHopper();
+            if (vuelta && resPayout && resHooper)
             {
                 if (Globals.Servicio2Inicio.Resultado.Data[0].Contains("OK"))
                 {
@@ -456,7 +459,8 @@ namespace WebAPINetCore.Services
             Globals.Servicio2 = new PipeClient2();
             Globals.Servicio2.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, Globals.data);
             var vuelta = Globals.Servicio2.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
-            if (vuelta)
+            var resPayout = controPeri.FinPayout();
+            if (vuelta && resPayout)
             {
                 if (Globals.Servicio2.Resultado.Data[0].Contains("OK"))
                 {

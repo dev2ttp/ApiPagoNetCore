@@ -32,6 +32,13 @@ namespace WebAPINetCore.Services
 
         public static CancelarPago EstadodeCancelacion = new CancelarPago();//variable para conocer estado de cancelacion
 
+        public static PipeClient2 ServInicioPayou = new PipeClient2();
+        public static PipeClient2 ServInicioHopper = new PipeClient2();
+        public static PipeClient2 ServFinPayou = new PipeClient2();
+        public static PipeClient2 ServFinHopper = new PipeClient2();
+        public static PipeClient2 ServNivelNota = new PipeClient2();
+        public static PipeClient2 ServNivelMoneda = new PipeClient2();
+
 
         // VAriable para hacer Log de la API
         //public static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
