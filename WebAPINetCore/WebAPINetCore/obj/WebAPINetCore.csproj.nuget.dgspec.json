@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Kiosko\\Desktop\\efectivo pandemia\\APITesoreriaEncolado\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {}
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Kiosko\\Desktop\\efectivo pandemia\\APITesoreriaEncolado\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj": {
+    "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Kiosko\\Desktop\\efectivo pandemia\\APITesoreriaEncolado\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
+        "projectUniqueName": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
         "projectName": "WebAPINetCore",
-        "projectPath": "C:\\Users\\Kiosko\\Desktop\\efectivo pandemia\\APITesoreriaEncolado\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\WebAPINetCore.csproj",
-        "packagesPath": "C:\\Users\\Kiosko\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Kiosko\\Desktop\\efectivo pandemia\\APITesoreriaEncolado\\APIPagoTesoreria 1.1.0\\WebAPINetCore\\obj\\",
+        "projectPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\WebAPINetCore.csproj",
+        "packagesPath": "C:\\Users\\jose.paz\\.nuget\\packages\\",
+        "outputPath": "D:\\ProyectosGIT\\ApiPagoNetCore\\WebAPINetCore\\WebAPINetCore\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Kiosko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jose.paz\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -38,6 +41,10 @@
       "frameworks": {
         "netcoreapp3.0": {
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
             "NLog.Web.AspNetCore": {
               "target": "Package",
               "version": "[4.9.0, )"
@@ -69,24 +76,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[3.0.1, 3.0.1]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x86",
-              "version": "[3.0.2, 3.0.2]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[3.0.0, 3.0.0]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[3.0.0, 3.0.0]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -95,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

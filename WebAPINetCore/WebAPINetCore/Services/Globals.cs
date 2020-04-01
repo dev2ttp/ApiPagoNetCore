@@ -111,7 +111,14 @@ namespace WebAPINetCore.Services
         public static string RParticularZGavetas { get; set; }
         public static string RParticularZDiscrepancias { get; set; }
         public static string[] RParticularZmain { get; set; }
-        
+
+
+        // Variable de versionamiento 
+        public static string VAppFPago = "";
+        public static string VAppFEfe = "";
+        public static string VAppFTes = "";
+        public static string VAppSV2 = "";
+
 
 
     }

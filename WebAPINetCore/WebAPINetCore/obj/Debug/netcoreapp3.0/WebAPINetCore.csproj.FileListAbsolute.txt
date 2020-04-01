@@ -241,3 +241,8 @@ C:\Users\Kiosko\Desktop\efectivo pandemia\APITesoreriaEncolado\APIPagoTesoreria 
 C:\Users\Kiosko\Desktop\efectivo pandemia\APITesoreriaEncolado\APIPagoTesoreria 1.1.0\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.pdb
 C:\Users\Kiosko\Desktop\efectivo pandemia\APITesoreriaEncolado\APIPagoTesoreria 1.1.0\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Kiosko\Desktop\efectivo pandemia\APITesoreriaEncolado\APIPagoTesoreria 1.1.0\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cache
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\Microsoft.OpenApi.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\bin\Debug\netcoreapp3.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\ProyectosGIT\ApiPagoNetCore\WebAPINetCore\WebAPINetCore\obj\Debug\netcoreapp3.0\WebAPINetCore.MvcApplicationPartsAssemblyInfo.cs

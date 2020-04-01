@@ -80,6 +80,9 @@ namespace WebAPINetCore.PipeServer
             LogOpe = 204,           // 0,IdUsr 1,acc 2,idToUpd 3,FHini 4,FHfin 5,tipo 6,detalle 7,monto 8,fCierre 9,subTipo 10,rutCli 11,codAseg 12,codLugar 13,rutConv 14,rutMedico 15,codEsp 16,FHagenda 17,rutCaj 18,tipoPago 19,idCita 20,codPres 21,nomAseg
             PagoOk2 = 205,           // 0,IdUsr 1,SrvTipo 2,NumDoc 3,$Total 4,Financiador 5,RutM 6,DV 7,$Bonif 8,DatOpe(0,$Medio 1,MedioPago 2,MedioTipo 3,MedioSubTipo 4,CodAut)
 
+            APP_FRTFIN = 101,       // Comando enviado para Finalizar elversionamiento de una APP
+            APP_FRTINI = 100,       // Comando enviado para iniciar elversionamiento de una APP
+
             InicioPayout = 600,
             InicioHopper = 601,
             FinPayout = 602,

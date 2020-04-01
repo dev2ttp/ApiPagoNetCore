@@ -40,7 +40,7 @@ namespace WebAPINetCore.Controllers
             Globals.ImpresoraMontoPagar = 0;
             Globals.ImpresoraMontoVueltoEntregar = 0;
             Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
-            //transaccion.InicioTransaccion();
+            transaccion.InicioTransaccion();
             Globals.ComprobanteImpresoContador = 0;
             Globals.ComprobanteImpreso = false;
             Globals.ComprobanteImpresoVuelto = false;

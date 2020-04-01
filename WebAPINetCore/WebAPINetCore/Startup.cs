@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebAPINetCore.Services;
 
 namespace WebAPINetCore
 {
@@ -24,6 +25,7 @@ namespace WebAPINetCore
             Configuration = configuration;
         }
         readonly string AllowSpecificOrigins = "AllowOrigins";
+        VersionamientoService versionAPI = new VersionamientoService();
         public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -67,6 +69,8 @@ namespace WebAPINetCore
             {
                 endpoints.MapControllers().RequireCors(AllowSpecificOrigins);
             });
+            versionAPI.EnviarInicioVersion("1.1.3", "APILOC");
+            versionAPI.VersionServicioPago2();
         }
     }
 }
