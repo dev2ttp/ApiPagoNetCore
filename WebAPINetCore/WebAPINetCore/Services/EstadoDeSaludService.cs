@@ -93,7 +93,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMinBillete.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMinBillete.Mensaje = "Los Billetes se encuentran en el minimo de billete, se recomienda cargar la maquina";
+                        SaludMaquina.StadoMinBillete.Mensaje = "Los Billetes en el reciclador se  encuentran en el minimo de billete, se recomienda cargar la maquina";
                     }
                     if (flags[2] == "1")
                     {
@@ -116,7 +116,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMaxBillete.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMaxBillete.Mensaje = "Los Billetes se encuentran en el maximo de billete, se recomienda descargar la maquina";
+                        SaludMaquina.StadoMaxBillete.Mensaje = "Los Billetes en la alcancia se encuentran en el maximo de billete, se recomienda descargar la maquina";
                     }
                     if (flags[2] == "1")
                     {
@@ -139,7 +139,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMinMoneda.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMinMoneda.Mensaje = "Las Monedas se encuentran en el minimo de monedas permitidas, se recomienda cargar la maquina";
+                        SaludMaquina.StadoMinMoneda.Mensaje = "Las Monedas para dar vueltos se encuentran en el minimo de monedas permitidas, se recomienda cargar la maquina";
                     }
                     if (flags[2] == "1")
                     {
@@ -157,7 +157,7 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (flags[0] == "10")// max monedas
+                if (flags[0] == "20")// max monedas
                 {
                     SaludMaquina.StadoMaxMonedas.Activo = true;
                     if (flags[1] == "1")
@@ -277,7 +277,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispCajaFull.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispCajaFull.Mensaje = "se ha detectado que la caja de billete  en el dispositivo se encuentra full";
+                        SaludMaquina.StadoDispCajaFull.Mensaje = "se ha detectado que la alcancia de billete  en el dispositivo se encuentra full, se recomineda descargar inmediatamente";
                     }
                     if (flags[2] == "1")
                     {
@@ -346,7 +346,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispBusquedaFallida.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispBusquedaFallida.Mensaje = "no se ha encontasdo la moneda solicitada ";
+                        SaludMaquina.StadoDispBusquedaFallida.Mensaje = "no se ha encontrado la moneda solicitada ";
                     }
                     if (flags[2] == "1")
                     {
