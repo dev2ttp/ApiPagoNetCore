@@ -14,13 +14,7 @@ namespace WebAPINetCore.Services
     public class PagoService
     {
         static object thisLock = new object();
-        System.Timers.Timer EsperarMonedas = new System.Timers.Timer() { AutoReset = false };
-        System.Timers.Timer EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
-        System.Timers.Timer TimerCancerlarPago = new System.Timers.Timer() { AutoReset = false };
-        System.Timers.Timer TimerDarVuelto = new System.Timers.Timer() { AutoReset = false };
-        private EstadoPago montoapagar = new EstadoPago();
         private static readonly HttpClient client = new HttpClient();
-        private EstadoVuelto montodeVuelto = new EstadoVuelto();
         TransaccionService transaccion = new TransaccionService();
         ControladorPerisfericos controPeri = new ControladorPerisfericos();
 
@@ -68,11 +62,15 @@ namespace WebAPINetCore.Services
             {
                 EstadoDeSaludService estadoSalud = new EstadoDeSaludService();
                 estadoSalud.DescifrarEstadoDeSalud();
-                ArmarDocuemntoPagoConVueltoAsync();
+                ArmarDocuemntoPagoCanceladosync();
+                var finalizar = FinalizarPago();
+                var finHopper = FinalizarOperacion();
                 return true;
             }
             else
             {
+                var finalizar = FinalizarPago();
+                var finHopper = FinalizarOperacion();
                 return false;
             }
         }
@@ -114,55 +112,106 @@ namespace WebAPINetCore.Services
                 return false;
             }
         }
+
         public bool CancelarPago()
         {
+            EstadoPago PagoInfo = new EstadoPago();
+            Globals.ImpresoraMontoEnCancelar = Globals.ImpresoraMontoIngresado - Globals.ImpresoraMontoEntregado;
             lock (thisLock)
             {
-                Globals.log.Debug("Cancerlar de Pago");
-                Globals.data = new List<string>();
-                Globals.data.Add("");
-                Globals.Servicio2Cancelar = new PipeClient2();
-                Globals.Servicio2Cancelar.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, Globals.data);
-                var vuelta = Globals.Servicio2Cancelar.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
-                if (vuelta)
+                var finalizar = FinalizarPago();
+                if (Globals.ImpresoraMontoEnCancelar > 0)
                 {
-                    if (Globals.Servicio2Cancelar.Resultado.Data[0].Contains("OK"))
+                    if (finalizar)
                     {
-                        Globals.MaquinasActivadas = false;
-                        TimerCancerlarPago = new System.Timers.Timer() { AutoReset = false };
-                        TimerCancerlarPago.Elapsed += new ElapsedEventHandler(Timer_EstadoCancelarPago);
-                        TimerCancerlarPago.AutoReset = false;
-                        TimerCancerlarPago.Interval = 6000;
-                        TimerCancerlarPago.Enabled = true;
-                        TimerCancerlarPago.Start();
-                        return true;
+                        Task.Delay(3000).Wait();
+                        var IniciooPago = InicioPago();
+                        if (IniciooPago == true)
+                        {
+                            var vuelto = Globals.ImpresoraMontoEnCancelar;
+                            var DarVuelto = controPeri.DarVuelto(vuelto);
+                            if (DarVuelto)// si la maquina devuelve que esta dando vueltos
+                            {
+                                return true;
+                            }
+                            else
+                            {// para decir que la maquina no esta dando vuelto y que hay que volver a llamar a al timer
+                                return false;
+                            }
+                        }
+                        else
+                        {// para decir que la maquina no esta dando vuelto y que hay que volver a llamar a al timer
+                            return false;
+                        }
                     }
                     else
                     {
-                        Globals.log.Error("Ha ocurrido un error al Cancelar  el Pago Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Cancelar.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Cancelar._Resp);
                         return false;
                     }
-
                 }
                 else
                 {
-                    Globals.log.Error("Ha ocurrido un error al Cancelar  el Pago Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Cancelar.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Cancelar._Resp);
-                    return false;
+                    return true;
                 }
+                
             }
         }
 
         public CancelarPago EstadoDeCancelacion()
         {
-            var estado = Globals.EstadodeCancelacion;
-            if (Globals.EstadodeCancelacion.CancelacionCompleta == true)
+            CancelarPago estado = new CancelarPago();
+            bool vueltoTerminado = false;
+            if (Globals.ImpresoraMontoEnCancelar == 0)
             {
-                Globals.EstadodeCancelacion = new CancelarPago();
+                ConfigurarStatus();
+                estado.StatusMaquina = Globals.SaludMaquina;
+                estado.BloqueoEfectivo = Globals.BloqueoEfectivo;
+                estado.BloqueoTransbank = Globals.BloqueoTransbank;
+                estado.CancelacionCompleta = true;
+                estado.EntregandoVuelto = false;
+                var finalizar = FinalizarPago();
+                var finHopper = FinalizarOperacion();
             }
-            return estado;
+            lock (thisLock)
+            {
+                var Vuelto = controPeri.VueltoRegresado();
+                ConfigurarStatus();
+                estado.StatusMaquina = Globals.SaludMaquina;
+                estado.BloqueoEfectivo = Globals.BloqueoEfectivo;
+                estado.BloqueoTransbank = Globals.BloqueoTransbank;
+                if (Vuelto != "false")
+                {
+                    if (Vuelto.Contains("OK"))// si termina de dr vuelto
+                    {
+                        vueltoTerminado = true;
+                        Vuelto = Vuelto.Replace("OK", "");
+                    }
+                    Globals.ImpresoraMontoEntregadoCancelar = int.Parse(Vuelto);
+                    if (vueltoTerminado)
+                    {
+                        estado.CancelacionCompleta = true;
+                        estado.EntregandoVuelto = false;
+                        var finalizar = FinalizarPago();
+                        var finHopper = FinalizarOperacion();
+                        return estado;
+                    }
+                    else
+                    {// si vuelto aun no termina 
+                        estado.CancelacionCompleta = false;
+                        estado.EntregandoVuelto = true;
+                        return estado;
+                    }
+                }
+                else
+                {
+                    estado.CancelacionCompleta = false;
+                    estado.EntregandoVuelto = false;
+                    var finalizar = FinalizarPago();
+                    var finHopper = FinalizarOperacion();
+                    return estado;
+                }
+            }
         }
-
-
 
         public async Task<bool> ImprimirComprobanteAsync(String Documento)
         {
@@ -201,6 +250,8 @@ namespace WebAPINetCore.Services
 
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("xxidm", Globals.idmaquina);
+                comprobante = comprobante.Replace("xxnommaq", Globals.nombremaquina);
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.ImpresoraMontoPagar.ToString());
                 comprobante = comprobante.Replace("XXXPAGADO", "$ " + Globals.ImpresoraMontoIngresado.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
@@ -235,6 +286,8 @@ namespace WebAPINetCore.Services
 
                 DateTime fechaHoy = DateTime.Now;
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("xxidm", Globals.idmaquina);
+                comprobante = comprobante.Replace("xxnommaq", Globals.nombremaquina);
                 comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.ImpresoraMontoPagar.ToString());
                 comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.ImpresoraMontoIngresado).ToString());
                 comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.ImpresoraMontoEntregado.ToString());
@@ -251,6 +304,47 @@ namespace WebAPINetCore.Services
 
         }
 
+        public async void ArmarDocuemntoPagoCanceladosync()
+        {
+            try
+            {
+                StreamReader objReader = new StreamReader("./Documentos/Comprobante_Pago_Cancelado.txt");
+                string sLine = "";
+                string comprobante = "";
+
+                while (sLine != null)
+                {
+                    sLine = objReader.ReadLine();
+                    if (sLine != null)
+                    {
+                        string oldvalue = sLine;
+                        comprobante += oldvalue + "\r\n";
+                    }
+                }
+                objReader.Close();
+
+                DateTime fechaHoy = DateTime.Now;
+                comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", fechaHoy.ToString());
+                comprobante = comprobante.Replace("xxidm", Globals.idmaquina);
+                comprobante = comprobante.Replace("xxnommaq", Globals.nombremaquina);
+                comprobante = comprobante.Replace("XXXAPAGAR", "$ " + Globals.ImpresoraMontoPagar.ToString());
+                comprobante = comprobante.Replace("XXXPAGADO", "$ " + (Globals.ImpresoraMontoIngresado).ToString());
+                comprobante = comprobante.Replace("XXXVAENTREGAR", "$ " + Globals.ImpresoraMontoEntregado.ToString());
+                comprobante = comprobante.Replace("XXXVENTREGADO", "$ " + Globals.ImpresoraMontoVueltoEntregar.ToString());
+                comprobante = comprobante.Replace("XXXCAENTREGAR", "$ " + Globals.ImpresoraMontoEnCancelar.ToString());
+                comprobante = comprobante.Replace("XXXCENTREGADO", "$ " + Globals.ImpresoraMontoEntregadoCancelar.ToString());
+                comprobante = comprobante.Replace("XXXIDTRANS", Globals.IDTransaccion);
+
+
+                var respuesta = await ImprimirComprobanteAsync(comprobante);
+            }
+            catch (Exception ex)
+            {
+
+                Globals.log.Error("Ha ocurrido un error al leer el archivo de texto que contiene el ticket: Error " + ex.Message);
+            }
+
+        }
 
         public EstadoPagoResp EstadoDelPAgo(EstadoPago PagoInfo)// se encarga de consultar el estado en que se encuentra el pago 
         {
@@ -263,6 +357,10 @@ namespace WebAPINetCore.Services
                     int Dinero = int.Parse(DineroIngresado);
                     PagoInfo.DineroIngresado = Dinero;
                     PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - Dinero;
+                    if (Dinero > Globals.ImpresoraMontoIngresado)
+                    {
+                        Globals.ImpresoraMontoIngresado = Dinero;
+                    }
                     // Actualizar Datos
                     if (PagoInfo.DineroFaltante < 0)
                     {// si hay que dar vuelto
@@ -284,8 +382,12 @@ namespace WebAPINetCore.Services
 
                             if (PagoInfo.DineroFaltante == 0)
                             {
-                                ArmarDocuemntoPagoCompeltoAsync(PagoInfo);// armar datos de ticket
-                                Globals.ComprobanteImpreso = true;
+                                if (Globals.ComprobanteImpreso == false && Globals.ImpresoraMontoIngresado > 0)
+                                {
+                                    ArmarDocuemntoPagoCompeltoAsync(PagoInfo);// armar datos de ticket
+                                    Globals.ComprobanteImpreso = true;
+                                }
+
                                 EstadoDelPAgo.data = PagoInfo;
                                 EstadoDelPAgo.Status = true;
                                 EstadoDelPAgo.PagoStatus = true;
@@ -335,12 +437,16 @@ namespace WebAPINetCore.Services
                     if (Vuelto.Contains("OK"))// si termina de dr vuelto
                     {
                         vueltoTerminado = true;
-                        Vuelto.Replace("OK", "");
+                        Vuelto = Vuelto.Replace("OK", "");
                     }
                     var VueltoEntregado = int.Parse(Vuelto);
                     VueltoInfo.DineroRegresado = VueltoEntregado;
                     VueltoInfo.DineroFaltante = VueltoInfo.VueltoTotal - VueltoEntregado;
                     VueltoInfo.VueltoFinalizado = vueltoTerminado;
+                    if (VueltoEntregado > Globals.ImpresoraMontoEntregado)
+                    {
+                        Globals.ImpresoraMontoEntregado = VueltoEntregado;
+                    }
 
                     if (vueltoTerminado)
                     {
@@ -383,145 +489,6 @@ namespace WebAPINetCore.Services
             }
         }
 
-        protected void Timer_VueltoMonedas(object sender, ElapsedEventArgs e)// timer ingresado cuando se ingresan monedas o billetes de mas 
-        {
-            EsperarMonedas.Enabled = false;
-            EsperarMonedas.Stop();
-
-
-            try
-            {
-                EstadoVueltoResp estadovuelto = new EstadoVueltoResp();
-                //var auxvuelto = Globals.Vuelto;
-                estadovuelto = EstadoDelVuelto(montodeVuelto);
-                if (estadovuelto.data.VueltoFinalizado == false)// si el vuelto no se finaliza el timer se reinicia
-                {
-                    //Globals.Vuelto = auxvuelto;
-                    Globals.EstadodeCancelacion.CancelacionCompleta = false;
-                    Globals.EstadodeCancelacion.EntregandoVuelto = true;
-                    EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
-                    EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
-                    EsperarVueltoMonedas.AutoReset = false;
-                    EsperarVueltoMonedas.Interval = 2000;
-                    EsperarVueltoMonedas.Enabled = true;
-                    EsperarVueltoMonedas.Start();
-                }
-                else
-                {// si el vuelto esta listo se apaga la maquina  y se actualizan los estados correspondientes
-                    var finalizar = FinalizarPago();
-                    if (finalizar == true)
-                    {
-                        //Globals.Vuelto = auxvuelto;
-                        Globals.EstadodeCancelacion.CancelacionCompleta = true;
-                        Globals.EstadodeCancelacion.EntregandoVuelto = false;
-                        EsperarVueltoMonedas.Enabled = false;
-                        EsperarVueltoMonedas.Stop();
-                        EsperarMonedas.Enabled = false;
-                        EsperarMonedas.Stop();
-                    }
-                    else
-                    {
-                        montodeVuelto = new EstadoVuelto();
-                        montoapagar = new EstadoPago();
-                        EsperarMonedas.Enabled = false;
-                        EsperarMonedas.Stop();
-                        EsperarVueltoMonedas.Enabled = false;
-                        EsperarVueltoMonedas.Stop();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_VueltoMonedas Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
-                //throw;
-            }
-        }
-
-        protected void Timer_EstadoCancelarPago(object sender, ElapsedEventArgs e)// timer utilizado cuando se cancela, para devolver todo el dinero ingresado 
-        {
-            TimerCancerlarPago.Enabled = false;
-            TimerCancerlarPago.Stop();
-
-            try
-            {
-
-                if (Globals.HayVuelto == false)
-                {
-                    var IniciooPago = InicioPago();
-                    if (IniciooPago == true)
-                    {
-
-                        Globals.data = new List<string>();
-                        Globals.data.Add(Globals.dineroIngresado);
-                        Globals.Servicio2Vuelto = new PipeClient2();
-                        Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
-                        var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
-                        if (DarVuelto)
-                        {
-                            Globals.ImpresoraMontoVueltoEntregar = int.Parse(Globals.dineroIngresado);
-                            Globals.Vuelto.VueltoTotal = int.Parse(Globals.dineroIngresado);
-                            Globals.Vuelto.DineroRegresado = int.Parse(Globals.dineroIngresado);
-                            EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
-                            EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
-                            EsperarVueltoMonedas.AutoReset = false;
-                            EsperarVueltoMonedas.Interval = 2000;
-                            EsperarVueltoMonedas.Enabled = true;
-                            EsperarVueltoMonedas.Start();
-                        }
-                    }
-                }
-                else
-                {
-
-                    EstadoPagoResp estadopago = new EstadoPagoResp();
-                    montoapagar.MontoAPagar = 9999999;
-                    var auxPago = Globals.Pago;
-                    estadopago = EstadoDelPAgo(montoapagar);
-                    if (estadopago.data.DineroIngresado > 0)
-                    {
-                        Globals.dineroIngresado = estadopago.data.DineroIngresado.ToString();
-                        Globals.DineroIngresadoSolicitado = true;
-                        var IniciooPago = InicioPago();
-                        if (IniciooPago == true)
-                        {
-                            Globals.Pago = auxPago;
-                            Globals.data = new List<string>();
-                            Globals.data.Add(estadopago.data.DineroIngresado.ToString());
-                            Globals.ImpresoraMontoVueltoEntregar = estadopago.data.DineroIngresado;
-                            Globals.Servicio2Vuelto = new PipeClient2();
-                            Globals.Servicio2Vuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, Globals.data);
-                            var DarVuelto = Globals.Servicio2Vuelto.SendMessage(ServicioPago.Comandos.DarVuelto);
-                            if (DarVuelto)
-                            {
-                                Globals.Vuelto.VueltoTotal = estadopago.data.DineroIngresado;
-                                Globals.Vuelto.DineroRegresado = estadopago.data.DineroIngresado;
-                                EsperarVueltoMonedas = new System.Timers.Timer() { AutoReset = false };
-                                EsperarVueltoMonedas.Elapsed += new ElapsedEventHandler(Timer_VueltoMonedas);
-                                EsperarVueltoMonedas.AutoReset = false;
-                                EsperarVueltoMonedas.Interval = 2000;
-                                EsperarVueltoMonedas.Enabled = true;
-                                EsperarVueltoMonedas.Start();
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        transaccion.FinTransaccion();
-                        Globals.EstadodeCancelacion.CancelacionCompleta = true;
-                        Globals.EstadodeCancelacion.EntregandoVuelto = false;
-                    }
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Globals.log.Error("Ha ocurrido un exepcion en el proceso Timer_EstadoCancelarPago Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
-                //
-            }
-        }
-
         public int ConsultarDineroExtra(int MontoApagar)
         {
             try
@@ -532,17 +499,17 @@ namespace WebAPINetCore.Services
 
                 int dineroF = new int();
                 dineroF = MontoApagar - estadopago.DineroIngresado;
+                if (estadopago.DineroIngresado > Globals.ImpresoraMontoIngresado)
+                { Globals.ImpresoraMontoIngresado = estadopago.DineroIngresado; }
                 if (dineroF < 0)// si despues de finalizar se ingreso dinero extra se llama el vuelto 
                 {
                     var IniciooPago = InicioPago();
                     if (IniciooPago == true)
                     {
-                        while (Globals.MaquinasActivadas == false)// si por alguna razon la maquina se encuentra desactivada al realizar el pago
-                        {
-                            InicioPago();
-                        }
                         dineroF = dineroF * -1;
-                        var DarVuelto = controPeri.DarVuelto();
+                        var DarVuelto = controPeri.DarVuelto(dineroF);
+                        if (dineroF > Globals.ImpresoraMontoVueltoEntregar)
+                        { Globals.ImpresoraMontoVueltoEntregar = dineroF; }
                         if (DarVuelto)// si se empieza  a dar vuelto  se llama a un timer de consulta para que luego apague la maquina
                         {
                             return dineroF;
@@ -572,21 +539,23 @@ namespace WebAPINetCore.Services
 
         public EstadoPago RealizarCalculoVuelto(int MontoApagar) // Proceso que se encarga de preparar la maquina para entregar vuelto 
         {
+            EstadoPago estadopago = new EstadoPago();
             try
             {
-
-                EstadoPago estadopago = new EstadoPago();
                 estadopago.MontoAPagar = MontoApagar;
                 estadopago = MicroConsultaPago(estadopago);// llamada para saber que monto actual de vuelto hay que realizar
-                Globals.dineroIngresado = estadopago.DineroIngresado.ToString();
+                if (estadopago.DineroIngresado > Globals.ImpresoraMontoIngresado)
+                { Globals.ImpresoraMontoIngresado = estadopago.DineroIngresado; }
+
                 if (estadopago.DineroFaltante < 0 && estadopago.DineroFaltante != -1)
                 {
-                    Globals.Vuelto.VueltoTotal = estadopago.DineroFaltante * -1;
                     var IniciooPago = InicioPago();
                     if (IniciooPago == true)
                     {
-                        estadopago.DineroFaltante *= -1;
-                        var DarVuelto = controPeri.DarVuelto();
+                        var vuelto = estadopago.DineroFaltante * -1;
+                        var DarVuelto = controPeri.DarVuelto(vuelto);
+                        if (vuelto > Globals.ImpresoraMontoVueltoEntregar)
+                        { Globals.ImpresoraMontoVueltoEntregar = vuelto; }
                         if (DarVuelto)// si la maquina devuelve que esta dando vueltos
                         {
                             return estadopago;
@@ -606,9 +575,11 @@ namespace WebAPINetCore.Services
             catch (Exception ex)
             {
                 Globals.log.Error("Ha ocurrido un exepcion en el proceso DarVuelto Transaccion: " + Globals.IDTransaccion + "Mensaje de error: " + ex.Message);
-                return false;
+                estadopago.DineroFaltante = -1;// si tiene agun error 
+                return estadopago;
             }
-            return true;
+            estadopago.DineroFaltante = -1;// si tiene agun error 
+            return estadopago;
         }
         public EstadoPago MicroConsultaPago(EstadoPago PagoInfo)
         {

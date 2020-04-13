@@ -49,12 +49,6 @@ namespace WebAPINetCore.Services
             var respuesta = Globals.Servicio1.SendMessage(ServicioPago.Comandos.FinTrans);
             if (respuesta)
             {
-                if (Globals.Servicio1.Resultado.Data[0].Length > 0)
-                {
-                    //Globals.IDTransaccion = "";
-                    //Globals.RutUser = "";
-                    //Globals.DVUser = "";
-                }
                 Globals.log.Info("Se acaba de Finalizar una transaccion de ID: " + Globals.IDTransaccion);
             }
         }

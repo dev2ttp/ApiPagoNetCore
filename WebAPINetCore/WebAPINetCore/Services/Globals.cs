@@ -41,17 +41,20 @@ namespace WebAPINetCore.Services
 
 
         // VAriable para hacer Log de la API
-        //public static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static readonly NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
 
         // variable impresa
         public static bool ComprobanteImpreso;
+        public static string idmaquina;
+        public static string nombremaquina;
         public static int ComprobanteImpresoContador = 0;
-        public static bool ComprobanteImpresoVuelto;
+        public static bool ComprobanteImpresoVuelto = false;
         public static int ImpresoraMontoPagar = 0;
         public static int ImpresoraMontoIngresado = 0;
         public static int ImpresoraMontoVueltoEntregar = 0;
         public static int ImpresoraMontoEntregado = 0;
+        public static int ImpresoraMontoEnCancelar = 0;
+        public static int ImpresoraMontoEntregadoCancelar = 0;
 
         // Variables de estado
         public static EstadoVuelto Vuelto;

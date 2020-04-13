@@ -6,4 +6,6 @@ Monto a Pagar: XXXAPAGAR
 Monto Pagado: XXXPAGADO
 Vuelto Total: XXXVAENTREGAR
 Vuelto Entregado: XXXVENTREGADO
+Cancelado Total: XXXCAENTREGAR
+Cancelado Entregado: XXXCENTREGADO
 ID de Transaccion: XXXIDTRANS

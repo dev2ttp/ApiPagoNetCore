@@ -33,14 +33,14 @@ namespace WebAPINetCore.Controllers
         // Administrar maquina Abrir apagar reiniciar
 
         [HttpGet("AbrirPuerta")]
-        public ActionResult<IEnumerable<string>> AbrirPuerta()
+        public ActionResult<IEnumerable<bool>> AbrirPuerta()
         {
             var respuesta = Tesoservice.abrirpuerta();
             return Ok(true);
         }
 
         [HttpGet("ApagarPC")]
-        public ActionResult<IEnumerable<string>> ApagarPC()
+        public ActionResult<IEnumerable<bool>> ApagarPC()
         {
             apagarPC apagar = new apagarPC("/s", DateTime.Now);
             var respuesta = apagar.Shut_Down();
@@ -48,7 +48,7 @@ namespace WebAPINetCore.Controllers
         }
 
         [HttpGet("ReiniciarPC")]
-        public ActionResult<IEnumerable<string>> ReiniciarPC()
+        public ActionResult<IEnumerable<bool>> ReiniciarPC()
         {
             apagarPC apagar = new apagarPC("/r", DateTime.Now);
             var respuesta = apagar.Shut_Down();
@@ -57,14 +57,14 @@ namespace WebAPINetCore.Controllers
 
         //Saldo  de maquina y base de datos
         [HttpGet("ObtenerSaldosMaquina")]
-        public ActionResult<IEnumerable<string>> ObtenerSaldosMaquina()
+        public ActionResult<IEnumerable<SaldoGaveta>> ObtenerSaldosMaquina()
         {
             Tesoservice.SaldoMaquinaTrans();
             return Ok(Globals.SaldosMaquina);
         }
 
         [HttpGet("ObtenerSaldos")]
-        public ActionResult<IEnumerable<string>> ObtenerSaldos()
+        public ActionResult<IEnumerable<SaldoGaveta>> ObtenerSaldos()
         {
             Tesoservice.SaldoTransaccion();
             return Ok(Globals.Saldos);
@@ -72,7 +72,7 @@ namespace WebAPINetCore.Controllers
 
         // Realizar cierre Z y consulta
         [HttpPost("RealizarCierreZ")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> RealizarCierreZ([FromBody] int mantisa)
+        public ActionResult<IEnumerable<DatosCierreZ>> RealizarCierreZ([FromBody] int mantisa)
         {
             Tesoservice.RealizarCierreZ(mantisa);
             return Ok(Globals.Cierrez);
@@ -86,7 +86,7 @@ namespace WebAPINetCore.Controllers
         }
 
         [HttpPost("ObtenerReportebyID")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ObtenerReportebyID([FromBody] UserToken user)
+        public ActionResult<IEnumerable<ReportesCierre>> ObtenerReportebyID([FromBody] UserToken user)
         {
             Tesoservice.ObtenerReportebyID(user);
             return Ok(Globals.DatosCierre);
@@ -95,14 +95,14 @@ namespace WebAPINetCore.Controllers
 
         // Vaciado de Gavetas
         [HttpPost("VaciarGaveta")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> VaciarGaveta([FromBody] GavsRetiro gavs)
+        public ActionResult<IEnumerable<string>> VaciarGaveta([FromBody] GavsRetiro gavs)
         {
             var respuesta = Tesoservice.VaciarGaveta(gavs.Gavo, gavs.GavD, gavs.Tipo);
             return Ok(respuesta);
         }
 
         [HttpPost("Estadovaciado")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> Estadovaciado([FromBody] GavsRetiro gavs)
+        public ActionResult<IEnumerable<string>> Estadovaciado([FromBody] GavsRetiro gavs)
         {
             var respuesta = Tesoservice.Estadovaciado(gavs.Gavo, gavs.Tipo);
             return Ok(respuesta);
@@ -110,21 +110,21 @@ namespace WebAPINetCore.Controllers
 
         // Cargar de dinero Dinero 
         [HttpGet("Iniciocarga")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> Iniciocarga()
+        public ActionResult<IEnumerable<string>> Iniciocarga()
         {
             var resultado = Tesoservice.Iniciocarga();
             return Ok(resultado);
         }
 
         [HttpGet("FinalizarCarga")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> FinalizarCarga()
+        public ActionResult<IEnumerable<string>> FinalizarCarga()
         {
             var resultado = Tesoservice.FinalizarCarga();
             return Ok(resultado);
         }
 
         [HttpGet("EstadoCarga")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> EstadoCarga()
+        public ActionResult<IEnumerable<string>> EstadoCarga()
         {
             var resultado = Tesoservice.EstadoCarga();
             return Ok(resultado);
@@ -132,7 +132,7 @@ namespace WebAPINetCore.Controllers
 
 
         [HttpPost("CargarMoneda")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> CargarMoneda([FromBody] GavMR MonIngresadas)
+        public ActionResult<IEnumerable<string>> CargarMoneda([FromBody] GavMR MonIngresadas)
         {
             var respuesta = Tesoservice.CargarMoneda(MonIngresadas);
             return Ok(respuesta);
@@ -140,49 +140,49 @@ namespace WebAPINetCore.Controllers
 
         // adm Dispositivos
         [HttpPost("InsertarDisp")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> InsertarDisp([FromBody] GavMR MonIngresadas)
+        public ActionResult<IEnumerable<string>> InsertarDisp([FromBody] GavMR MonIngresadas)
         {
             var respuesta = Tesoservice.InsertarDisp(MonIngresadas.Idgav);
             return Ok(respuesta);
         }
 
         [HttpPost("RetirararDisp")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> RetirararDisp([FromBody] GavMR MonIngresadas)
+        public ActionResult<IEnumerable<string>> RetirararDisp([FromBody] GavMR MonIngresadas)
         {
             var respuesta = Tesoservice.RetirararDisp(MonIngresadas.Idgav);
             return Ok(respuesta);
         }
         // Retirar gavetas
         [HttpPost("AgregarGav")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> AgregarGav([FromBody] GavReq gav)
+        public ActionResult<IEnumerable<string>> AgregarGav([FromBody] GavReq gav)
         {
             var respuesta = Tesoservice.AgregarGav(gav);
             return Ok(respuesta);
         }
 
         [HttpPost("RetirarGavB")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavB([FromBody] GavReq tipogav)
+        public ActionResult<IEnumerable<string>> RetirarGavB([FromBody] GavReq tipogav)
         {
             var respuesta = Tesoservice.RetirarGavB(tipogav.Idgav);
             return Ok(respuesta);
         }
 
         [HttpPost("RetirarGavM")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> RetirarGavM([FromBody] GavReq tipogav)
+        public ActionResult<IEnumerable<string>> RetirarGavM([FromBody] GavReq tipogav)
         {
             var respuesta = Tesoservice.RetirarGavM(tipogav.Idgav);
             return Ok(respuesta);
         }
 
         [HttpPost("DiscrepanciaBillete")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> DiscrepanciaBillete([FromBody] Discrepancia Gavs)
+        public ActionResult<IEnumerable<string>> DiscrepanciaBillete([FromBody] Discrepancia Gavs)
         {
             var respuesta = Tesoservice.DiscrepanciaB(Gavs);
             return Ok(respuesta);
         }
 
         [HttpPost("DiscrepanciaMoneda")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> DiscrepanciaMoneda([FromBody] Discrepancia Gavs)
+        public ActionResult<IEnumerable<string>> DiscrepanciaMoneda([FromBody] Discrepancia Gavs)
         {
             var respuesta = Tesoservice.DiscrepanciaM(Gavs);
             return Ok(respuesta);
@@ -190,42 +190,42 @@ namespace WebAPINetCore.Controllers
 
         // Impresiones de Ticketcs 
         [HttpPost("ImprimirCierreZ")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCierreZ([FromBody] DatosCierreZ Cierre)
+        public ActionResult<IEnumerable<bool>> ImprimirCierreZ([FromBody] DatosCierreZ Cierre)
         {
             var respuesta = Tesoservice.ImprecionCierreZAsync(Cierre);
             return Ok(respuesta);
         }
 
         [HttpPost("ImprimirCargaDinero")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirCargaDinero([FromBody] CargaDinero Carga)
+        public ActionResult<IEnumerable<bool>> ImprimirCargaDinero([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprecionComprobantePagoAsync(Carga);
             return Ok(respuesta);
         }
 
         [HttpPost("ImpresionReporteCierrez")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImpresionReporteCierrez([FromBody] UserToken user)
+        public ActionResult<IEnumerable<bool>> ImpresionReporteCierrez([FromBody] UserToken user)
         {
             var respuesta = Tesoservice.ImpresionReporteCierrez(user);
             return Ok(respuesta);
         }
 
         [HttpPost("ImprimirGavAntesAhora")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirGavAntesAhora([FromBody] CargaDinero Carga)
+        public ActionResult<IEnumerable<bool>> ImprimirGavAntesAhora([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprimirGavAntesAhora(Carga, "Vaciado Gaveta de Vueltos");
             return Ok(respuesta);
         }
 
         [HttpPost("ImprimirGavAntesAhoraR")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImprimirGavAntesAhoraR([FromBody] CargaDinero Carga)
+        public ActionResult<IEnumerable<bool>> ImprimirGavAntesAhoraR([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprecionComprobantePagoAsyncR(Carga, "Vaciado Alcancias");
             return Ok(respuesta);
         }
 
         [HttpPost("ImpGavAntesAhoraD")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImpGavAntesAhoraD([FromBody] CargaDinero Carga)
+        public ActionResult<IEnumerable<bool>> ImpGavAntesAhoraD([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprimirGavAntesAhora(Carga, "Retiro Disp Vueltos");
             return Ok(true);
@@ -233,7 +233,7 @@ namespace WebAPINetCore.Controllers
 
 
         [HttpPost("ImpGavAntesAhoraDReciclaje")]
-        public ActionResult<IEnumerable<EstadoPagoResp>> ImpGavAntesAhoraDReciclaje([FromBody] CargaDinero Carga)
+        public ActionResult<IEnumerable<bool>> ImpGavAntesAhoraDReciclaje([FromBody] CargaDinero Carga)
         {
             var respuesta = Tesoservice.ImprecionComprobantePagoAsyncR(Carga, "Retiro Disp Alcancia");
             return Ok(true);

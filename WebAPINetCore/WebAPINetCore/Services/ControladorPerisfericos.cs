@@ -13,12 +13,12 @@ namespace WebAPINetCore.Services
             Globals.log.Debug("Inicio de Pago");
             List<string> data = new List<string>();
             data.Add("");
-            PipeClient2 ServInicioPayou = new PipeClient2();
-            ServInicioPayou.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Ini_Agregar_dinero, data);
-            var respuesta = Globals.ServInicioPayou.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
+            PipeClient2 ServInicioPago = new PipeClient2();
+            ServInicioPago.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Ini_Agregar_dinero, data);
+            var respuesta = ServInicioPago.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
             if (respuesta)
             {
-                if (ServInicioPayou.Resultado.Data[0].Contains("OK"))
+                if (ServInicioPago.Resultado.Data[0].Contains("OK"))
                 {
                     return true;
                 }
@@ -29,7 +29,7 @@ namespace WebAPINetCore.Services
             }
             else
             {
-                Globals.log.Error("Error al Empezaar el pago Transaccion: " + Globals.IDTransaccion + " Error:" + ServInicioPayou.Resultado.CodigoError + " Respuesta completa " + ServInicioPayou._Resp);
+                Globals.log.Error("Error al Empezaar el pago Transaccion: " + Globals.IDTransaccion + " Error:" + ServInicioPago.Resultado.CodigoError + " Respuesta completa " + ServInicioPago._Resp);
                 return false;
             }
         }
@@ -38,12 +38,12 @@ namespace WebAPINetCore.Services
             Globals.log.Debug("Finalizar de Pago");
             List<string> data = new List<string>();
             data.Add("");
-            PipeClient2 ServInicioPayou = new PipeClient2();
-            ServInicioPayou.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, data);
-            var respuesta = Globals.ServInicioPayou.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
+            PipeClient2 ServFiPago = new PipeClient2();
+            ServFiPago.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, data);
+            var respuesta = ServFiPago.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
             if (respuesta)
             {
-                if (ServInicioPayou.Resultado.Data[0].Contains("OK"))
+                if (ServFiPago.Resultado.Data[0].Contains("OK"))
                 {
                     return true;
                 }
@@ -54,7 +54,7 @@ namespace WebAPINetCore.Services
             }
             else
             {
-                Globals.log.Error("Error al Empezaar el pago Transaccion: " + Globals.IDTransaccion + " Error:" + ServInicioPayou.Resultado.CodigoError + " Respuesta completa " + ServInicioPayou._Resp);
+                Globals.log.Error("Error al Empezaar el pago Transaccion: " + Globals.IDTransaccion + " Error:" + ServFiPago.Resultado.CodigoError + " Respuesta completa " + ServFiPago._Resp);
                 return false;
             }
         }
@@ -273,8 +273,8 @@ namespace WebAPINetCore.Services
             List<string> data = new List<string>();
             data.Add("");
             PipeClient2 ServVueltoRegresado = new PipeClient2();
-            ServVueltoRegresado.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Cons_dinero_ingre, data);
-            var respuesta = ServVueltoRegresado.SendMessage(ServicioPago.Comandos.Cons_dinero_ingre);
+            ServVueltoRegresado.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.EstadoVuelto, data);
+            var respuesta = ServVueltoRegresado.SendMessage(ServicioPago.Comandos.EstadoVuelto);
             if (respuesta)
             {
                 Globals.log.Debug("vuelto regresado " + ServVueltoRegresado.Resultado.Data[0]);
@@ -294,12 +294,11 @@ namespace WebAPINetCore.Services
                 return "false";
             }
         }
-
-        public bool DarVuelto()
+        public bool DarVuelto(int vuelto)
         {
             Globals.log.Debug("Dar Vuelto");
             List<string> data = new List<string>();
-            data.Add("");
+            data.Add(vuelto.ToString());
             PipeClient2 ServDarVuelto = new PipeClient2();
             ServDarVuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DarVuelto, data);
             var respuesta = ServDarVuelto.SendMessage(ServicioPago.Comandos.DarVuelto);

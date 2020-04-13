@@ -41,7 +41,7 @@ namespace WebAPINetCore
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Impresión PDF", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Pago Efectivo / Tesoreria", Version = "v1" });
             });
             services.ConfigureSwaggerGen(options =>
             {
@@ -59,7 +59,7 @@ namespace WebAPINetCore
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("../swagger/v1/swagger.json", "API Impresión PDF");
+                c.SwaggerEndpoint("../swagger/v1/swagger.json", "API Pago Efectivo / tesoreria");
             });
             app.UseHttpsRedirection();
             app.UseRouting();

@@ -14,6 +14,7 @@ namespace WebAPINetCore.Services
     public class TesoreriaService
     {
         private static readonly HttpClient client = new HttpClient();
+        ControladorPerisfericos controPeri = new ControladorPerisfericos();
 
         public bool abrirpuerta()
         {
@@ -424,54 +425,33 @@ namespace WebAPINetCore.Services
 
         public string Iniciocarga()
         {
-            Globals.log.Debug("Inicio de Carga de Dinero");
-            Globals.data = new List<string>();
-            Globals.data.Add("");
-            Globals.Servicio2Inicio = new PipeClient2();
-            Globals.Servicio2Inicio.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Ini_Agregar_dinero, Globals.data);
-            var respuesta = Globals.Servicio2Inicio.SendMessage(ServicioPago.Comandos.Ini_Agregar_dinero);
-            if (respuesta)
+            var inicio = controPeri.IniciarPago();
+            var resPayout = controPeri.InicioPayout();
+            var resHooper = controPeri.InicioHopper();
+            if (inicio && resPayout && resHooper)
             {
-                if (Globals.Servicio2Inicio.Resultado.Data[0].Contains("OK"))
-                {
-                    return "OK";
-                }
-                else
-                {
-                    return "NOK";
-                }
+                Globals.MaquinasActivadas = true;
+                return "OK";
             }
             else
             {
-                Globals.log.Error("Eror al activar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2Inicio.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2Inicio._Resp);
                 return "NOK";
             }
         }
 
         public string FinalizarCarga()
         {
-            Globals.log.Debug("Finalizar Carga");
-            Globals.data = new List<string>();
-            Globals.data.Add("");
-            Globals.Servicio2 = new PipeClient2();
-            Globals.Servicio2.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.Fin_agregar_dinero, Globals.data);
-            var vuelta = Globals.Servicio2.SendMessage(ServicioPago.Comandos.Fin_agregar_dinero);
-            if (vuelta)
+            var ResfinPag = controPeri.FinalizarPago();
+            var resPayout = controPeri.FinPayout();
+            var resPayout2 = controPeri.FinHopper();
+            if (ResfinPag && resPayout && resPayout2)
             {
-                if (Globals.Servicio2.Resultado.Data[0].Contains("OK"))
-                {
-                    return "OK";
-                }
-                else
-                {
-                    Globals.log.Error("Ha ocurrido un error al Finalizar el Pago o Apagar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2._Resp);
-                    return "NOK";
-                }
 
+                Globals.MaquinasActivadas = false;
+                return "OK";
             }
             else
             {
-                Globals.log.Error("Ha ocurrido un error al Finalizar el Pago o Apagar la maquina Transaccion: " + Globals.IDTransaccion + " Error:" + Globals.Servicio2.Resultado.CodigoError + " Respuesta completa " + Globals.Servicio2._Resp);
                 return "NOK";
             }
         }

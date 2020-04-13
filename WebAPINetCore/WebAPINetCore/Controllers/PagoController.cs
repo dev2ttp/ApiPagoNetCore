@@ -35,27 +35,16 @@ namespace WebAPINetCore.Controllers
         [HttpPost("IniciarPago")]
         public ActionResult<IEnumerable<InicioOperacionService>> IniciarPago([FromBody] EstadoPago PagoInfo)
         {
-            Globals.ImpresoraMontoEntregado = 0;
-            Globals.ImpresoraMontoIngresado = 0;
-            Globals.ImpresoraMontoPagar = 0;
-            Globals.ImpresoraMontoVueltoEntregar = 0;
-            Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
-            transaccion.InicioTransaccion();
-            Globals.ComprobanteImpresoContador = 0;
-            Globals.ComprobanteImpreso = false;
             Globals.ComprobanteImpresoVuelto = false;
-            Globals.Vuelto = new EstadoVuelto();
-            Globals.Pago = new EstadoPago();
-            Globals.TimersVueltoCancel = false;
-            Globals.PagoFinalizado = false;
-            Globals.VueltoUnaVEz = false;
-            Globals.DandoVuelto = false;
-            Globals.HayVuelto = true;
-            Globals.PagoCompleto = false;
-            Globals.VueltoPermitido = false;
-            Globals.VueltosSinIniciar = 0;
-            Globals.DineroIngresadoSolicitado = false;
-            Globals.dineroIngresado = "0";
+            Globals.ComprobanteImpreso = false;
+            Globals.ImpresoraMontoPagar = 0;
+            Globals.ImpresoraMontoIngresado = 0;
+            Globals.ImpresoraMontoVueltoEntregar = 0;
+            Globals.ImpresoraMontoEntregado = 0;
+            Globals.ImpresoraMontoEnCancelar = 0;
+            Globals.ImpresoraMontoEntregadoCancelar = 0;
+        Globals.VueltoPermitido = false;
+            transaccion.InicioTransaccion();
             InicioOperacionService Status = new InicioOperacionService();
             if (Globals.VueltoPermitido == false)
             {
@@ -73,7 +62,8 @@ namespace WebAPINetCore.Controllers
                     Status.StatusMaquina = Globals.SaludMaquina;
                     Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
                     Status.BloqueoTransbank = Globals.BloqueoTransbank;
-                    return Ok(Status);                  
+                    Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
+                    return Ok(Status);
                 }
             }
             var resultado = pagoservice.InicioPago();
@@ -84,6 +74,7 @@ namespace WebAPINetCore.Controllers
             Status.StatusMaquina = Globals.SaludMaquina;
             Status.BloqueoEfectivo = Globals.BloqueoEfectivo;
             Status.BloqueoTransbank = Globals.BloqueoTransbank;
+            Globals.ImpresoraMontoPagar = PagoInfo.MontoAPagar;
             return Ok(Status);
         }
 
@@ -162,6 +153,7 @@ namespace WebAPINetCore.Controllers
             resultado.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(resultado);
         }
+
         // GET api/Pago/EstadoSalud
         [HttpGet("EstadoSalud")]
         public ActionResult<IEnumerable<bool>> EstadoSalud()
@@ -174,6 +166,7 @@ namespace WebAPINetCore.Controllers
             Status.BloqueoTransbank = Globals.BloqueoTransbank;
             return Ok(Status);
         }
+
         // GET api/Pago/Detener vuelto
         [HttpGet("DetenerVuelto")]
         public ActionResult<IEnumerable<bool>> DetenerVuelto()
@@ -191,7 +184,7 @@ namespace WebAPINetCore.Controllers
         [HttpGet("Float")]
         public ActionResult<IEnumerable<string>> Float()
         {
-           var resultado =  pagoservice.FloatByDenomination();
+            var resultado = pagoservice.FloatByDenomination();
             InicioOperacionService Status = new InicioOperacionService();
             Status.Status = resultado;
             Status.StatusMaquina = Globals.SaludMaquina;
@@ -201,7 +194,8 @@ namespace WebAPINetCore.Controllers
         }
         // GET api/Pago/estadoBloqueo
         [HttpGet("estadoBloqueo")]
-        public void EstadoBloqueo() {
+        public void EstadoBloqueo()
+        {
             if (Globals.BloqueoEfectivo == true | Globals.BloqueoTransbank == true)
             {
                 Globals.log.Info("Se ha producido una Alteracion en el estado de salud de la maquina: " + Globals.EstadoDeSaludMaquina);
