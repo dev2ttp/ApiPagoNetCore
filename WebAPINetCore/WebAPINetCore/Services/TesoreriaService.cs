@@ -493,22 +493,47 @@ namespace WebAPINetCore.Services
                 List<string> data = new List<string>();
                 data.Add("M");
                 data.Add(MonIngresadas.Idgav); // numero serie de gaveta
+                if (int.Parse(MonIngresadas.M1) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M1"]+"," + MonIngresadas.M1);
+                }
+                if (int.Parse(MonIngresadas.M2) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M2"] + "," + MonIngresadas.M2);
+                }
+                if (int.Parse(MonIngresadas.M3) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M3"] + "," + MonIngresadas.M3);
+                }
+                if (int.Parse(MonIngresadas.M4) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M4"] + "," + MonIngresadas.M4);
+                }
+                if (int.Parse(MonIngresadas.M5) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M5"] + "," + MonIngresadas.M5);
+                }
+                if (int.Parse(MonIngresadas.M6) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M6"] + "," + MonIngresadas.M6);
+                }
+                if (int.Parse(MonIngresadas.M7) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M7"] + "," + MonIngresadas.M7);
+                }
+                if (int.Parse(MonIngresadas.M8) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M8"] + "," + MonIngresadas.M8);
+                }
+                if (int.Parse(MonIngresadas.M9) > 0)
+                {
+                    data.Add(Globals._config["ValorMonedaReal:M9"] + "," + MonIngresadas.M9);
+                }
                 if (int.Parse(MonIngresadas.M10) > 0)
                 {
-                    data.Add("10," + MonIngresadas.M10);
+                    data.Add(Globals._config["ValorMonedaReal:M10"] + "," + MonIngresadas.M10);
                 }
-                if (int.Parse(MonIngresadas.M50) > 0)
-                {
-                    data.Add("50," + MonIngresadas.M50);
-                }
-                if (int.Parse(MonIngresadas.M100) > 0)
-                {
-                    data.Add("100," + MonIngresadas.M100);
-                }
-                if (int.Parse(MonIngresadas.M500) > 0)
-                {
-                    data.Add("500," + MonIngresadas.M500);
-                }
+
                 pipeClient.Message = servicio.BuildMessage(ServicioPago.Comandos.Agregar_diner, data);
                 pipeClient.SendMessage(ServicioPago.Comandos.Agregar_diner);
 
@@ -928,15 +953,27 @@ namespace WebAPINetCore.Services
                 comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
-                comprobante = comprobante.Replace("M1XX", Carga.M10);
-                comprobante = comprobante.Replace("M50X", Carga.M50);
-                comprobante = comprobante.Replace("M10X", Carga.M100);
-                comprobante = comprobante.Replace("M500", Carga.M500);
-                comprobante = comprobante.Replace("B1XXX", Carga.B1000);
-                comprobante = comprobante.Replace("B2XXX", Carga.B2000);
-                comprobante = comprobante.Replace("B5000", Carga.B5000);
-                comprobante = comprobante.Replace("B100XX", Carga.B10000);
-                comprobante = comprobante.Replace("B20XXX", Carga.B20000);
+                comprobante = comprobante.Replace("M1XX", Carga.M1);
+                comprobante = comprobante.Replace("M2XX", Carga.M2);
+                comprobante = comprobante.Replace("M3XX", Carga.M3);
+                comprobante = comprobante.Replace("M4XX", Carga.M4);
+                comprobante = comprobante.Replace("M5XX", Carga.M5);
+                comprobante = comprobante.Replace("M6XX", Carga.M6);
+                comprobante = comprobante.Replace("M7XX", Carga.M7);
+                comprobante = comprobante.Replace("M8XX", Carga.M8);
+                comprobante = comprobante.Replace("M9XX", Carga.M9);
+                comprobante = comprobante.Replace("M10XX", Carga.M10);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1);
+                comprobante = comprobante.Replace("B2XXX", Carga.B2);
+                comprobante = comprobante.Replace("B3XXX", Carga.B3);
+                comprobante = comprobante.Replace("B4XXX", Carga.B4);
+                comprobante = comprobante.Replace("B5XXX", Carga.B5);
+                comprobante = comprobante.Replace("B6XXX", Carga.B6);
+                comprobante = comprobante.Replace("B7XXX", Carga.B7);
+                comprobante = comprobante.Replace("B8XXX", Carga.B8);
+                comprobante = comprobante.Replace("B9XXX", Carga.B9);
+                comprobante = comprobante.Replace("B10XXX", Carga.B10);
+
 
                 comprobanteE.document = comprobante;
                 var respuesta = await ImprimirComprobanteAsync(comprobanteE);
@@ -973,15 +1010,27 @@ namespace WebAPINetCore.Services
                 comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
+                comprobante = comprobante.Replace("M1XX", Carga.M1 + "|" + Globals.SaldosMaquina.MR.M1);
+                comprobante = comprobante.Replace("M1XX", Carga.M2 + "|" + Globals.SaldosMaquina.MR.M2);
+                comprobante = comprobante.Replace("M1XX", Carga.M3 + "|" + Globals.SaldosMaquina.MR.M3);
+                comprobante = comprobante.Replace("M1XX", Carga.M4 + "|" + Globals.SaldosMaquina.MR.M4);
+                comprobante = comprobante.Replace("M1XX", Carga.M5 + "|" + Globals.SaldosMaquina.MR.M5);
+                comprobante = comprobante.Replace("M1XX", Carga.M6 + "|" + Globals.SaldosMaquina.MR.M6);
+                comprobante = comprobante.Replace("M1XX", Carga.M7 + "|" + Globals.SaldosMaquina.MR.M7);
+                comprobante = comprobante.Replace("M1XX", Carga.M8 + "|" + Globals.SaldosMaquina.MR.M8);
+                comprobante = comprobante.Replace("M1XX", Carga.M9 + "|" + Globals.SaldosMaquina.MR.M9);
                 comprobante = comprobante.Replace("M1XX", Carga.M10 + "|" + Globals.SaldosMaquina.MR.M10);
-                comprobante = comprobante.Replace("M50X", Carga.M50 + "|" + Globals.SaldosMaquina.MR.M50);
-                comprobante = comprobante.Replace("M10X", Carga.M100 + "|" + Globals.SaldosMaquina.MR.M100);
-                comprobante = comprobante.Replace("M500", Carga.M500 + "|" + Globals.SaldosMaquina.MR.M500);
-                comprobante = comprobante.Replace("B1XXX", Carga.B1000 + "|" + Globals.SaldosMaquina.BA.B1000);
-                comprobante = comprobante.Replace("B2XXX", Carga.B2000 + "|" + Globals.SaldosMaquina.BA.B2000);
-                comprobante = comprobante.Replace("B5000", Carga.B5000 + "|" + Globals.SaldosMaquina.BA.B5000);
-                comprobante = comprobante.Replace("B100XX", Carga.B10000 + "|" + Globals.SaldosMaquina.BA.B10000);
-                comprobante = comprobante.Replace("B20XXX", Carga.B20000 + "|" + Globals.SaldosMaquina.BA.B20000);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1 + "|" + Globals.SaldosMaquina.BA.B1);
+                comprobante = comprobante.Replace("B1XXX", Carga.B2 + "|" + Globals.SaldosMaquina.BA.B2);
+                comprobante = comprobante.Replace("B1XXX", Carga.B3 + "|" + Globals.SaldosMaquina.BA.B3);
+                comprobante = comprobante.Replace("B1XXX", Carga.B4 + "|" + Globals.SaldosMaquina.BA.B4);
+                comprobante = comprobante.Replace("B1XXX", Carga.B5 + "|" + Globals.SaldosMaquina.BA.B5);
+                comprobante = comprobante.Replace("B1XXX", Carga.B6 + "|" + Globals.SaldosMaquina.BA.B6);
+                comprobante = comprobante.Replace("B1XXX", Carga.B7 + "|" + Globals.SaldosMaquina.BA.B7);
+                comprobante = comprobante.Replace("B1XXX", Carga.B8 + "|" + Globals.SaldosMaquina.BA.B8);
+                comprobante = comprobante.Replace("B1XXX", Carga.B9 + "|" + Globals.SaldosMaquina.BA.B9);
+                comprobante = comprobante.Replace("B1XXX", Carga.B10 + "|" + Globals.SaldosMaquina.BA.B10);
+
 
                 comprobanteE.document = comprobante;
                 var respuesta = await ImprimirComprobanteAsync(comprobanteE);
@@ -1018,15 +1067,26 @@ namespace WebAPINetCore.Services
                 comprobante = comprobante.Replace("XXXRUT", Carga.Rut);
                 comprobante = comprobante.Replace("dd/mm/aaaa hh:mm:ss PM", DateTime.Now.ToString());
                 comprobante = comprobante.Replace("XXXIDTRANS", Carga.IdTrans);
-                comprobante = comprobante.Replace("M1XX", Carga.M10 + "|" + Globals.Saldos.MB.M10);
-                comprobante = comprobante.Replace("M50X", Carga.M50 + "|" + Globals.Saldos.MB.M50);
-                comprobante = comprobante.Replace("M10X", Carga.M100 + "|" + Globals.Saldos.MB.M100);
-                comprobante = comprobante.Replace("M500", Carga.M500 + "|" + Globals.Saldos.MB.M500);
-                comprobante = comprobante.Replace("B1XXX", Carga.B1000 + "|" + Globals.Saldos.BR.B1000);
-                comprobante = comprobante.Replace("B2XXX", Carga.B2000 + "|" + Globals.Saldos.BR.B2000);
-                comprobante = comprobante.Replace("B5000", Carga.B5000 + "|" + Globals.Saldos.BR.B5000);
-                comprobante = comprobante.Replace("B100XX", Carga.B10000 + "|" + Globals.Saldos.BR.B10000);
-                comprobante = comprobante.Replace("B20XXX", Carga.B20000 + "|" + Globals.Saldos.BR.B20000);
+                comprobante = comprobante.Replace("M1XX", Carga.M1 + "|" + Globals.SaldosMaquina.MB.M1);
+                comprobante = comprobante.Replace("M1XX", Carga.M2 + "|" + Globals.SaldosMaquina.MB.M2);
+                comprobante = comprobante.Replace("M1XX", Carga.M3 + "|" + Globals.SaldosMaquina.MB.M3);
+                comprobante = comprobante.Replace("M1XX", Carga.M4 + "|" + Globals.SaldosMaquina.MB.M4);
+                comprobante = comprobante.Replace("M1XX", Carga.M5 + "|" + Globals.SaldosMaquina.MB.M5);
+                comprobante = comprobante.Replace("M1XX", Carga.M6 + "|" + Globals.SaldosMaquina.MB.M6);
+                comprobante = comprobante.Replace("M1XX", Carga.M7 + "|" + Globals.SaldosMaquina.MB.M7);
+                comprobante = comprobante.Replace("M1XX", Carga.M8 + "|" + Globals.SaldosMaquina.MB.M8);
+                comprobante = comprobante.Replace("M1XX", Carga.M9 + "|" + Globals.SaldosMaquina.MB.M9);
+                comprobante = comprobante.Replace("M1XX", Carga.M10 + "|" + Globals.SaldosMaquina.MB.M10);
+                comprobante = comprobante.Replace("B1XXX", Carga.B1 + "|" + Globals.SaldosMaquina.BR.B1);
+                comprobante = comprobante.Replace("B1XXX", Carga.B2 + "|" + Globals.SaldosMaquina.BR.B2);
+                comprobante = comprobante.Replace("B1XXX", Carga.B3 + "|" + Globals.SaldosMaquina.BR.B3);
+                comprobante = comprobante.Replace("B1XXX", Carga.B4 + "|" + Globals.SaldosMaquina.BR.B4);
+                comprobante = comprobante.Replace("B1XXX", Carga.B5 + "|" + Globals.SaldosMaquina.BR.B5);
+                comprobante = comprobante.Replace("B1XXX", Carga.B6 + "|" + Globals.SaldosMaquina.BR.B6);
+                comprobante = comprobante.Replace("B1XXX", Carga.B7 + "|" + Globals.SaldosMaquina.BR.B7);
+                comprobante = comprobante.Replace("B1XXX", Carga.B8 + "|" + Globals.SaldosMaquina.BR.B8);
+                comprobante = comprobante.Replace("B1XXX", Carga.B9 + "|" + Globals.SaldosMaquina.BR.B9);
+                comprobante = comprobante.Replace("B1XXX", Carga.B10 + "|" + Globals.SaldosMaquina.BR.B10);
 
                 comprobanteE.document = comprobante;
                 var respuesta = await ImprimirComprobanteAsync(comprobanteE);
@@ -1044,64 +1104,125 @@ namespace WebAPINetCore.Services
             foreach (var Billete in denominacion)
             {
                 var cantidad = Billete.Split(",");
-                if (cantidad[0] == "1000")
+                if (cantidad[0] == Globals._config["lecturamaquina:B1"])
                 {
                     if (Tipo == "BA")
                     {
 
-                        Globals.Saldos.BA.B1000 = cantidad[1];
+                        Globals.Saldos.BA.B1 = cantidad[1];
                     }
                     if (Tipo == "BR")
                     {
-                        Globals.Saldos.BR.B1000 = cantidad[1];
+                        Globals.Saldos.BR.B1 = cantidad[1];
                     }
                 }
 
-                if (cantidad[0] == "2000")
+                if (cantidad[0] == Globals._config["lecturamaquina:B2"])
                 {
                     if (Tipo == "BA")
                     {
-                        Globals.Saldos.BA.B2000 = cantidad[1];
+
+                        Globals.Saldos.BA.B2 = cantidad[1];
                     }
                     if (Tipo == "BR")
                     {
-                        Globals.Saldos.BR.B2000 = cantidad[1];
+                        Globals.Saldos.BR.B2 = cantidad[1];
                     }
                 }
-
-                if (cantidad[0] == "5000")
+                if (cantidad[0] == Globals._config["lecturamaquina:B3"])
                 {
                     if (Tipo == "BA")
                     {
-                        Globals.Saldos.BA.B5000 = cantidad[1];
+
+                        Globals.Saldos.BA.B3 = cantidad[1];
                     }
                     if (Tipo == "BR")
                     {
-                        Globals.Saldos.BR.B5000 = cantidad[1];
+                        Globals.Saldos.BR.B3 = cantidad[1];
                     }
                 }
-
-                if (cantidad[0] == "10000")
+                if (cantidad[0] == Globals._config["lecturamaquina:B4"])
                 {
                     if (Tipo == "BA")
                     {
-                        Globals.Saldos.BA.B10000 = cantidad[1];
+
+                        Globals.Saldos.BA.B4 = cantidad[1];
                     }
                     if (Tipo == "BR")
                     {
-                        Globals.Saldos.BR.B10000 = cantidad[1];
+                        Globals.Saldos.BR.B4 = cantidad[1];
                     }
                 }
-
-                if (cantidad[0] == "20000")
+                if (cantidad[0] == Globals._config["lecturamaquina:B5"])
                 {
                     if (Tipo == "BA")
                     {
-                        Globals.Saldos.BA.B20000 = cantidad[1];
+
+                        Globals.Saldos.BA.B5 = cantidad[1];
                     }
                     if (Tipo == "BR")
                     {
-                        Globals.Saldos.BR.B20000 = cantidad[1];
+                        Globals.Saldos.BR.B5 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["lecturamaquina:B6"])
+                {
+                    if (Tipo == "BA")
+                    {
+
+                        Globals.Saldos.BA.B6 = cantidad[1];
+                    }
+                    if (Tipo == "BR")
+                    {
+                        Globals.Saldos.BR.B6 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["lecturamaquina:B7"])
+                {
+                    if (Tipo == "BA")
+                    {
+
+                        Globals.Saldos.BA.B7 = cantidad[1];
+                    }
+                    if (Tipo == "BR")
+                    {
+                        Globals.Saldos.BR.B7 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["lecturamaquina:B8"])
+                {
+                    if (Tipo == "BA")
+                    {
+
+                        Globals.Saldos.BA.B8 = cantidad[1];
+                    }
+                    if (Tipo == "BR")
+                    {
+                        Globals.Saldos.BR.B8 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["lecturamaquina:B9"])
+                {
+                    if (Tipo == "BA")
+                    {
+
+                        Globals.Saldos.BA.B9 = cantidad[1];
+                    }
+                    if (Tipo == "BR")
+                    {
+                        Globals.Saldos.BR.B9 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["lecturamaquina:B10"])
+                {
+                    if (Tipo == "BA")
+                    {
+
+                        Globals.Saldos.BA.B10 = cantidad[1];
+                    }
+                    if (Tipo == "BR")
+                    {
+                        Globals.Saldos.BR.B10 = cantidad[1];
                     }
                 }
 
@@ -1115,7 +1236,106 @@ namespace WebAPINetCore.Services
             foreach (var Moneda in denominacion)
             {
                 var cantidad = Moneda.Split(",");
-                if (cantidad[0] == "10")
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M1"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M1 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M1 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M2"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M2 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M2 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M3"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M3 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M3 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M4"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M4= cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M4 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M5"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M5 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M5 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M6"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M6 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M1 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M7"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M7 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M7 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M8"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M8 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M8 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:M9"])
+                {
+                    if (Tipo == "MB")
+                    {
+                        Globals.Saldos.MB.M9 = cantidad[1];
+                    }
+                    if (Tipo == "MR")
+                    {
+                        Globals.Saldos.MR.M9 = cantidad[1];
+                    }
+                }
+                if (cantidad[0] == Globals._config["ValorMonedaReal:10"])
                 {
                     if (Tipo == "MB")
                     {
@@ -1127,41 +1347,6 @@ namespace WebAPINetCore.Services
                     }
                 }
 
-                if (cantidad[0] == "50")
-                {
-                    if (Tipo == "MB")
-                    {
-                        Globals.Saldos.MB.M50 = cantidad[1];
-                    }
-                    if (Tipo == "MR")
-                    {
-                        Globals.Saldos.MR.M50 = cantidad[1];
-                    }
-                }
-
-                if (cantidad[0] == "100")
-                {
-                    if (Tipo == "MB")
-                    {
-                        Globals.Saldos.MB.M100 = cantidad[1];
-                    }
-                    if (Tipo == "MR")
-                    {
-                        Globals.Saldos.MR.M100 = cantidad[1];
-                    }
-                }
-
-                if (cantidad[0] == "500")
-                {
-                    if (Tipo == "MB")
-                    {
-                        Globals.Saldos.MB.M500 = cantidad[1];
-                    }
-                    if (Tipo == "MR")
-                    {
-                        Globals.Saldos.MR.M500 = cantidad[1];
-                    }
-                }
             }
         }
 

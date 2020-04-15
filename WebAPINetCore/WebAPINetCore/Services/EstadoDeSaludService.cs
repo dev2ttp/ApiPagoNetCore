@@ -47,7 +47,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoPuerta.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoPuerta.Mensaje = "No se puede continuar con las Operaciones La puerta se encuentra abierta. Por favor espere que un ejecutivo se acerque para solucionar el problema";
+                        SaludMaquina.StadoPuerta.Mensaje = Globals._config["MensajesSalud:StadoPuerta"];
                     }
                     if (flags[2] == "1")
                     {
@@ -70,7 +70,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoCorreinte.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoCorreinte.Mensaje = "Se ha detectado un fallo en la corriente, Mientras el problema persista el sistema se Imhabilitaraa";
+                        SaludMaquina.StadoCorreinte.Mensaje = Globals._config["MensajesSalud:StadoCorreinte"];
                     }
                     if (flags[2] == "1")
                     {
@@ -93,7 +93,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMinBillete.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMinBillete.Mensaje = "Los Billetes en el reciclador se  encuentran en el minimo de billete, se recomienda cargar la maquina";
+                        SaludMaquina.StadoMinBillete.Mensaje = Globals._config["MensajesSalud:StadoMinBillete"];
                     }
                     if (flags[2] == "1")
                     {
@@ -116,7 +116,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMaxBillete.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMaxBillete.Mensaje = "Los Billetes en la alcancia se encuentran en el maximo de billete, se recomienda descargar la maquina";
+                        SaludMaquina.StadoMaxBillete.Mensaje = Globals._config["MensajesSalud:StadoMaxBillete"];
                     }
                     if (flags[2] == "1")
                     {
@@ -139,7 +139,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMinMoneda.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMinMoneda.Mensaje = "Las Monedas para dar vueltos se encuentran en el minimo de monedas permitidas, se recomienda cargar la maquina";
+                        SaludMaquina.StadoMinMoneda.Mensaje = Globals._config["MensajesSalud:StadoMinMoneda"];
                     }
                     if (flags[2] == "1")
                     {
@@ -162,7 +162,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoMaxMonedas.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoMaxMonedas.Mensaje = "Las Monedas se encuentran en el maximo de monedas permitido, se recomienda descargar la maquina";
+                        SaludMaquina.StadoMaxMonedas.Mensaje = Globals._config["MensajesSalud:StadoMaxMonedas"];
                     }
                     if (flags[2] == "1")
                     {
@@ -185,7 +185,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispDiferente.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispDiferente.Mensaje = "Alguno de los Dispositivos Actuales no coinciden con los registrados, Por favor verifique, he intente nuevamente";
+                        SaludMaquina.StadoDispDiferente.Mensaje = Globals._config["MensajesSalud:StadoDispDiferente"];
                     }
                     if (flags[2] == "1")
                     {
@@ -208,7 +208,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispAtascadoS.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispAtascadoS.Mensaje = "Un billete se ha atascado en el dispositivo";
+                        SaludMaquina.StadoDispAtascadoS.Mensaje = Globals._config["MensajesSalud:StadoDispAtascadoS"];
                     }
                     if (flags[2] == "1")
                     {
@@ -231,7 +231,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispAtascadoInS.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispAtascadoInS.Mensaje = "Un billete se ha atascado bruscamente en el dispositivo";
+                        SaludMaquina.StadoDispAtascadoInS.Mensaje = Globals._config["MensajesSalud:StadoDispAtascadoInS"];
                     }
                     if (flags[2] == "1")
                     {
@@ -254,7 +254,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispIntentoFraude.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispIntentoFraude.Mensaje = "se ha intentado cometer fraude con un billete  en el dispositivo";
+                        SaludMaquina.StadoDispIntentoFraude.Mensaje = Globals._config["MensajesSalud:StadoDispIntentoFraude"];
                     }
                     if (flags[2] == "1")
                     {
@@ -277,7 +277,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispCajaFull.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispCajaFull.Mensaje = "se ha detectado que la alcancia de billete  en el dispositivo se encuentra full, se recomineda descargar inmediatamente";
+                        SaludMaquina.StadoDispCajaFull.Mensaje = Globals._config["MensajesSalud:StadoDispCajaFull"];
                     }
                     if (flags[2] == "1")
                     {
@@ -300,7 +300,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispUnidadAtascada.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispUnidadAtascada.Mensaje = "se ha detectado una unidad atascada  en el dispositivo";
+                        SaludMaquina.StadoDispUnidadAtascada.Mensaje = Globals._config["MensajesSalud:StadoDispUnidadAtascada"];
                     }
                     if (flags[2] == "1")
                     {
@@ -323,7 +323,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispMonedaAtascada.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispMonedaAtascada.Mensaje = "se ha detectado una moneda atascada  en el dispositivo";
+                        SaludMaquina.StadoDispMonedaAtascada.Mensaje = Globals._config["MensajesSalud:StadoDispMonedaAtascada"];
                     }
                     if (flags[2] == "1")
                     {
@@ -346,7 +346,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispBusquedaFallida.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispBusquedaFallida.Mensaje = "no se ha encontrado la moneda solicitada ";
+                        SaludMaquina.StadoDispBusquedaFallida.Mensaje = Globals._config["MensajesSalud:StadoDispBusquedaFallida"];
                     }
                     if (flags[2] == "1")
                     {
@@ -369,7 +369,7 @@ namespace WebAPINetCore.Services
                     SaludMaquina.StadoDispIntetoFraudeMoneda.Activo = true;
                     if (flags[1] == "1")
                     {
-                        SaludMaquina.StadoDispIntetoFraudeMoneda.Mensaje = "Se ha encontrado un intento de fraude en la moneda ";
+                        SaludMaquina.StadoDispIntetoFraudeMoneda.Mensaje = Globals._config["MensajesSalud:StadoDispIntetoFraudeMoneda"];
                     }
                     if (flags[2] == "1")
                     {

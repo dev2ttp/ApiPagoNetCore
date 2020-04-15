@@ -23,80 +23,153 @@ namespace WebAPINetCore.Services
             //    Globals.Servicio2ConsultarVuelto.Message = Globals.servicio.BuildMessage(ServicioPago.Comandos.DineroEnMaquina, Globals.data);
             //    vuelta = Globals.Servicio2ConsultarVuelto.SendMessage(ServicioPago.Comandos.DineroEnMaquina);
             //} while (Globals.Servicio2ConsultarVuelto.Resultado.Data[0].Contains("NOK"));
-           
+
             //if (vuelta)
             //{
-                Globals.SaldosMaquina = new SaldoGaveta();
-                var billete = controladorPerisfericos.GetAllLevelsNota(); //Globals.Servicio2ConsultarVuelto.Resultado.Data[0];
-                var billetes = billete.Split(';');
-                foreach (var item in billetes)
+            Globals.SaldosMaquina = new SaldoGaveta();
+            var billete = controladorPerisfericos.GetAllLevelsNota(); //Globals.Servicio2ConsultarVuelto.Resultado.Data[0];
+            var billetes = billete.Split(';');
+            foreach (var item in billetes)
+            {
+                if (item.Contains(Globals._config["lecturamaquina:B1"] + ","))
                 {
-                    if (item.Contains("1000,"))
-                    {
-                        var b1000 = item.Split(',')[1];
-                        Globals.billetes.Add(int.Parse(b1000)*1000);
-                        Globals.SaldosMaquina.BA.B1000 = b1000;
-                    }
-                    if (item.Contains("2000,"))
-                    {
-                        var b2000 = item.Split(',')[1];
-                        Globals.billetes.Add(int.Parse(b2000)*2000);
-                        Globals.SaldosMaquina.BA.B2000 = b2000;
-                    }
-                    if (item.Contains("5000,"))
-                    {
-                        var b5000 = item.Split(',')[1];
-                        Globals.billetes.Add(int.Parse(b5000)*5000);
-                        Globals.SaldosMaquina.BA.B5000 = b5000;
-                    }
-                    if (item.Contains("10000,"))
-                    {
-                        var b10000 = item.Split(',')[1];
-                        Globals.billetes.Add(int.Parse(b10000)*10000);
-                        Globals.SaldosMaquina.BA.B10000 = b10000;
-                    }
-                    if (item.Contains("20000,"))
-                    {
-                        var b20000 = item.Split(',')[1];
-                        Globals.billetes.Add(int.Parse(b20000)*20000);
-                        Globals.SaldosMaquina.BA.B20000 = b20000;
-                    }
+                    var b1 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b1) * int.Parse(Globals._config["lecturamaquina:B1"]));
+                    Globals.SaldosMaquina.BA.B1 = b1;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B2"] + ","))
+                {
+                    var b2 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b2) * int.Parse(Globals._config["lecturamaquina:B2"]));
+                    Globals.SaldosMaquina.BA.B2 = b2;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B3"] + ","))
+                {
+                    var b3 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b3) * int.Parse(Globals._config["lecturamaquina:B3"]));
+                    Globals.SaldosMaquina.BA.B3 = b3;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B4"] + ","))
+                {
+                    var b4 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b4) * int.Parse(Globals._config["lecturamaquina:B4"]));
+                    Globals.SaldosMaquina.BA.B4 = b4;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B5"] + ","))
+                {
+                    var b5 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b5) * int.Parse(Globals._config["lecturamaquina:B5"]));
+                    Globals.SaldosMaquina.BA.B5 = b5;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B6"] + ","))
+                {
+                    var b6 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b6) * int.Parse(Globals._config["lecturamaquina:B6"]));
+                    Globals.SaldosMaquina.BA.B6 = b6;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B7"] + ","))
+                {
+                    var b7 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b7) * int.Parse(Globals._config["lecturamaquina:B7"]));
+                    Globals.SaldosMaquina.BA.B7 = b7;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B8"] + ","))
+                {
+                    var b8 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b8) * int.Parse(Globals._config["lecturamaquina:B8"]));
+                    Globals.SaldosMaquina.BA.B8 = b8;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B9"] + ","))
+                {
+                    var b9 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b9) * int.Parse(Globals._config["lecturamaquina:B9"]));
+                    Globals.SaldosMaquina.BA.B9 = b9;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:B10"] + ","))
+                {
+                    var b10 = item.Split(',')[1];
+                    Globals.billetes.Add(int.Parse(b10) * int.Parse(Globals._config["lecturamaquina:B10"]));
+                    Globals.SaldosMaquina.BA.B10 = b10;
                 }
 
-                var Moneda = controladorPerisfericos.GetAllLevelsCoin(); //Globals.Servicio2ConsultarVuelto.Resultado.Data[1];
-                var Monedas = Moneda.Split(';');
-                foreach (var item in Monedas)
-                {
-                    if (item.Contains("10,"))
-                    {
-                        var b10 = item.Split(',')[1];
-                        Globals.monedas.Add(int.Parse(b10)*10);
-                        Globals.SaldosMaquina.MR.M10 = b10;
-                    }
-                    if (item.Contains("50,"))
-                    {
-                        var b50 = item.Split(',')[1];
-                        Globals.monedas.Add(int.Parse(b50)*50);
-                        Globals.SaldosMaquina.MR.M50 = b50;
-                    }
-                    if (item.Contains("100,"))
-                    {
-                        var b100 = item.Split(',')[1];
-                        Globals.monedas.Add(int.Parse(b100)*100);
-                        Globals.SaldosMaquina.MR.M100 = b100;
-                    }
-                    if (item.Contains("500,"))
-                    {
-                        var b500 = item.Split(',')[1];
-                        Globals.monedas.Add(int.Parse(b500)*500);
-                        Globals.SaldosMaquina.MR.M500 = b500;
-                    }
-                }
-            //}
-            //else
-            //{
+            }
 
-            //}
+            var Moneda = controladorPerisfericos.GetAllLevelsCoin(); //Globals.Servicio2ConsultarVuelto.Resultado.Data[1];
+            var Monedas = Moneda.Split(';');
+            foreach (var item in Monedas)
+            {
+                if (item.Contains(Globals._config["lecturamaquina:M1"]+","))
+                {
+                    var moneda1 = item.Replace(Globals._config["ValorMonedaReal:M1"] +",", Globals._config["lecturamaquina:M1"]+",");
+                    var  m1= moneda1.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m1) * int.Parse(Globals._config["ValorMonedaReal:M1"]));
+                    Globals.SaldosMaquina.MR.M1 = m1;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M2"] + ","))
+                {
+                    var moneda2 = item.Replace(Globals._config["ValorMonedaReal:M2"] + ",", Globals._config["lecturamaquina:M2"] + ",");
+                    var m2 = moneda2.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m2) * int.Parse(Globals._config["ValorMonedaReal:M2"]));
+                    Globals.SaldosMaquina.MR.M2 = m2;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M3"] + ","))
+                {
+                    var moneda3 = item.Replace(Globals._config["ValorMonedaReal:M3"] + ",", Globals._config["lecturamaquina:M3"] + ",");
+                    var m3 = moneda3.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m3) * int.Parse(Globals._config["ValorMonedaReal:M3"]));
+                    Globals.SaldosMaquina.MR.M3 = m3;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M4"] + ","))
+                {
+                    var moneda4 = item.Replace(Globals._config["ValorMonedaReal:M4"] + ",", Globals._config["lecturamaquina:M4"] + ",");
+                    var m4 = moneda4.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m4) * int.Parse(Globals._config["ValorMonedaReal:M4"]));
+                    Globals.SaldosMaquina.MR.M4 = m4;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M5"] + ","))
+                {
+                    var moneda5 = item.Replace(Globals._config["ValorMonedaReal:M5"] + ",", Globals._config["lecturamaquina:M5"] + ",");
+                    var m5 = moneda5.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m5) * int.Parse(Globals._config["ValorMonedaReal:M5"]));
+                    Globals.SaldosMaquina.MR.M5 = m5;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M6"] + ","))
+                {
+                    var moneda6 = item.Replace(Globals._config["ValorMonedaReal:M6"] + ",", Globals._config["lecturamaquina:M6"] + ",");
+                    var m6 = moneda6.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m6) * int.Parse(Globals._config["ValorMonedaReal:M6"]));
+                    Globals.SaldosMaquina.MR.M6 = m6;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M7"] + ","))
+                {
+                    var moneda7 = item.Replace(Globals._config["ValorMonedaReal:M7"] + ",", Globals._config["lecturamaquina:M7"] + ",");
+                    var m7 = moneda7.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m7) * int.Parse(Globals._config["ValorMonedaReal:M7"]));
+                    Globals.SaldosMaquina.MR.M7 = m7;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M8"] + ","))
+                {
+                    var moneda8 = item.Replace(Globals._config["ValorMonedaReal:M8"] + ",", Globals._config["lecturamaquina:M8"] + ",");
+                    var m8 = moneda8.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m8) * int.Parse(Globals._config["ValorMonedaReal:M8"]));
+                    Globals.SaldosMaquina.MR.M8 = m8;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M9"] + ","))
+                {
+                    var moneda9 = item.Replace(Globals._config["ValorMonedaReal:M9"] + ",", Globals._config["lecturamaquina:M9"] + ",");
+                    var m9 = moneda9.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m9) * int.Parse(Globals._config["ValorMonedaReal:M9"]));
+                    Globals.SaldosMaquina.MR.M9 = m9;
+                }
+                if (item.Contains(Globals._config["lecturamaquina:M10"] + ","))
+                {
+                    var moneda10 = item.Replace(Globals._config["ValorMonedaReal:M10"] + ",", Globals._config["lecturamaquina:M10"] + ",");
+                    var m10 = moneda10.Split(',')[1];
+                    Globals.monedas.Add(int.Parse(m10) * int.Parse(Globals._config["ValorMonedaReal:M10"]));
+                    Globals.SaldosMaquina.MR.M10 = m10;
+                }
+
+            }
         }
 
         public bool CalcularVueltoPosible(int MontoApagar)
@@ -120,7 +193,7 @@ namespace WebAPINetCore.Services
             //{
             //    return false;
             //}
-            if (Globals.monedas[2] < 400 )
+            if (Globals.monedas[2] < int.Parse(Globals._config["PermitirVuelto:Monedas"]))
             {
                 return false;
             }
