@@ -172,22 +172,38 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public bool CalcularVueltoPosible(int MontoApagar)
+        public bool CalcularVueltoPosible(float MontoApagar)
         {
             int dineroTotal = 0;
             Globals.billetes = new List<int>();
             Globals.monedas = new List<int>();
             ObteneDineroMaquina();
 
+
+            var moneda = 0;
+            var billete = 0;
             foreach (var item in Globals.billetes)
             {
-                dineroTotal += item;
+                billete += item;
             }
+
+            if (Globals._config["Decimal:billete"] == "true")
+            {
+                billete = billete / int.Parse(Globals._config["Decimal:divbillete"]);
+            }
+            dineroTotal += billete;
+
 
             foreach (var item in Globals.monedas)
             {
-                dineroTotal += item;
+                moneda += item;
             }
+
+            if (Globals._config["Decimal:moneda"] == "true")
+            {
+                moneda = moneda / int.Parse(Globals._config["Decimal:divmoneda"]);
+            }
+            dineroTotal += moneda;
             //monedas
             //if (/*Globals.monedas[0] < 4 || Globals.monedas[1] < 4 || */Globals.monedas[2] < 400 /*|| Globals.monedas[3] < 2*/)
             //{

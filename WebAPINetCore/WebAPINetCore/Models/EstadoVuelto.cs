@@ -10,9 +10,9 @@ namespace WebAPINetCore.Models
         public EstadoVuelto()
         {
         }
-        public int VueltoTotal { get; set; }
-        public int DineroRegresado { get; set; }
-        public int DineroFaltante { get; set; }
+        public float VueltoTotal { get; set; }
+        public float DineroRegresado { get; set; }
+        public float DineroFaltante { get; set; }
         public bool VueltoFinalizado { get; set; }
     }
 

@@ -124,7 +124,7 @@ namespace WebAPINetCore.Services
                 {
                     if (finalizar)
                     {
-                        Task.Delay(3000).Wait();
+                        Task.Delay(int.Parse(Globals._config["TiempoDelay:EsperarVuelto"])).Wait();
                         var IniciooPago = InicioPago();
                         if (IniciooPago == true)
                         {
@@ -186,7 +186,7 @@ namespace WebAPINetCore.Services
                         vueltoTerminado = true;
                         Vuelto = Vuelto.Replace("OK", "");
                     }
-                    Globals.ImpresoraMontoEntregadoCancelar = int.Parse(Vuelto);
+                    Globals.ImpresoraMontoEntregadoCancelar = float.Parse(Vuelto);
                     if (vueltoTerminado)
                     {
                         estado.CancelacionCompleta = true;
@@ -354,7 +354,7 @@ namespace WebAPINetCore.Services
                 var DineroIngresado = controPeri.DinerIngresado();
                 if (DineroIngresado != "false")
                 {
-                    int Dinero = int.Parse(DineroIngresado);
+                    float Dinero = float.Parse(DineroIngresado);
                     PagoInfo.DineroIngresado = Dinero;
                     PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - Dinero;
                     if (Dinero > Globals.ImpresoraMontoIngresado)
@@ -367,7 +367,7 @@ namespace WebAPINetCore.Services
                         FinalizarPago();
                         EstadoDelPAgo.Status = true;
                         EstadoDelPAgo.PagoStatus = false;// estado que se retornan al front
-                        Task.Delay(3000).Wait();
+                        Task.Delay(int.Parse(Globals._config["TiempoDelay:EsperarVuelto"])).Wait();
                         PagoInfo = RealizarCalculoVuelto(PagoInfo.MontoAPagar);
                         EstadoDelPAgo.data = PagoInfo;
                         return EstadoDelPAgo;
@@ -377,7 +377,7 @@ namespace WebAPINetCore.Services
                         var finalizar = FinalizarPago();
                         if (finalizar == true)
                         {
-                            Task.Delay(3000).Wait();
+                            Task.Delay(int.Parse(Globals._config["TiempoDelay:EsperarVuelto"])).Wait();
                             PagoInfo.DineroFaltante = ConsultarDineroExtra(PagoInfo.MontoAPagar);
 
                             if (PagoInfo.DineroFaltante == 0)
@@ -439,7 +439,7 @@ namespace WebAPINetCore.Services
                         vueltoTerminado = true;
                         Vuelto = Vuelto.Replace("OK", "");
                     }
-                    var VueltoEntregado = int.Parse(Vuelto);
+                    var VueltoEntregado = float.Parse(Vuelto);
                     VueltoInfo.DineroRegresado = VueltoEntregado;
                     VueltoInfo.DineroFaltante = VueltoInfo.VueltoTotal - VueltoEntregado;
                     VueltoInfo.VueltoFinalizado = vueltoTerminado;
@@ -489,7 +489,7 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public int ConsultarDineroExtra(int MontoApagar)
+        public float ConsultarDineroExtra(float MontoApagar)
         {
             try
             {
@@ -497,7 +497,7 @@ namespace WebAPINetCore.Services
                 estadopago.MontoAPagar = MontoApagar;
                 estadopago = MicroConsultaPago(estadopago);
 
-                int dineroF = new int();
+                float dineroF = new float();
                 dineroF = MontoApagar - estadopago.DineroIngresado;
                 if (estadopago.DineroIngresado > Globals.ImpresoraMontoIngresado)
                 { Globals.ImpresoraMontoIngresado = estadopago.DineroIngresado; }
@@ -537,7 +537,7 @@ namespace WebAPINetCore.Services
             }
         }
 
-        public EstadoPago RealizarCalculoVuelto(int MontoApagar) // Proceso que se encarga de preparar la maquina para entregar vuelto 
+        public EstadoPago RealizarCalculoVuelto(float MontoApagar) // Proceso que se encarga de preparar la maquina para entregar vuelto 
         {
             EstadoPago estadopago = new EstadoPago();
             try
@@ -589,7 +589,7 @@ namespace WebAPINetCore.Services
                 try
                 {
                     //Actualizar los datos de pago
-                    var DineroIngresado = int.Parse(EstadoPgo);
+                    var DineroIngresado = float.Parse(EstadoPgo);
                     PagoInfo.DineroIngresado = DineroIngresado;
                     PagoInfo.DineroFaltante = PagoInfo.MontoAPagar - DineroIngresado;
                     return PagoInfo;

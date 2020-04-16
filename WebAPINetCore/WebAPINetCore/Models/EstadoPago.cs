@@ -9,9 +9,9 @@ namespace WebAPINetCore.Models
     {
         public EstadoPago() { 
         }
-        public int MontoAPagar { get; set; }
-        public int DineroIngresado { get; set; }
-        public int DineroFaltante { get; set; }
+        public float MontoAPagar { get; set; }
+        public float DineroIngresado { get; set; }
+        public float DineroFaltante { get; set; }
        // public bool EntregandoVuelto { get; set; }
     }
 

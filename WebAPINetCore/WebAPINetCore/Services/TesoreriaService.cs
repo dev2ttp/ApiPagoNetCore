@@ -101,15 +101,15 @@ namespace WebAPINetCore.Services
                 string[] msg = Globals.Servicio1.Resultado.Data[0].Split('~');
                 if (msg.Length < 3)
                 {
-                    Globals.Cierrez.MensajeaMostrar = "Error en cierre Z";
+                    Globals.Cierrez.MensajeaMostrar = Globals._config["MensajeTesoreria:ErrorCierreZ"];
                 }
                 else if (msg[2] == "0")
                 {
-                    Globals.Cierrez.MensajeaMostrar = "No hay cierres Z que realizar actualmente";
+                    Globals.Cierrez.MensajeaMostrar = Globals._config["MensajeTesoreria:NCierreZ"];
                 }
                 else
                 {
-                    Globals.Cierrez.MensajeaMostrar = "El Cierre Z se ha realizado satisfactorimente";
+                    Globals.Cierrez.MensajeaMostrar = Globals._config["MensajeTesoreria:CierreOK"];
                     Globals.Cierrez.Fecha = msg[0];
                     Globals.Cierrez.Hora = msg[1];
                     Globals.Cierrez.IDZCierre = msg[2];
@@ -583,7 +583,7 @@ namespace WebAPINetCore.Services
                     string respuestaserv = resultado[resultado.Length - 1];
                     if (respuestaserv.Contains("diferente"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:DispDif"];
                     }
                     else
                     {
@@ -622,7 +622,7 @@ namespace WebAPINetCore.Services
                     string respuestaserv = resultado[resultado.Length - 1];
                     if (respuestaserv.Contains("no existe"))
                     {
-                        return "no existe";
+                        return Globals._config["MensajeTesoreria:DispRetirad"];
                     }
                     else
                     {
@@ -664,27 +664,27 @@ namespace WebAPINetCore.Services
                     string respuestaserv = resultado[resultado.Length - 1];
                     if (respuestaserv.Contains("diferente"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:AgreGavDD"];
                     }
                     else if (respuestaserv.Contains("no existe"))
                     {
-                        return "no existe";
+                        return Globals._config["MensajeTesoreria:AgreGavNE"];
                     }
                     else if (respuestaserv.Contains("no habilitada"))
                     {
-                        return "no habilitada";
+                        return Globals._config["MensajeTesoreria:AgreGavNH"];
                     }
                     else if (respuestaserv.Contains("no cargado"))
                     {
-                        return "no cargado";
+                        return Globals._config["MensajeTesoreria:AgreGavNC"];
                     }
                     else if (respuestaserv.Contains("previamente retirado"))
                     {
-                        return "previamente retirado";
+                        return Globals._config["MensajeTesoreria:AgreGavPR"];
                     }
                     else if (respuestaserv.Contains("ya estaba inserta"))
                     {
-                        return "ya estaba inserta";
+                        return Globals._config["MensajeTesoreria:AgreGavYI"];
                     }
                     else
                     {
@@ -723,15 +723,15 @@ namespace WebAPINetCore.Services
                     string respuestaserv = resultado[resultado.Length - 1];
                     if (respuestaserv.Contains("diferente"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:RetGavDD"];
                     }
                     else if (respuestaserv.Contains("no existe"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:RetGavNE"];
                     }
                     else if (respuestaserv.Contains("previamente retirada"))
                     {
-                        return "previamente retirada";
+                        return Globals._config["MensajeTesoreria:RetGavPR"];
                     }
                     else
                     {
@@ -770,15 +770,15 @@ namespace WebAPINetCore.Services
                     string respuestaserv = resultado[resultado.Length - 1];
                     if (respuestaserv.Contains("diferente"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:RetGavDD"];
                     }
                     else if (respuestaserv.Contains("no existe"))
                     {
-                        return "Dispositivo Diferente";
+                        return Globals._config["MensajeTesoreria:RetGavNE"];
                     }
                     else if (respuestaserv.Contains("previamente retirada"))
                     {
-                        return "previamente retirada";
+                        return Globals._config["MensajeTesoreria:RetGavPR"];
                     }
                     else
                     {

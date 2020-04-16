@@ -294,7 +294,7 @@ namespace WebAPINetCore.Services
                 return "false";
             }
         }
-        public bool DarVuelto(int vuelto)
+        public bool DarVuelto(float vuelto)
         {
             Globals.log.Debug("Dar Vuelto");
             List<string> data = new List<string>();
