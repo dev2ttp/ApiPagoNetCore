@@ -54,8 +54,9 @@ namespace WebAPINetCore.Services
                 resultado = pipeClient.SendMessage(ServicioPago.Comandos.APP_FRTINI);
                 if (resultado == true)
                 {
-                   Globals.idmaquina = pipeClient.Resultado.Data[0];
-                   Globals.nombremaquina = pipeClient.Resultado.Data[1];
+                    var datos = pipeClient.Resultado.Data[0].Split("~");
+                    Globals.idmaquina = datos[0];
+                    Globals.nombremaquina = datos[1];
 
                 }
                 return resultado;
