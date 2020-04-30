@@ -17,6 +17,53 @@ namespace WebAPINetCore.Models
             BR = new GavBR();
             MB = new GavMB();
             MR = new GavMR();
+
+            BA.B1 = "0";
+            BA.B2 = "0";
+            BA.B3 = "0";
+            BA.B4 = "0";
+            BA.B5 = "0";
+            BA.B6 = "0";
+            BA.B7 = "0";
+            BA.B8 = "0";
+            BA.B9 = "0";
+            BA.B10 = "0";
+
+
+            BR.B1 = "0";
+            BR.B2 = "0";
+            BR.B3 = "0";
+            BR.B4 = "0";
+            BR.B5 = "0";
+            BR.B6 = "0";
+            BR.B7 = "0";
+            BR.B8 = "0";
+            BR.B9 = "0";
+            BR.B10 = "0";
+
+
+            MB.M1 = "0";
+            MB.M2 = "0";
+            MB.M3 = "0";
+            MB.M4 = "0";
+            MB.M5 = "0";
+            MB.M6 = "0";
+            MB.M7 = "0";
+            MB.M8 = "0";
+            MB.M9 = "0";
+            MB.M10 = "0";
+
+            MR.M1 = "0";
+            MR.M2 = "0";
+            MR.M3 = "0";
+            MR.M4 = "0";
+            MR.M5 = "0";
+            MR.M6 = "0";
+            MR.M7 = "0";
+            MR.M8 = "0";
+            MR.M9 = "0";
+            MR.M10 = "0";
+
         }
         
     }
